@@ -374,6 +374,63 @@
       font-weight: 700;
     }
 
+    .service-demo-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--pink-main);
+      color: var(--white);
+      font-size: 13px;
+      font-weight: 700;
+      padding: 10px 18px;
+      border-radius: 999px;
+      text-decoration: none;
+      margin-top: 14px;
+      box-shadow: 0 4px 12px rgba(201,84,122,0.28);
+      transition: transform 0.15s;
+    }
+
+    .service-demo-link:active { transform: scale(0.97); }
+
+    .service-demo-thumb {
+      display: block;
+      margin-top: 14px;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      border: 1.5px solid #ecddd5;
+      text-decoration: none;
+    }
+
+    .service-demo-preview {
+      background: linear-gradient(135deg, #f3eefe 0%, #e6f1fb 100%);
+      padding: 22px 18px;
+      text-align: center;
+    }
+
+    .service-demo-tag {
+      display: inline-block;
+      background: var(--white);
+      color: #534ab7;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 999px;
+      margin-bottom: 8px;
+    }
+
+    .service-demo-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--brown-text);
+      line-height: 1.4;
+      margin-bottom: 4px;
+    }
+
+    .service-demo-url {
+      font-size: 11px;
+      color: var(--text-sub);
+    }
+
     /* ── ポートフォリオ（運用アカウント） ── */
     #portfolio { background: var(--white); }
 
@@ -893,6 +950,31 @@
   <div class="section-label">SERVICES</div>
   <h2 class="section-title">サービスと料金</h2>
   <div class="divider"></div>
+
+  <div class="service-card" style="border:2px solid var(--pink-mid);">
+    <div class="service-header">
+      <div class="service-emoji">💻</div>
+      <div class="service-name">AIで作るWebサイト・アプリ制作<span class="service-badge">バイブコーディング</span></div>
+    </div>
+    <p class="service-desc">最新のAIを活用（バイブコーディング）して、Webサイトや学習アプリなど「実際に動くもの」をゼロから制作します。コードの知識がなくても、やりたいことを形にできます。下は実際に制作したサイトの一例です。</p>
+
+    <a class="service-demo-thumb" href="https://rinrin127.github.io/ai_pasuport/" target="_blank" rel="noopener">
+      <div class="service-demo-preview">
+        <span class="service-demo-tag">制作実績</span>
+        <div class="service-demo-title">生成AIパスポート 模擬試験トレーナー</div>
+        <div class="service-demo-url">rinrin127.github.io/ai_pasuport</div>
+      </div>
+    </a>
+
+    <a class="service-demo-link" href="https://rinrin127.github.io/ai_pasuport/" target="_blank" rel="noopener">
+      実際のサイトを見る <span aria-hidden="true">↗</span>
+    </a>
+
+    <div class="service-footer" style="margin-top:16px;">
+      <div class="service-price">お見積り <span>/ 内容に応じて</span></div>
+      <div class="service-sales">LP・アプリ対応</div>
+    </div>
+  </div>
 
   <div class="service-card">
     <div class="service-header">
