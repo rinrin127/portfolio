@@ -526,6 +526,84 @@
       flex-shrink: 0;
     }
 
+    /* ── デザイン制作実績 ── */
+    #design { background: var(--beige); }
+
+    .design-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .design-card {
+      display: block;
+      text-decoration: none;
+      background: var(--white);
+      border: 1.5px solid #ecddd5;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-soft);
+      transition: border-color 0.15s, transform 0.15s;
+    }
+    .design-card:active { transform: scale(0.99); border-color: var(--pink-main); }
+
+    .design-frame {
+      position: relative;
+      height: 300px;
+      overflow: hidden;
+      background: var(--beige);
+    }
+    .design-frame img { width: 100%; display: block; }
+
+    .design-fade {
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      height: 96px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, var(--white) 100%);
+    }
+
+    .design-zoom {
+      position: absolute;
+      bottom: 10px; left: 50%;
+      transform: translateX(-50%);
+      background: var(--pink-main);
+      color: var(--white);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 6px 16px;
+      border-radius: 999px;
+      box-shadow: var(--shadow-soft);
+      white-space: nowrap;
+    }
+
+    .design-body { padding: 14px 16px; }
+
+    .design-genre {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--pink-main);
+      letter-spacing: 0.03em;
+      margin-bottom: 3px;
+    }
+    .design-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--brown-text);
+      line-height: 1.4;
+      margin-bottom: 4px;
+    }
+    .design-desc {
+      font-size: 11px;
+      color: var(--text-sub);
+      line-height: 1.7;
+    }
+    .design-tags {
+      margin-top: 8px;
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
     /* ── お客様の声 ── */
     #testimonials { background: var(--beige-mid); }
 
@@ -1130,6 +1208,37 @@
     </a>
   </div>
   <p style="font-size:11px; color:var(--text-sub); text-align:center; margin-top:16px;">※ アカウント名・ジャンル文言はご自由に調整ください</p>
+</section>
+
+<!-- ── デザイン制作実績 ── -->
+<section id="design">
+  <div class="section-label">DESIGN</div>
+  <h2 class="section-title">デザイン制作実績</h2>
+  <div class="divider"></div>
+  <p class="portfolio-intro">
+    Photoshopを使ったLP・バナーなどのデザイン制作も承っています。<br>
+    実際に制作したサンプルをご紹介します。
+  </p>
+
+  <div class="design-list">
+    <a class="design-card" href="cocopita-lp.jpg" target="_blank" rel="noopener">
+      <div class="design-frame">
+        <img src="cocopita-lp.jpg" alt="COCOPiTA 会員制優待サービス LPデザイン" loading="lazy">
+        <div class="design-fade"></div>
+        <span class="design-zoom">🔍 タップで全体を見る</span>
+      </div>
+      <div class="design-body">
+        <div class="design-genre">ランディングページ制作</div>
+        <div class="design-name">COCOPiTA｜会員制優待サービス LP</div>
+        <div class="design-desc">家族で使える会員制優待サービスのランディングページをデザイン。サービスの魅力が伝わる構成と、やさしい配色で制作しました。</div>
+        <div class="design-tags">
+          <span class="plat-tag">Photoshop</span>
+          <span class="plat-tag">LPデザイン</span>
+        </div>
+      </div>
+    </a>
+  </div>
+  <p style="font-size:11px; color:var(--text-sub); text-align:center; margin-top:16px;">※ 説明文・タグはご自由に調整ください</p>
 </section>
 
 <!-- ── 5. お客様の声 ── -->
