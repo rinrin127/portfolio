@@ -231,7 +231,8 @@ function altBlock(c) {
 function formBlock(c) {
   const f = c.form || {};
   if (!f.endpoint) return '';
-  const action = /^https?:/.test(f.endpoint) ? f.endpoint : `https://formspree.io/f/${f.endpoint}`;
+  // 絶対URL・/で始まるパスはそのまま。それ以外は Formspree のIDとして扱う
+  const action = /^(https?:|\/)/.test(f.endpoint) ? f.endpoint : `https://formspree.io/f/${f.endpoint}`;
   const topics = f.fields?.topics || [];
   return `
     <form class="form u-fade" data-delay="1" action="${e(action)}" method="POST" id="contactForm">

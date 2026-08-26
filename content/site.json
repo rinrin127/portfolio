@@ -72,8 +72,8 @@
     "lead": "サービス内容・ご予算・納期など、決まっていない段階でも大丈夫です。まずはやりたいことをそのままお聞かせください。",
     "responseTime": "原則2営業日以内にご返信します",
     "form": {
-      "_取得方法": "https://formspree.io で無料登録 → New Form → 表示される https://formspree.io/f/xxxxxxxx の xxxxxxxx 部分を endpoint に貼る（無料枠は月50件）",
-      "endpoint": "",
+      "_取得方法": "自前のResend連携を使っています（外部サービス不要・月3,000通まで無料）。受け口は functions/api/contact.js。Cloudflare Pages の Settings → Variables and Secrets に RESEND_API_KEY を登録すると動きます。",
+      "endpoint": "https://tonarie.pages.dev/api/contact",
       "subjectPrefix": "【トナリエ】お問い合わせ",
       "privacyNote": "いただいた内容は、ご相談への回答以外には使用しません。",
       "fields": {
@@ -83,7 +83,8 @@
           "AI導入・業務自動化",
           "その他・まだ決まっていない"
         ]
-      }
+      },
+      "_endpointメモ": "risalink1.com にサイトを移したら https://risalink1.com/api/contact に変えてください。"
     },
     "email": {
       "user": "info",

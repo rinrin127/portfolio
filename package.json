@@ -10,6 +10,7 @@
     "figma:tokens": "node scripts/figma-tokens.mjs",
     "figma:inspect": "node scripts/figma-inspect.mjs",
     "figma:all": "npm run figma:tokens && npm run figma:works && npm run build",
-    "serve": "node --run build && npx --yes serve -l 4321 ."
+    "serve": "node --run build && npx --yes serve -l 4321 .",
+    "dist": "node scripts/build.mjs && node scripts/dist.mjs"
   }
 }

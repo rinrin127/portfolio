@@ -63,12 +63,55 @@
   <div class="wrap wrap--narrow">
     <p class="c-lead c-lead--top u-fade" style="text-align:center;margin-inline:auto">サービス内容・ご予算・納期など、決まっていない段階でも大丈夫です。まずはやりたいことをそのままお聞かせください。</p>
     
-    <p class="u-fade" style="text-align:center;color:var(--ink-soft);font-size:.9375rem">下記のメールアドレスまでお気軽にご連絡ください。</p>
+    <form class="form u-fade" data-delay="1" action="https://tonarie.pages.dev/api/contact" method="POST" id="contactForm">
+      <input type="hidden" name="_subject" value="【トナリエ】お問い合わせ">
+      <p class="form__hp"><label>この欄は空のままにしてください<input type="text" name="_gotcha" tabindex="-1" autocomplete="off"></label></p>
+
+      <div class="form__row">
+        <label class="form__field">
+          <span class="form__label">お名前<i>必須</i></span>
+          <input type="text" name="お名前" required autocomplete="name">
+        </label>
+        <label class="form__field">
+          <span class="form__label">会社名・屋号</span>
+          <input type="text" name="会社名" autocomplete="organization">
+        </label>
+      </div>
+
+      <label class="form__field">
+        <span class="form__label">メールアドレス<i>必須</i></span>
+        <input type="email" name="email" required autocomplete="email" placeholder="example@example.com">
+      </label>
+
+      <label class="form__field">
+        <span class="form__label">ご相談の種類</span>
+        <select name="ご相談の種類">
+          <option>Webサイト・アプリ制作</option>
+          <option>SNS運用・コンテンツ制作</option>
+          <option>AI導入・業務自動化</option>
+          <option>その他・まだ決まっていない</option>
+        </select>
+      </label>
+
+      <label class="form__field">
+        <span class="form__label">ご相談内容<i>必須</i></span>
+        <textarea name="ご相談内容" rows="7" required placeholder="やりたいこと、お困りごと、ご予算感や希望納期など。決まっていない項目は空欄で構いません。"></textarea>
+      </label>
+
+      <p class="form__privacy">いただいた内容は、ご相談への回答以外には使用しません。</p>
+      <button class="btn btn--primary form__submit" type="submit">送信する</button>
+    </form>
+
+    <div class="form__thanks" id="formThanks" hidden>
+      <p class="form__thanks-title">お問い合わせありがとうございます。</p>
+      <p class="form__thanks-text">内容を確認のうえ、原則2営業日以内にご返信します。<br>数日たっても返信が届かない場合は、お手数ですがメールでご連絡ください。</p>
+    </div>
+    
     
     <div class="mailto u-fade" data-delay="2">
       <span class="mailto__label">メールでも受け付けています</span>
       <a class="mailto__addr" href="#" data-user="info" data-domain="risalink1.com"><noscript>info ＠ risalink1.com</noscript></a>
-      
+      <span class="mailto__note">フォームが使いにくい場合はこちらへ直接お送りください。</span>
     </div>
     
     <div class="alt-route u-fade" data-delay="3">
