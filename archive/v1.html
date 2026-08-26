@@ -1,0 +1,1457 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Risa Link. | SNS運用・バナーデザイン・Canva講師</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --pink-light: #fdf2f5;
+      --pink-mid: #f4c0d1;
+      --pink-main: #c9547a;
+      --pink-dark: #8c3354;
+      --beige: #fdf8f4;
+      --beige-mid: #f5ede6;
+      --brown-text: #4a2e22;
+      --text-main: #3a3232;
+      --text-sub: #7a6b62;
+      --white: #ffffff;
+      --radius-sm: 12px;
+      --radius-md: 20px;
+      --radius-lg: 32px;
+      --shadow-soft: 0 2px 12px rgba(74,46,34,0.08);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Noto Sans JP', sans-serif;
+      font-size: 15px;
+      line-height: 1.8;
+      color: var(--text-main);
+      background: var(--beige);
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    /* ── ヒーロー ── */
+    #hero {
+      background: linear-gradient(160deg, #fce4ef 0%, #fdf2f5 55%, #fef6ee 100%);
+      padding: 52px 24px 44px;
+      text-align: center;
+    }
+
+    .hero-logo {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: var(--pink-main);
+      margin-bottom: 20px;
+      opacity: 0.8;
+    }
+
+    .hero-avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: #fdf6f0;
+      margin: 0 auto 20px;
+      overflow: hidden;
+      border: 4px solid var(--white);
+      box-shadow: 0 6px 22px rgba(201,84,122,0.22);
+    }
+
+    .hero-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--white);
+      color: var(--pink-main);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 5px 14px;
+      border-radius: 999px;
+      border: 1.5px solid var(--pink-mid);
+      margin-bottom: 14px;
+      letter-spacing: 0.04em;
+    }
+
+    .hero-badge::before {
+      content: '';
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      background: #4cd96b;
+      border-radius: 50%;
+    }
+
+    .hero-name {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--brown-text);
+      margin-bottom: 4px;
+      letter-spacing: 0.02em;
+    }
+
+    .hero-name-sub {
+      font-size: 12px;
+      color: var(--text-sub);
+      margin-bottom: 14px;
+      letter-spacing: 0.04em;
+    }
+
+    .hero-tagline {
+      font-size: 14px;
+      color: var(--text-sub);
+      margin-bottom: 10px;
+      line-height: 1.75;
+    }
+
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-bottom: 28px;
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-num {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--brown-text);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 10px;
+      color: var(--text-sub);
+      margin-top: 3px;
+    }
+
+    .stat-div {
+      width: 1px;
+      height: 32px;
+      background: var(--pink-mid);
+      align-self: center;
+    }
+
+    .hero-cta {
+      display: inline-block;
+      background: var(--pink-main);
+      color: var(--white);
+      font-size: 16px;
+      font-weight: 700;
+      padding: 17px 40px;
+      border-radius: 999px;
+      text-decoration: none;
+      box-shadow: 0 6px 22px rgba(201,84,122,0.38);
+      transition: transform 0.15s, box-shadow 0.15s;
+      letter-spacing: 0.02em;
+    }
+
+    .hero-cta:active {
+      transform: scale(0.97);
+      box-shadow: 0 3px 10px rgba(201,84,122,0.25);
+    }
+
+    .hero-sub-text {
+      font-size: 11px;
+      color: var(--text-sub);
+      margin-top: 10px;
+    }
+
+    /* ── セクション共通 ── */
+    section { padding: 48px 20px; }
+
+    .section-label {
+      display: inline-block;
+      background: var(--pink-light);
+      color: var(--pink-main);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      padding: 3px 12px;
+      border-radius: 999px;
+      margin-bottom: 8px;
+    }
+
+    .section-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--brown-text);
+      margin-bottom: 6px;
+    }
+
+    .divider {
+      width: 36px;
+      height: 3px;
+      background: var(--pink-main);
+      border-radius: 999px;
+      margin: 0 0 22px;
+    }
+
+    /* ── プロフィール ── */
+    #profile {
+      background: var(--white);
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    }
+
+    .profile-body {
+      font-size: 14px;
+      color: var(--text-sub);
+      line-height: 1.95;
+    }
+
+    .profile-body p + p { margin-top: 14px; }
+
+    .career-box {
+      background: var(--beige);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      margin-top: 20px;
+      border-left: 3px solid var(--pink-main);
+    }
+
+    .career-box-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--pink-main);
+      letter-spacing: 0.06em;
+      margin-bottom: 10px;
+    }
+
+    .career-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--text-sub);
+      line-height: 1.6;
+      padding: 5px 0;
+      border-bottom: 1px solid #ece3db;
+    }
+
+    .career-item:last-child { border-bottom: none; }
+
+    .career-icon {
+      font-size: 14px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .profile-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 20px;
+    }
+
+    .profile-tag {
+      background: var(--pink-light);
+      color: var(--pink-dark);
+      font-size: 12px;
+      font-weight: 500;
+      padding: 5px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--pink-mid);
+    }
+
+    /* ── サービス・料金 ── */
+    #services { background: var(--beige-mid); }
+
+    .service-card {
+      background: var(--white);
+      border-radius: var(--radius-md);
+      padding: 22px;
+      margin-bottom: 14px;
+      border: 1.5px solid #ecddd5;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .service-card:last-child { margin-bottom: 0; }
+
+    .service-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .service-emoji {
+      width: 44px;
+      height: 44px;
+      background: var(--pink-light);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+
+    .service-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--brown-text);
+      line-height: 1.4;
+    }
+
+    .service-badge {
+      display: inline-block;
+      background: #fff0e8;
+      color: #b05a1a;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 999px;
+      margin-left: 6px;
+      vertical-align: middle;
+    }
+
+    .service-desc {
+      font-size: 13px;
+      color: var(--text-sub);
+      line-height: 1.8;
+      margin-bottom: 14px;
+    }
+
+    .service-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid #f0e6e0;
+      padding-top: 12px;
+    }
+
+    .service-price {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--pink-main);
+    }
+
+    .service-price span {
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--text-sub);
+    }
+
+    .service-sales {
+      font-size: 11px;
+      color: var(--text-sub);
+      background: var(--beige);
+      padding: 4px 10px;
+      border-radius: 999px;
+    }
+
+    .service-items {
+      margin-top: 10px;
+    }
+
+    .service-items li {
+      list-style: none;
+      font-size: 12px;
+      color: var(--text-sub);
+      padding: 3px 0;
+    }
+
+    .service-items li::before {
+      content: "✓ ";
+      color: var(--pink-main);
+      font-weight: 700;
+    }
+
+    .service-demo-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--pink-main);
+      color: var(--white);
+      font-size: 13px;
+      font-weight: 700;
+      padding: 10px 18px;
+      border-radius: 999px;
+      text-decoration: none;
+      margin-top: 14px;
+      box-shadow: 0 4px 12px rgba(201,84,122,0.28);
+      transition: transform 0.15s;
+    }
+
+    .service-demo-link:active { transform: scale(0.97); }
+
+    .service-demo-thumb {
+      display: block;
+      margin-top: 14px;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      border: 1.5px solid #ecddd5;
+      text-decoration: none;
+    }
+
+    .service-demo-preview {
+      background: linear-gradient(135deg, #f3eefe 0%, #e6f1fb 100%);
+      padding: 22px 18px;
+      text-align: center;
+    }
+
+    .service-demo-tag {
+      display: inline-block;
+      background: var(--white);
+      color: #534ab7;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 999px;
+      margin-bottom: 8px;
+    }
+
+    .service-demo-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--brown-text);
+      line-height: 1.4;
+      margin-bottom: 4px;
+    }
+
+    .service-demo-url {
+      font-size: 11px;
+      color: var(--text-sub);
+    }
+
+    /* ── ポートフォリオ（運用アカウント） ── */
+    #portfolio { background: var(--white); }
+
+    .portfolio-intro {
+      font-size: 13px;
+      color: var(--text-sub);
+      line-height: 1.85;
+      margin-bottom: 20px;
+    }
+
+    .account-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .account-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: var(--beige);
+      border: 1.5px solid #ecddd5;
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      text-decoration: none;
+      box-shadow: var(--shadow-soft);
+      transition: border-color 0.15s, transform 0.15s;
+    }
+
+    .account-card:active { transform: scale(0.99); border-color: var(--pink-main); }
+
+    .account-thumb {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+
+    .pt-1 { background: linear-gradient(135deg, #fce4ef 0%, #f4c0d1 100%); }
+    .pt-2 { background: linear-gradient(135deg, #f3eefe 0%, #cfcbf6 100%); }
+    .pt-3 { background: linear-gradient(135deg, #fef0f4 0%, #f0aac0 100%); }
+    .pt-4 { background: linear-gradient(135deg, #fde8ee 0%, #e89ab0 100%); }
+    .pt-5 { background: linear-gradient(135deg, #e8f9f0 0%, #9fe1cb 100%); }
+    .pt-6 { background: linear-gradient(135deg, #fef6e4 0%, #fac775 100%); }
+    .pt-7 { background: linear-gradient(135deg, #e8f4fd 0%, #b5d4f4 100%); }
+    .pt-8 { background: linear-gradient(135deg, #fdf0d5 0%, #f4b860 100%); }
+
+    .account-info { flex: 1; min-width: 0; }
+
+    .account-genre {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--pink-main);
+      letter-spacing: 0.03em;
+      margin-bottom: 2px;
+    }
+
+    .account-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--brown-text);
+      line-height: 1.35;
+      margin-bottom: 3px;
+    }
+
+    .account-meta {
+      font-size: 10px;
+      color: var(--text-sub);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .plat-tag {
+      display: inline-block;
+      background: var(--white);
+      border: 1px solid #e0cfc7;
+      border-radius: 999px;
+      padding: 1px 8px;
+      font-size: 9px;
+      font-weight: 700;
+      color: var(--text-sub);
+    }
+
+    .account-arrow {
+      font-size: 16px;
+      color: var(--pink-mid);
+      flex-shrink: 0;
+    }
+
+    /* ── デザイン制作実績 ── */
+    #design { background: var(--beige); }
+
+    .design-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .design-card {
+      display: block;
+      text-decoration: none;
+      background: var(--white);
+      border: 1.5px solid #ecddd5;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-soft);
+      transition: border-color 0.15s, transform 0.15s;
+    }
+    .design-card:active { transform: scale(0.99); border-color: var(--pink-main); }
+
+    .design-frame {
+      position: relative;
+      height: 300px;
+      overflow: hidden;
+      background: var(--beige);
+    }
+    .design-frame img { width: 100%; display: block; }
+
+    .design-fade {
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      height: 96px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, var(--white) 100%);
+    }
+
+    .design-zoom {
+      position: absolute;
+      bottom: 10px; left: 50%;
+      transform: translateX(-50%);
+      background: var(--pink-main);
+      color: var(--white);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 6px 16px;
+      border-radius: 999px;
+      box-shadow: var(--shadow-soft);
+      white-space: nowrap;
+    }
+
+    .design-body { padding: 14px 16px; }
+
+    .design-genre {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--pink-main);
+      letter-spacing: 0.03em;
+      margin-bottom: 3px;
+    }
+    .design-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--brown-text);
+      line-height: 1.4;
+      margin-bottom: 4px;
+    }
+    .design-desc {
+      font-size: 11px;
+      color: var(--text-sub);
+      line-height: 1.7;
+    }
+    .design-tags {
+      margin-top: 8px;
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    /* ── お客様の声 ── */
+    #testimonials { background: var(--beige-mid); }
+
+    .coconala-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #fff0e8;
+      color: #b05a1a;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 5px 14px;
+      border-radius: 999px;
+      margin-bottom: 20px;
+    }
+
+    .review-card {
+      background: var(--white);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      margin-bottom: 14px;
+      border: 1.5px solid #ecddd5;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .review-card:last-child { margin-bottom: 0; }
+
+    .review-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .review-stars {
+      color: #f5a623;
+      font-size: 14px;
+    }
+
+    .review-service-tag {
+      font-size: 10px;
+      color: var(--text-sub);
+      background: var(--beige);
+      padding: 3px 9px;
+      border-radius: 999px;
+    }
+
+    .review-text {
+      font-size: 13px;
+      color: var(--text-main);
+      line-height: 1.9;
+      margin-bottom: 14px;
+      padding-left: 12px;
+      border-left: 2px solid var(--pink-mid);
+    }
+
+    .review-author {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .review-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--pink-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      flex-shrink: 0;
+      border: 1.5px solid var(--pink-mid);
+    }
+
+    .review-name {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--brown-text);
+    }
+
+    .review-date {
+      font-size: 10px;
+      color: var(--text-sub);
+    }
+
+    /* ── お問い合わせ ── */
+    #contact { background: var(--white); }
+
+    .contact-note {
+      background: var(--pink-light);
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+      font-size: 13px;
+      color: var(--text-sub);
+      line-height: 1.75;
+      margin-bottom: 22px;
+      border-left: 3px solid var(--pink-main);
+    }
+
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--brown-text);
+      margin-bottom: 6px;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1.5px solid #e0cfc7;
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+      font-size: 14px;
+      color: var(--text-main);
+      background: var(--beige);
+      outline: none;
+      transition: border-color 0.15s;
+      -webkit-appearance: none;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      border-color: var(--pink-main);
+      background: var(--white);
+    }
+
+    .form-group textarea { height: 120px; resize: vertical; }
+
+    .required { color: var(--pink-main); margin-left: 3px; }
+
+    .submit-btn {
+      width: 100%;
+      background: var(--pink-main);
+      color: var(--white);
+      border: none;
+      font-family: inherit;
+      font-size: 16px;
+      font-weight: 700;
+      padding: 17px;
+      border-radius: 999px;
+      cursor: pointer;
+      box-shadow: 0 5px 18px rgba(201,84,122,0.32);
+      transition: transform 0.15s;
+      margin-top: 4px;
+      letter-spacing: 0.02em;
+    }
+
+    .submit-btn:active { transform: scale(0.98); }
+
+    /* ── ゾーン区切り ── */
+    .zone-divider {
+      background: var(--beige-mid);
+      padding: 0 20px;
+    }
+
+    .zone-divider-inner {
+      border-top: 2px dashed #d4b8a8;
+      padding: 24px 0 0;
+      text-align: center;
+    }
+
+    .zone-divider-label {
+      display: inline-block;
+      background: var(--white);
+      color: var(--text-sub);
+      font-size: 11px;
+      font-weight: 500;
+      padding: 5px 16px;
+      border-radius: 999px;
+      border: 1px solid #d4b8a8;
+      position: relative;
+      top: -14px;
+    }
+
+    /* ── コミュニティ ── */
+    #community {
+      background: var(--beige-mid);
+      padding-top: 12px;
+    }
+
+    .community-heading {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--brown-text);
+      margin-bottom: 8px;
+      line-height: 1.65;
+    }
+
+    .community-sub {
+      font-size: 13px;
+      color: var(--text-sub);
+      margin-bottom: 26px;
+      line-height: 1.85;
+    }
+
+    .line-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: #06c755;
+      color: var(--white);
+      font-size: 15px;
+      font-weight: 700;
+      padding: 16px 24px;
+      border-radius: 999px;
+      text-decoration: none;
+      margin-bottom: 30px;
+      box-shadow: 0 5px 16px rgba(6,199,85,0.3);
+      transition: transform 0.15s;
+    }
+
+    .line-btn:active { transform: scale(0.97); }
+
+    .line-icon { width: 22px; height: 22px; }
+
+    .sns-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-sub);
+      margin-bottom: 12px;
+      letter-spacing: 0.05em;
+    }
+
+    .sns-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .sns-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--white);
+      border: 1.5px solid #ecddd5;
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      text-decoration: none;
+      color: var(--brown-text);
+      font-size: 13px;
+      font-weight: 500;
+      box-shadow: var(--shadow-soft);
+      transition: border-color 0.15s;
+    }
+
+    .sns-link:active { border-color: var(--pink-main); }
+
+    .sns-icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      flex-shrink: 0;
+    }
+
+    /* ── フッター ── */
+    footer {
+      background: var(--brown-text);
+      color: rgba(255,255,255,0.55);
+      text-align: center;
+      padding: 32px 20px;
+      font-size: 12px;
+    }
+
+    .footer-brand {
+      color: var(--white);
+      font-weight: 700;
+      font-size: 15px;
+      letter-spacing: 0.08em;
+      margin-bottom: 4px;
+    }
+
+    .footer-email {
+      color: rgba(255,255,255,0.7);
+      font-size: 12px;
+      margin-bottom: 14px;
+    }
+
+    footer a {
+      color: rgba(255,255,255,0.55);
+      text-decoration: none;
+      margin: 0 8px;
+    }
+
+    /* ── フローティングCTA ── */
+    .float-cta {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--pink-main);
+      color: var(--white);
+      font-size: 14px;
+      font-weight: 700;
+      padding: 13px 28px;
+      border-radius: 999px;
+      text-decoration: none;
+      box-shadow: 0 6px 24px rgba(201,84,122,0.45);
+      white-space: nowrap;
+      z-index: 100;
+      transition: opacity 0.3s, transform 0.2s;
+      letter-spacing: 0.02em;
+    }
+
+    .float-cta.hidden {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(-50%) translateY(12px);
+    }
+
+    .float-cta:active { transform: translateX(-50%) scale(0.97); }
+  </style>
+</head>
+<body>
+
+<!-- ── 1. トップ ── -->
+<section id="hero">
+  <div class="hero-logo">✦ Risa Link.</div>
+  <div class="hero-avatar">
+    <!-- portfolioフォルダに profile.png を置いてください -->
+    <img src="profile.png" alt="Risa Link. プロフィールイラスト">
+  </div>
+  <div class="hero-badge">お仕事のご依頼、受付中です</div>
+  <h1 class="hero-name">Risa Link.</h1>
+  <p class="hero-name-sub">AI × マーケティング ｜ コンテンツ制作 ｜ Web制作</p>
+  <p class="hero-tagline">
+    最新のAIを使いこなす、マーケティング志向のクリエイター。<br>
+    <strong>「作る」だけで終わらせず、「成果が出る」コンテンツへ。</strong><br>
+    AIの力で、あなたのビジネスをスピードと精度で支えます。
+  </p>
+  <div class="hero-stats">
+    <div class="stat-item">
+      <div class="stat-num">104<span style="font-size:14px;">件</span></div>
+      <div class="stat-label">ご依頼実績</div>
+    </div>
+    <div class="stat-div"></div>
+    <div class="stat-item">
+      <div class="stat-num">4.8</div>
+      <div class="stat-label">総合評価</div>
+    </div>
+    <div class="stat-div"></div>
+    <div class="stat-item">
+      <div class="stat-num">5<span style="font-size:14px;">年</span></div>
+      <div class="stat-label">デザイン歴</div>
+    </div>
+  </div>
+  <a href="#contact" class="hero-cta">お仕事のご依頼はこちら</a>
+  <p class="hero-sub-text">※ まずはお気軽にご相談ください（無料）</p>
+</section>
+
+<!-- ── 2. プロフィール ── -->
+<section id="profile">
+  <div class="section-label">PROFILE</div>
+  <h2 class="section-title">こんな人です</h2>
+  <div class="divider"></div>
+  <div class="profile-body">
+    <p>はじめまして、Risa（りん）です。<strong>「AIを使いこなして、成果につながるコンテンツをつくる」</strong>——それが私の軸です。</p>
+    <p>SNS広報・Webデザイン・マーケティングのキャリアをベースに、いまは最新のAI技術を学び、実務にどんどん取り入れています。AIを使えば、これまで時間のかかっていた制作・分析・改善を、はやく・高い精度で回せるようになりました。</p>
+    <p>目指しているのは、<strong>マーケティングの視点で成果を設計できる「マーケティングエンジニア」兼コンテンツクリエイター</strong>。デザイン・文章・動画・データを横断して、あなたのビジネスを「作って終わり」にしない形で支えます。</p>
+  </div>
+
+  <div class="career-box" style="border-left-color:#7f77dd; background:#f5f3fe;">
+    <div class="career-box-title" style="color:#534ab7;">✨ NOW — いま取り組んでいること</div>
+    <div class="career-item" style="border-color:#e3e0f7;">
+      <span class="career-icon">🤖</span>
+      <span>最新の生成AI（文章・画像・動画・分析）を学習し、実案件に活用中</span>
+    </div>
+    <div class="career-item" style="border-color:#e3e0f7;">
+      <span class="career-icon">🎯</span>
+      <span>「AI × マーケティング」で成果を出すコンテンツ制作の仕組みづくり</span>
+    </div>
+    <div class="career-item" style="border-color:#e3e0f7;">
+      <span class="career-icon">🚀</span>
+      <span>将来像：マーケティングエンジニア／Webクリエイターとして独立支援</span>
+    </div>
+  </div>
+
+  <div class="career-box">
+    <div class="career-box-title">CAREER — これまでの土台</div>
+    <div class="career-item">
+      <span class="career-icon">🏛️</span>
+      <span>国立施設 SNS広報総括（YouTube・Instagram・Facebook）<br><small>2021年4月〜2022年3月</small></span>
+    </div>
+    <div class="career-item">
+      <span class="career-icon">💼</span>
+      <span>株式会社LIFIX スクール事業・顧客管理・サポート<br><small>2023年5月〜2025年12月</small></span>
+    </div>
+    <div class="career-item">
+      <span class="career-icon">🎨</span>
+      <span>Webデザイナー・動画クリエイター歴5年</span>
+    </div>
+    <div class="career-item">
+      <span class="career-icon">📋</span>
+      <span>キャリアコンサルタント資格取得（2023年）</span>
+    </div>
+    <div class="career-item">
+      <span class="career-icon">🏆</span>
+      <span>ココナラ プラチナランク 認定（2023年8月）</span>
+    </div>
+  </div>
+
+  <div class="profile-tags">
+    <span class="profile-tag">🤖 生成AI活用</span>
+    <span class="profile-tag">📊 マーケ思考</span>
+    <span class="profile-tag">⚡ AIで時短・高精度</span>
+    <span class="profile-tag">Canva / Photoshop</span>
+    <span class="profile-tag">Meta広告運用</span>
+    <span class="profile-tag">🖥️ フルオンライン対応</span>
+  </div>
+</section>
+
+<!-- ── 3. サービス・料金 ── -->
+<section id="services">
+  <div class="section-label">SERVICES</div>
+  <h2 class="section-title">サービスと料金</h2>
+  <div class="divider"></div>
+
+  <div class="service-card" style="border:2px solid var(--pink-mid);">
+    <div class="service-header">
+      <div class="service-emoji">💻</div>
+      <div class="service-name">AIで作るWebサイト・アプリ制作<span class="service-badge">バイブコーディング</span></div>
+    </div>
+    <p class="service-desc">最新のAIを活用（バイブコーディング）して、Webサイトや学習アプリなど「実際に動くもの」をゼロから制作します。コードの知識がなくても、やりたいことを形にできます。下は実際に制作したサイトの一例です。</p>
+
+    <a class="service-demo-thumb" href="https://rinrin127.github.io/ai_pasuport/" target="_blank" rel="noopener">
+      <div class="service-demo-preview">
+        <span class="service-demo-tag">制作実績</span>
+        <div class="service-demo-title">生成AIパスポート 模擬試験トレーナー</div>
+        <div class="service-demo-url">rinrin127.github.io/ai_pasuport</div>
+      </div>
+    </a>
+
+    <a class="service-demo-link" href="https://rinrin127.github.io/ai_pasuport/" target="_blank" rel="noopener">
+      実際のサイトを見る <span aria-hidden="true">↗</span>
+    </a>
+
+    <div class="service-footer" style="margin-top:16px;">
+      <div class="service-price">お見積り <span>/ 内容に応じて</span></div>
+      <div class="service-sales">LP・アプリ対応</div>
+    </div>
+  </div>
+
+  <div class="service-card">
+    <div class="service-header">
+      <div class="service-emoji">🤖</div>
+      <div class="service-name">AI活用 コンテンツ制作・運用代行<span class="service-badge">新</span></div>
+    </div>
+    <p class="service-desc">生成AIを使って、SNS投稿・記事・画像・ショート動画をスピーディに制作。マーケティング視点で「反応が取れる」コンテンツを設計し、発信までまるごとお任せいただけます。</p>
+    <div class="service-footer">
+      <div class="service-price">¥10,000〜 <span>/ 月</span></div>
+      <div class="service-sales">お見積り対応</div>
+    </div>
+    <ul class="service-items">
+      <li>AIで制作スピード大幅アップ</li>
+      <li>マーケ視点で構成・改善</li>
+    </ul>
+  </div>
+
+  <div class="service-card">
+    <div class="service-header">
+      <div class="service-emoji">🎨</div>
+      <div class="service-name">AI × デザイン バナー・SNS画像制作</div>
+    </div>
+    <p class="service-desc">AIとデザインスキルを組み合わせ、「目を引く×伝わる」バナーを高速で制作。Canva・Photoshop対応。マーケターの視点で“クリックされる”デザインに仕上げます。</p>
+    <div class="service-footer">
+      <div class="service-price">¥2,000〜 <span>/ 1枚</span></div>
+      <div class="service-sales">実績 8件</div>
+    </div>
+    <ul class="service-items">
+      <li>修正対応あり</li>
+      <li>PNG・JPG納品</li>
+    </ul>
+  </div>
+
+  <div class="service-card">
+    <div class="service-header">
+      <div class="service-emoji">✏️</div>
+      <div class="service-name">AI × Canva 時短コンテンツ講座<span class="service-badge">人気 No.1</span></div>
+    </div>
+    <p class="service-desc">CanvaとAIを掛け合わせて、デザイン制作を一気に時短する方法をレクチャー。初心者さんでも、AIを“相棒”にして自分で発信できるようになります。</p>
+    <div class="service-footer">
+      <div class="service-price">¥5,000〜 <span>/ 1回</span></div>
+      <div class="service-sales">実績 24件</div>
+    </div>
+    <ul class="service-items">
+      <li>オンラインZoom対応</li>
+      <li>録画データプレゼント</li>
+    </ul>
+  </div>
+
+  <div class="service-card">
+    <div class="service-header">
+      <div class="service-emoji">📈</div>
+      <div class="service-name">AI活用 SNSマーケティング戦略コンサル</div>
+    </div>
+    <p class="service-desc">AIツールを使った分析・改善を取り入れながら、SNS戦略・集客・ブランディングを設計します。「感覚」ではなく「データ」で成果を伸ばす運用へ伴走します。</p>
+    <div class="service-footer">
+      <div class="service-price">¥10,000〜 <span>/ 1回</span></div>
+      <div class="service-sales">実績 2件</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 4. 運用アカウント（ポートフォリオ） ── -->
+<section id="portfolio">
+  <div class="section-label">WORKS</div>
+  <h2 class="section-title">運用中のアカウント</h2>
+  <div class="divider"></div>
+  <p class="portfolio-intro">
+    ジャンルの異なる複数のSNSアカウントを企画・運用しています。<br>
+    「どんな発信が伸びるのか」を日々の運用で検証しているからこそ、あなたのアカウントにも再現性のあるご提案ができます。
+  </p>
+
+  <div class="account-list">
+    <a class="account-card" href="https://www.tiktok.com/@miimegu2211?_r=1&_t=ZS-97GahAsre4u" target="_blank" rel="noopener">
+      <div class="account-thumb pt-8">🛍️</div>
+      <div class="account-info">
+        <div class="account-genre">TikTokショップ・アフィリエイト</div>
+        <div class="account-name">みぃめぐ｜運用アカウントの中で売上No.1</div>
+        <div class="account-meta"><span class="plat-tag">TikTok</span>@miimegu2211</div>
+      </div>
+      <span class="account-arrow">↗</span>
+    </a>
+
+    <a class="account-card" href="https://www.instagram.com/risalink0127" target="_blank" rel="noopener">
+      <div class="account-thumb pt-1">✦</div>
+      <div class="account-info">
+        <div class="account-genre">お仕事・SNS発信</div>
+        <div class="account-name">Risa Link.（本アカウント）</div>
+        <div class="account-meta"><span class="plat-tag">Instagram</span><span class="plat-tag">TikTok</span>@risalink0127</div>
+      </div>
+      <span class="account-arrow">↗</span>
+    </a>
+
+    <a class="account-card" href="https://www.threads.com/@nouiku_rin" target="_blank" rel="noopener">
+      <div class="account-thumb pt-2">🧠</div>
+      <div class="account-info">
+        <div class="account-genre">子どもの発達・脳育</div>
+        <div class="account-name">脳育りん｜ことばと発達のお話</div>
+        <div class="account-meta"><span class="plat-tag">Threads</span>@nouiku_rin</div>
+      </div>
+      <span class="account-arrow">↗</span>
+    </a>
+
+    <a class="account-card" href="https://www.instagram.com/mama_biyou127" target="_blank" rel="noopener">
+      <div class="account-thumb pt-3">💄</div>
+      <div class="account-info">
+        <div class="account-genre">美容・ライフスタイル</div>
+        <div class="account-name">シンママ美容日記</div>
+        <div class="account-meta"><span class="plat-tag">Instagram</span>@mama_biyou127</div>
+      </div>
+      <span class="account-arrow">↗</span>
+    </a>
+
+    <a class="account-card" href="https://www.instagram.com/rin_lovemyself" target="_blank" rel="noopener">
+      <div class="account-thumb pt-4">💗</div>
+      <div class="account-info">
+        <div class="account-genre">恋愛・婚活 × 算命学</div>
+        <div class="account-name">りん｜愛され女性のつくり方</div>
+        <div class="account-meta"><span class="plat-tag">Instagram</span>@rin_lovemyself</div>
+      </div>
+      <span class="account-arrow">↗</span>
+    </a>
+
+    <a class="account-card" href="https://www.instagram.com/miimegu2211" target="_blank" rel="noopener">
+      <div class="account-thumb pt-5">🗺️</div>
+      <div class="account-info">
+        <div class="account-genre">地域・子育て情報</div>
+        <div class="account-name">みぃめぐ｜富山の子連れマップ</div>
+        <div class="account-meta"><span class="plat-tag">Instagram</span><span class="plat-tag">TikTok</span>@miimegu2211</div>
+      </div>
+      <span class="account-arrow">↗</span>
+    </a>
+
+    <a class="account-card" href="https://www.tiktok.com/@taka.20.idea" target="_blank" rel="noopener">
+      <div class="account-thumb pt-6">💡</div>
+      <div class="account-info">
+        <div class="account-genre">自己啓発</div>
+        <div class="account-name">taka｜自己啓発・マインド</div>
+        <div class="account-meta"><span class="plat-tag">TikTok</span>@taka.20.idea</div>
+      </div>
+      <span class="account-arrow">↗</span>
+    </a>
+
+    <a class="account-card" href="https://www.tiktok.com/@taka.love.counseling" target="_blank" rel="noopener">
+      <div class="account-thumb pt-7">💬</div>
+      <div class="account-info">
+        <div class="account-genre">恋愛の悩み相談</div>
+        <div class="account-name">taka｜恋愛のお悩み相談</div>
+        <div class="account-meta"><span class="plat-tag">TikTok</span>@taka.love.counseling</div>
+      </div>
+      <span class="account-arrow">↗</span>
+    </a>
+  </div>
+  <p style="font-size:11px; color:var(--text-sub); text-align:center; margin-top:16px;">※ アカウント名・ジャンル文言はご自由に調整ください</p>
+</section>
+
+<!-- ── デザイン制作実績 ── -->
+<section id="design">
+  <div class="section-label">DESIGN</div>
+  <h2 class="section-title">デザイン制作実績</h2>
+  <div class="divider"></div>
+  <p class="portfolio-intro">
+    Photoshopを使ったLP・バナーなどのデザイン制作も承っています。<br>
+    実際に制作したサンプルをご紹介します。
+  </p>
+
+  <div class="design-list">
+    <a class="design-card" href="cocopita-lp.jpg" target="_blank" rel="noopener">
+      <div class="design-frame">
+        <img src="cocopita-lp.jpg" alt="COCOPiTA 会員制優待サービス LPデザイン" loading="lazy">
+        <div class="design-fade"></div>
+        <span class="design-zoom">🔍 タップで全体を見る</span>
+      </div>
+      <div class="design-body">
+        <div class="design-genre">ランディングページ制作</div>
+        <div class="design-name">COCOPiTA｜会員制優待サービス LP</div>
+        <div class="design-desc">家族で使える会員制優待サービスのランディングページをデザイン。サービスの魅力が伝わる構成と、やさしい配色で制作しました。</div>
+        <div class="design-tags">
+          <span class="plat-tag">Photoshop</span>
+          <span class="plat-tag">LPデザイン</span>
+        </div>
+      </div>
+    </a>
+  </div>
+  <p style="font-size:11px; color:var(--text-sub); text-align:center; margin-top:16px;">※ 説明文・タグはご自由に調整ください</p>
+</section>
+
+<!-- ── 5. お客様の声 ── -->
+<section id="testimonials">
+  <div class="section-label">REVIEWS</div>
+  <h2 class="section-title">お客様の声</h2>
+  <div class="divider"></div>
+  <div class="coconala-badge">
+    🍊 cocona la 総合評価 ★4.8 ／ 104件の実績
+  </div>
+
+  <div class="review-card">
+    <div class="review-top">
+      <div class="review-stars">★★★★★</div>
+      <div class="review-service-tag">インフルエンサーPR</div>
+    </div>
+    <p class="review-text">こちらの希望に沿い、きちんと構成を立案して、いくつもご提案いただきました。ぜひ皆さんにお勧めしたいです。</p>
+    <div class="review-author">
+      <div class="review-avatar">😊</div>
+      <div>
+        <div class="review-name">小池聡 様</div>
+        <div class="review-date">インフルエンサーマーケティング・PR</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="review-card">
+    <div class="review-top">
+      <div class="review-stars">★★★★★</div>
+      <div class="review-service-tag">バナー・ヘッダー制作</div>
+    </div>
+    <p class="review-text">毎回お世話になっています。素敵なサムネイルを作っていただき、サイズ調整も親切に行っていただきました。ありがとうございました。またよろしくお願いします。</p>
+    <div class="review-author">
+      <div class="review-avatar">🎨</div>
+      <div>
+        <div class="review-name">女性 様</div>
+        <div class="review-date">バナー・ヘッダー制作のご依頼</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="review-card">
+    <div class="review-top">
+      <div class="review-stars">★★★★★</div>
+      <div class="review-service-tag">LP・Web制作</div>
+    </div>
+    <p class="review-text">丁寧な対応ありがとうございました！またお願いいたします。</p>
+    <div class="review-author">
+      <div class="review-avatar">☁️</div>
+      <div>
+        <div class="review-name">ns77kk 様</div>
+        <div class="review-date">LP（ランディングページ）制作のご依頼</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 6. お問い合わせ ── -->
+<section id="contact">
+  <div class="section-label">CONTACT</div>
+  <h2 class="section-title">お仕事のご依頼</h2>
+  <div class="divider"></div>
+  <div class="contact-note">
+    📩 お気軽にご相談ください。<br>
+    内容を確認して、<strong>24時間以内にご返信</strong>いたします。<br>
+    メールでのご連絡は <a href="mailto:risalink127@gmail.com" style="color:var(--pink-main); font-weight:700;">risalink127@gmail.com</a> まで。
+  </div>
+  <form class="contact-form" id="contactForm">
+    <div class="form-group">
+      <label>お名前<span class="required">*</span></label>
+      <input type="text" id="f-name" placeholder="山田 花子" required>
+    </div>
+    <div class="form-group">
+      <label>メールアドレス<span class="required">*</span></label>
+      <input type="email" id="f-email" placeholder="example@email.com" required>
+    </div>
+    <div class="form-group">
+      <label>ご依頼・ご相談内容<span class="required">*</span></label>
+      <textarea id="f-message" placeholder="ご希望のサービス、ご要望、ご予算感などをお気軽にお書きください。" required></textarea>
+    </div>
+    <button type="submit" class="submit-btn">送信する →</button>
+  </form>
+
+  <div id="contactThanks" style="display:none; text-align:center; background:var(--pink-light); border-radius:var(--radius-md); padding:28px 20px;">
+    <div style="font-size:40px; margin-bottom:8px;">💌</div>
+    <p style="font-weight:700; color:var(--pink-dark); font-size:16px; margin-bottom:6px;">メール作成画面を開きました</p>
+    <p style="font-size:13px; color:var(--text-sub); line-height:1.7;">入力内容が入ったメールが開きます。<br>そのまま<strong>「送信」</strong>すれば完了です📨<br>24時間以内にご返信いたします。</p>
+  </div>
+</section>
+
+<!-- ── ゾーン区切り ── -->
+<div class="zone-divider">
+  <div class="zone-divider-inner">
+    <span class="zone-divider-label">ここからは発信・コミュニティ情報です</span>
+  </div>
+</div>
+
+<!-- ── 7. コミュニティ ── -->
+<section id="community">
+  <h2 class="community-heading">これから収入の柱を作りたい<br>シンママ・ワンオペママの方へ</h2>
+  <p class="community-sub">
+    「子育てしながら在宅で稼ぎたい」「スキマ時間を活かして収入を作りたい」——<br>
+    私自身もそんな想いからスタートしました。<br>
+    公式LINEでは、在宅ワークのヒントや発信のコツを配信しています。ぜひ繋がりましょう！
+  </p>
+
+  <a href="https://lin.ee/ziWsEWc" class="line-btn" target="_blank" rel="noopener">
+    <svg class="line-icon" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+      <path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63h2.386c.349 0 .63.285.63.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63.349 0 .631.285.631.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.281.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/>
+    </svg>
+    公式LINEに登録する（無料）
+  </a>
+
+  <div class="sns-title">SNS・各種リンク</div>
+  <div class="sns-grid">
+    <a href="https://www.instagram.com/risalink0127" class="sns-link" target="_blank" rel="noopener">
+      <svg class="sns-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="24" height="24" rx="6" fill="url(#ig-grad)"/>
+        <defs><linearGradient id="ig-grad" x1="0" y1="24" x2="24" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#f09433"/><stop offset="25%" stop-color="#e6683c"/><stop offset="50%" stop-color="#dc2743"/><stop offset="75%" stop-color="#cc2366"/><stop offset="100%" stop-color="#bc1888"/></linearGradient></defs>
+        <circle cx="12" cy="12" r="4.5" stroke="white" stroke-width="1.5"/>
+        <circle cx="17" cy="7" r="1" fill="white"/>
+        <rect x="4" y="4" width="16" height="16" rx="5" stroke="white" stroke-width="1.5" fill="none"/>
+      </svg>
+      Instagram
+    </a>
+    <a href="https://www.tiktok.com/@risalink" class="sns-link" target="_blank" rel="noopener">
+      <svg class="sns-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="24" height="24" rx="6" fill="#000"/>
+        <path d="M16.5 6.2c-.7-.5-1.1-1.2-1.3-2.1h-2v9.6c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2c.2 0 .4 0 .6.1V7.7c-.2 0-.4 0-.6 0-2.5 0-4.5 2-4.5 4.5s2 4.5 4.5 4.5 4.5-2 4.5-4.5V9.4c.8.6 1.8.9 2.8.9V7.8c-.6 0-1.1-.2-1.5-.5z" fill="white"/>
+      </svg>
+      TikTok
+    </a>
+    <a href="https://www.threads.com/@nouiku_rin" class="sns-link" target="_blank" rel="noopener">
+      <svg class="sns-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="24" height="24" rx="6" fill="#000"/>
+        <text x="12" y="17" text-anchor="middle" fill="white" font-size="14" font-weight="bold" font-family="sans-serif">@</text>
+      </svg>
+      Threads
+    </a>
+    <a href="https://coconala.com/users/3294390" class="sns-link" target="_blank" rel="noopener">
+      <svg class="sns-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="24" height="24" rx="6" fill="#ef8200"/>
+        <text x="12" y="16" text-anchor="middle" fill="white" font-size="9" font-weight="bold" font-family="sans-serif">cocona</text>
+      </svg>
+      ココナラ
+    </a>
+  </div>
+</section>
+
+<!-- ── フッター ── -->
+<footer>
+  <div class="footer-brand">✦ Risa Link.</div>
+  <div class="footer-email">risalink127@gmail.com</div>
+  <p>© 2025 Risa Link. All rights reserved.</p>
+  <div style="margin-top:12px;">
+    <a href="#">プライバシーポリシー</a>
+    <a href="#contact">お問い合わせ</a>
+  </div>
+</footer>
+
+<!-- ── フローティングCTA ── -->
+<a href="#contact" class="float-cta hidden" id="floatCta">お仕事のご依頼はこちら</a>
+
+<script>
+  const hero = document.getElementById('hero');
+  const contact = document.getElementById('contact');
+  const floatCta = document.getElementById('floatCta');
+
+  const heroObs = new IntersectionObserver(([e]) => {
+    floatCta.classList.toggle('hidden', e.isIntersecting);
+  }, { threshold: 0.1 });
+
+  const contactObs = new IntersectionObserver(([e]) => {
+    if (e.isIntersecting) floatCta.classList.add('hidden');
+  }, { threshold: 0.2 });
+
+  heroObs.observe(hero);
+  contactObs.observe(contact);
+
+  /* ===================================================================
+     お問い合わせフォーム → メール送信（mailto方式）
+     送信ボタンで risalink127@gmail.com 宛のメール作成画面が開きます。
+  ==================================================================== */
+  const CONTACT_EMAIL = "risalink127@gmail.com";
+
+  const cForm = document.getElementById('contactForm');
+  const cThanks = document.getElementById('contactThanks');
+
+  cForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const name = document.getElementById('f-name').value.trim();
+    const email = document.getElementById('f-email').value.trim();
+    const message = document.getElementById('f-message').value.trim();
+
+    const subject = "【お仕事のご依頼】" + (name || "お問い合わせ") + " 様";
+    const body =
+      "お名前：" + name + "\n" +
+      "メールアドレス：" + email + "\n\n" +
+      "▼ ご依頼・ご相談内容\n" + message + "\n\n" +
+      "──────────\n" +
+      "※ Risa Link. ポートフォリオサイトのお問い合わせフォームより";
+
+    const mailto = "mailto:" + CONTACT_EMAIL +
+      "?subject=" + encodeURIComponent(subject) +
+      "&body=" + encodeURIComponent(body);
+
+    window.location.href = mailto;
+
+    cForm.style.display = 'none';
+    cThanks.style.display = 'block';
+  });
+</script>
+
+</body>
+</html>

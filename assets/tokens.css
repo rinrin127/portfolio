@@ -1,0 +1,57 @@
+/* ============================================================
+   デザイントークン
+   自動生成: npm run figma:tokens（2026-08-26）
+   Figmaファイル: ircGYX97nW5DIC0qdV0AIE
+   ------------------------------------------------------------
+   手で編集してもかまいませんが、次に figma:tokens を実行すると
+   --- Color --- のブロックは上書きされます。
+   ============================================================ */
+
+:root {
+  /* --- Color --- */
+  --ink:         #4A382F;
+  --ink-soft:    #7A6558;
+  --ink-faint:   #A8968A;
+  --cream:       #FBF4EC;
+  --cream-deep:  #F5E9DD;
+  --white:       #FFFFFF;
+  --accent:      #B4505D;
+  --accent-soft: #D0808A;
+  --accent-pale: #F6E4E6;
+  --accent-on-dark: #E8A9B0;
+  --line:        #EADCD0;
+  --dark:        #3B2C26;
+
+  /* --- Typography --- */
+  /* 見出し・キャッチ＝明朝／本文＝丸みのないゴシック／英字＝セリフ */
+  --font-mincho: "Zen Old Mincho", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  --font-sans: "Noto Sans JP", -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", sans-serif;
+  --font-en:     "Crimson Pro", "Zen Old Mincho", Georgia, serif;
+
+  --fs-catch:  clamp(1.75rem, 4.6vw, 3.125rem);
+  --fs-h2:     clamp(1.75rem, 4vw, 3.5rem);
+  --fs-h3:     clamp(1.25rem, 2.2vw, 1.75rem);
+  --fs-body:   1rem;
+  --fs-small:  0.875rem;
+  --lh-tight:  1.45;
+  --lh-body:   2.05;
+  --ls-wide:   .08em;
+
+  /* --- Layout --- */
+  --maxw:      1120px;
+  --maxw-narrow: 720px;
+  --gap:       24px;
+  --section-y: clamp(80px, 11vw, 160px);
+
+  /* --- Radius / Shadow --- */
+  --r-sm: 4px;
+  --r-md: 10px;
+  --r-lg: 20px;
+  --r-pill: 999px;
+  --shadow-sm: 0 1px 2px rgba(51,38,31,.05), 0 6px 18px rgba(51,38,31,.05);
+  --shadow-md: 0 2px 6px rgba(51,38,31,.07), 0 18px 44px rgba(51,38,31,.09);
+
+  /* --- Motion --- */
+  --ease-out: cubic-bezier(.33, 1, .68, 1);
+  --ease-clip: cubic-bezier(.4, 0, .2, 1);
+}

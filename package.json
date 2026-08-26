@@ -1,0 +1,15 @@
+{
+  "name": "risalink-site",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Risa Link. 公式サイト（content/*.json からHTMLを生成する静的サイト）",
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "figma:works": "node scripts/figma-works.mjs",
+    "figma:tokens": "node scripts/figma-tokens.mjs",
+    "figma:inspect": "node scripts/figma-inspect.mjs",
+    "figma:all": "npm run figma:tokens && npm run figma:works && npm run build",
+    "serve": "node --run build && npx --yes serve -l 4321 ."
+  }
+}

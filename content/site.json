@@ -1,0 +1,107 @@
+{
+  "_comment": "サイト全体の基本情報。ファーストビューの画像もここで指定します。",
+  "name": "トナリエ",
+  "nameEn": "TONARIE",
+  "wordmark": "en-first",
+  "_wordmark": "ロゴの並び。'en-first' は TONARIE を大きく・トナリエを小さく。'ja-first' で逆になります。",
+  "tagline": "ネットの向こうを、となりに。",
+  "description": "ネットの向こうを、となりに。TikTok・Instagram・ThreadsのSNS集客と、AIを使った動画・コンテンツ制作。むずかしいことを、わかるカタチにしてお渡しします。Web制作・SNS運用代行・AI導入のご依頼を承ります。富山県射水市発、トナリエ。",
+  "url": "https://rinrin127.github.io/portfolio/",
+  "ogImage": "assets/images/profile.png",
+  "lang": "ja",
+  "updated": "2026-08-20",
+  "_ファーストビューについて": "slides に画像を3枚指定すると、6秒ごとにゆっくり切り替わります。ファイルが無い場合は、代わりに色のグラデーションが表示されます（サイトは崩れません）。撮影のしかたは README の「ファーストビューの写真」を見てください。",
+  "hero": {
+    "slides": [
+      {
+        "image": "assets/fv/fv-1.svg",
+        "alt": "富山の風景"
+      },
+      {
+        "image": "assets/fv/fv-2.svg",
+        "alt": "仕事の手元"
+      },
+      {
+        "image": "assets/fv/fv-3.svg",
+        "alt": "制作の風景"
+      }
+    ],
+    "scrollLabel": "scroll"
+  },
+  "concept": {
+    "catch": "AIを、わかるカタチで味方に。",
+    "text": [
+      "ネットの向こうにあるものは、いつも少し遠い。",
+      "AIも、SNSも、はじめて訪ねる土地の宿も。",
+      "むずかしいことを、むずかしいまま渡さない。",
+      "わかるカタチにして、となりに置いていく。"
+    ]
+  },
+  "achievements": {
+    "_comment": "名刺の裏に書いた実績3行。名刺と一字一句そろえてあります。片方を直したらもう片方も直すこと。",
+    "items": [
+      "TikTok Shop 月商 140万円 の販売実績",
+      "動画自動生成パイプラインを自社開発・運用",
+      "元・国立青少年教育施設 指導員"
+    ]
+  },
+  "stats": [
+    {
+      "value": "104",
+      "unit": "件",
+      "label": "ご依頼実績"
+    },
+    {
+      "value": "4.8",
+      "unit": "",
+      "label": "総合評価"
+    },
+    {
+      "value": "5",
+      "unit": "年",
+      "label": "制作歴"
+    },
+    {
+      "value": "8",
+      "unit": "",
+      "label": "運用アカウント"
+    }
+  ],
+  "contact": {
+    "_comment": "お問い合わせ。form.endpoint が空のあいだはフォームが出ず、メールだけになります（壊れたフォームを公開しないため）。",
+    "lead": "サービス内容・ご予算・納期など、決まっていない段階でも大丈夫です。まずはやりたいことをそのままお聞かせください。",
+    "responseTime": "原則2営業日以内にご返信します",
+    "form": {
+      "_取得方法": "https://formspree.io で無料登録 → New Form → 表示される https://formspree.io/f/xxxxxxxx の xxxxxxxx 部分を endpoint に貼る（無料枠は月50件）",
+      "endpoint": "",
+      "subjectPrefix": "【トナリエ】お問い合わせ",
+      "privacyNote": "いただいた内容は、ご相談への回答以外には使用しません。",
+      "fields": {
+        "topics": [
+          "Webサイト・アプリ制作",
+          "SNS運用・コンテンツ制作",
+          "AI導入・業務自動化",
+          "その他・まだ決まっていない"
+        ]
+      }
+    },
+    "email": {
+      "user": "info",
+      "domain": "risalink1.com",
+      "note": "フォームが使いにくい場合はこちらへ直接お送りください。"
+    },
+    "alt": {
+      "show": true,
+      "title": "ココナラをご利用の方へ",
+      "text": "ココナラに登録済みで、そちらでのやり取りをご希望の方は、下記のページからもご依頼いただけます。これまでにいただいた評価・レビューもご覧いただけます。",
+      "label": "ココナラのページを見る",
+      "href": "https://coconala.com/users/3294390"
+    }
+  },
+  "footer": {
+    "owner": "トナリエ（りん）",
+    "location": "富山県／全国フルオンライン対応",
+    "note": "掲載しているサービス内容・料金は予告なく変更する場合があります。"
+  },
+  "taglineAccent": "となりに。"
+}

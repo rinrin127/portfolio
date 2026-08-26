@@ -1,0 +1,15 @@
+{
+  "_comment": "運用中のSNSアカウント。public:false にすると、そのアカウントはサイトに表示されません（データは残ります）。",
+
+  "lead": "ジャンルの異なる複数のアカウントを企画・運用しています。「どんな発信が伸びるのか」を日々検証しているからこそ、再現性のあるご提案ができます。",
+
+  "items": [
+    { "public": true,  "icon": "✦",  "genre": "お仕事・SNS発信", "name": "トナリエ（本アカウント）", "handle": "@risalink0127", "href": "https://www.instagram.com/risalink0127", "platform": "Instagram / TikTok" },
+    { "public": true,  "icon": "🛍️", "genre": "TikTok Shop アフィリエイト", "name": "りすママ｜運用アカウント売上No.1", "handle": "@miimegu2211", "href": "https://www.tiktok.com/@miimegu2211", "platform": "TikTok" },
+    { "public": true,  "icon": "🧠", "genre": "子どもの発達・脳育", "name": "脳育りん｜ことばと発達のお話", "handle": "@nouiku_rin", "href": "https://www.threads.com/@nouiku_rin", "platform": "Threads" },
+    { "public": true,  "icon": "💄", "genre": "美容・ライフスタイル", "name": "シンママ美容日記", "handle": "@mama_biyou127", "href": "https://www.instagram.com/mama_biyou127", "platform": "Instagram / Threads" },
+    { "public": true,  "icon": "💗", "genre": "恋愛・婚活 × 算命学", "name": "りん｜愛され女性のつくり方", "handle": "@rin_lovemyself", "href": "https://www.instagram.com/rin_lovemyself", "platform": "Instagram" },
+    { "public": true,  "icon": "💡", "genre": "自己啓発", "name": "taka｜自己啓発・マインド", "handle": "@taka.20.idea", "href": "https://www.tiktok.com/@taka.20.idea", "platform": "TikTok" },
+    { "public": true,  "icon": "💬", "genre": "恋愛の悩み相談", "name": "taka｜恋愛のお悩み相談", "handle": "@taka.love.counseling", "href": "https://www.tiktok.com/@taka.love.counseling", "platform": "TikTok" }
+  ]
+}
