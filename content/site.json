@@ -7,7 +7,7 @@
   "tagline": "ネットの向こうを、となりに。",
   "description": "ネットの向こうを、となりに。TikTok・Instagram・ThreadsのSNS集客と、AIを使った動画・コンテンツ制作。むずかしいことを、わかるカタチにしてお渡しします。Web制作・SNS運用代行・AI導入のご依頼を承ります。富山県射水市発、トナリエ。",
   "url": "https://rinrin127.github.io/portfolio/",
-  "ogImage": "assets/images/profile.png",
+  "ogImage": "assets/images/profile-tonarie.jpg",
   "lang": "ja",
   "updated": "2026-08-20",
   "_ファーストビューについて": "slides に画像を3枚指定すると、6秒ごとにゆっくり切り替わります。ファイルが無い場合は、代わりに色のグラデーションが表示されます（サイトは崩れません）。撮影のしかたは README の「ファーストビューの写真」を見てください。",
@@ -100,7 +100,7 @@
     }
   },
   "footer": {
-    "owner": "トナリエ（りん）",
+    "owner": "トナリエ（中島 理佐）",
     "location": "富山県／全国フルオンライン対応",
     "note": "掲載しているサービス内容・料金は予告なく変更する場合があります。"
   },

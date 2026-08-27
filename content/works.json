@@ -1,13 +1,11 @@
 {
   "_comment": "制作実績ギャラリー。items は Figma連携（npm run figma:works）で自動更新されます。manual に書いたものは自動更新でも消えません。",
-
   "lead": "実際に制作したものの一部です。",
-
   "manual": [
     {
       "title": "生成AIパスポート 模擬試験トレーナー",
       "category": "Webアプリ",
-      "image": "",
+      "image": "assets/works/ai-passport-trainer.png",
       "href": "https://rinrin127.github.io/ai_pasuport/",
       "note": "資格試験の学習用Webアプリ。問題演習・採点・復習まで対応"
     },
@@ -19,8 +17,6 @@
       "note": "Photoshopで制作した商品LPデザイン"
     }
   ],
-
   "items": [],
-
   "figmaSyncedAt": null
 }
