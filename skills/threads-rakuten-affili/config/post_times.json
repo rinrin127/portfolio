@@ -1,0 +1,6 @@
+{
+  "phase": 1,
+  "max_posts_per_day": 3,
+  "slots": ["07:30", "12:15", "20:30"],
+  "note": "Phase1は2〜3本/日。インサイト蓄積後にweekly_reviewの提案で最適化"
+}

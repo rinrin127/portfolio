@@ -1,0 +1,49 @@
+{
+  "filters": {
+    "min_review_count": 100,
+    "min_review_average": 4.2,
+    "price_range": [
+      1500,
+      6000
+    ],
+    "review_count_cap": 2000,
+    "exclude_keywords": [
+      "医薬品",
+      "第1類",
+      "第2類",
+      "第3類",
+      "定期購入",
+      "処方"
+    ]
+  },
+  "genres": [
+    {
+      "genreId": 100939,
+      "label": "美容・コスメ・香水"
+    },
+    {
+      "genreId": 100938,
+      "label": "ダイエット・健康"
+    },
+    {
+      "genreId": 216131,
+      "label": "スキンケア"
+    }
+  ],
+  "comparison_mode": {
+    "note": "比較モード専用。genres/filtersではなくmy_products.mdのキーワードで検索する",
+    "hits_per_keyword": 5,
+    "candidates_per_product": 3,
+    "prefer_repeat_buy": true,
+    "repeat_buy_hints": [
+      "詰め替え",
+      "替えブラシ",
+      "フィルター",
+      "カートリッジ",
+      "インク",
+      "ストック",
+      "まとめ買い",
+      "定期"
+    ]
+  }
+}
