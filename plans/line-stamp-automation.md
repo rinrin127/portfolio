@@ -206,3 +206,18 @@ R2_ACCOUNT_ID= / R2_ACCESS_KEY= / R2_SECRET=   # 動画置き場
 - LINE Creators Market 利用規約: https://creator.line.me/ja/terms/
 - Meta Content Publishing（Reels）: https://developers.facebook.com/documentation/instagram-platform/content-publishing
 - Grok Imagine Video（料金）: https://openrouter.ai/x-ai/grok-imagine-video
+
+---
+
+## 追記（2026-09-08）：自分の猫の写真から作るルートに変更
+
+AI生成キャラではなく、**昔飼っていた猫ちゃんの実写真**を素材にする方針に決定。
+これによって前提が変わる部分：
+
+- **画像生成コストが0円になる**（素材が手元にある）。1セットあたりの費用は実質タダ
+- **権利が完全にクリア**。自分で撮った自分の猫の写真なので、審査で問題になる要素がない
+- 参考にした他人のスタンプ（mushucalar 等）のデザインは真似しない。構図の傾向だけ参考にする
+- 唯一のボトルネックが「背景の切り抜き品質」に移る。iPhoneの長押し切り抜きが一番きれいで速い
+
+Phase 1 のツールを `tools/line-stamp/` に実装済み（ダミー画像で24個ぶん動作確認、全て規格OK）。
+写真を `input/` に置けば申請ZIPまで一発で出る状態。

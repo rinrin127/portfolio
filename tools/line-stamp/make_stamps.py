@@ -1,0 +1,450 @@
+#!/usr/bin/env python3
+"""
+make_stamps.py — 切り抜き済みの写真から LINE スタンプ一式を組み立てる
+
+  python3 make_stamps.py --config config.json --out build
+
+やること:
+  1. 透過PNG（iPhoneの長押し切り抜き等）を読み込み、余白を自動トリム
+  2. ステッカー風の白フチ・リボン・キラキラ・ほっぺ等のデコを合成
+  3. セリフを白フチ文字で載せる
+  4. ぷるぷる／ジャンプ等のモーションを付けて APNG 化
+  5. LINE の規格（サイズ・フレーム数・再生時間・300KB）を満たすまで自動で圧縮
+  6. main.png / tab.png を作って ZIP にまとめる
+  7. 最後に規格バリデータを通して結果を表で表示
+
+入力画像は「背景が透過済みのPNG」を想定。
+（iPhone: 写真の被写体を長押し → コピー、が一番きれいで速い）
+"""
+from __future__ import annotations
+
+import argparse, json, math, struct, sys, zipfile
+from dataclasses import dataclass
+from io import BytesIO
+from pathlib import Path
+
+from PIL import Image, ImageDraw, ImageFilter, ImageFont, ImageSequence
+
+# ---------------------------------------------------------------- LINE 規格
+SPEC = {
+    "animation": dict(canvas=(320, 270), min_long_side=270, max_bytes=300_000,
+                      min_frames=5, max_frames=20, min_sec=1.0, max_sec=4.0,
+                      counts=(8, 16, 24)),
+    "static":    dict(canvas=(370, 320), min_long_side=0, max_bytes=1_000_000,
+                      counts=(8, 16, 24, 32, 40)),
+}
+MAIN_SIZE, TAB_SIZE = (240, 240), (96, 74)
+
+# 日本語フォント候補（上から順に探す。Mac / Windows / Linux）
+FONT_CANDIDATES = [
+    "/System/Library/Fonts/ヒラギノ丸ゴ ProN W4.ttc",
+    "/System/Library/Fonts/Hiragino Sans W6.ttc",
+    "/Library/Fonts/ヒラギノ丸ゴ ProN W4.ttc",
+    "C:/Windows/Fonts/meiryob.ttc",
+    "C:/Windows/Fonts/YuGothB.ttc",
+    "/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc",
+    "/usr/share/fonts/truetype/fonts-japanese-gothic.ttf",
+]
+
+PINK, DEEP_PINK, WHITE = (255, 150, 180, 255), (240, 90, 140, 255), (255, 255, 255, 255)
+
+
+def find_font(explicit: str | None) -> str | None:
+    if explicit and explicit != "auto" and Path(explicit).exists():
+        return explicit
+    for p in FONT_CANDIDATES:
+        if Path(p).exists():
+            return p
+    return None
+
+
+# ---------------------------------------------------------------- 画像の下ごしらえ
+def load_cutout(path: Path) -> Image.Image:
+    """透過PNGを読み込んで、透明な余白を切り落とす。"""
+    img = Image.open(path).convert("RGBA")
+    bbox = img.split()[3].getbbox()
+    if bbox is None:
+        raise SystemExit(f"✗ {path} は中身が全部透明。背景透過に失敗してるかも")
+    if img.split()[3].getextrema()[0] == 255:
+        print(f"  ! {path.name}: 透過されてない（背景が残ってる）可能性あり")
+    return img.crop(bbox)
+
+
+def sticker_outline(img: Image.Image, width: int = 8, color=WHITE) -> Image.Image:
+    """シールっぽい白フチを付ける。アルファを膨張させて塗りつぶす。"""
+    if width <= 0:
+        return img
+    pad = width + 2
+    base = Image.new("RGBA", (img.width + pad * 2, img.height + pad * 2), (0, 0, 0, 0))
+    base.paste(img, (pad, pad))
+    alpha = base.split()[3]
+    grown = alpha.filter(ImageFilter.MaxFilter(width * 2 + 1)).filter(ImageFilter.GaussianBlur(1.2))
+    grown = grown.point(lambda v: 255 if v > 90 else 0)
+    edge = Image.new("RGBA", base.size, color)
+    edge.putalpha(grown)
+    return Image.alpha_composite(edge, base)
+
+
+def fit_into(img: Image.Image, box: tuple[int, int]) -> Image.Image:
+    """縦横比を保ったまま box に収める。"""
+    scale = min(box[0] / img.width, box[1] / img.height)
+    return img.resize((max(1, round(img.width * scale)), max(1, round(img.height * scale))), Image.LANCZOS)
+
+
+# ---------------------------------------------------------------- デコレーション
+def _bow(size: int, color=PINK) -> Image.Image:
+    w = h = size
+    im = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+    d.ellipse([0, h * 0.15, w * 0.46, h * 0.85], fill=color, outline=WHITE, width=max(1, size // 22))
+    d.ellipse([w * 0.54, h * 0.15, w, h * 0.85], fill=color, outline=WHITE, width=max(1, size // 22))
+    d.ellipse([w * 0.38, h * 0.34, w * 0.62, h * 0.66], fill=DEEP_PINK, outline=WHITE, width=max(1, size // 24))
+    return im
+
+
+def _sparkle(size: int, color=WHITE) -> Image.Image:
+    im = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+    c, r, t = size / 2, size / 2, size * 0.16
+    d.polygon([(c, 0), (c + t, c - t), (size, c), (c + t, c + t),
+               (c, size), (c - t, c + t), (0, c), (c - t, c - t)], fill=color)
+    return im
+
+
+def _heart(size: int, color=PINK) -> Image.Image:
+    im = Image.new("RGBA", (size * 2, size * 2), (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+    s = size * 2
+    d.ellipse([s * 0.04, s * 0.10, s * 0.54, s * 0.60], fill=color)
+    d.ellipse([s * 0.46, s * 0.10, s * 0.96, s * 0.60], fill=color)
+    d.polygon([(s * 0.06, s * 0.42), (s * 0.94, s * 0.42), (s * 0.5, s * 0.96)], fill=color)
+    return im.resize((size, size), Image.LANCZOS)
+
+
+def _star(size: int, color=(255, 214, 90, 255)) -> Image.Image:
+    im = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+    pts, c = [], size / 2
+    for i in range(10):
+        r = c if i % 2 == 0 else c * 0.44
+        a = math.pi / 2 + i * math.pi / 5
+        pts.append((c + r * math.cos(a), c - r * math.sin(a)))
+    d.polygon(pts, fill=color, outline=WHITE)
+    return im
+
+
+def _flower(size: int, color=(255, 205, 100, 255)) -> Image.Image:
+    im = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+    c, pr = size / 2, size * 0.22
+    for i in range(6):
+        a = i * math.pi / 3
+        px, py = c + math.cos(a) * size * 0.26, c + math.sin(a) * size * 0.26
+        d.ellipse([px - pr, py - pr, px + pr, py + pr], fill=color, outline=WHITE)
+    d.ellipse([c - pr * 0.7, c - pr * 0.7, c + pr * 0.7, c + pr * 0.7], fill=(255, 245, 220, 255))
+    return im
+
+
+DECO_SHAPES = {"bow": _bow, "sparkle": _sparkle, "heart": _heart, "star": _star, "flower": _flower}
+
+# 各デコの既定の置き場所（コンテンツ矩形に対する相対座標 0〜1）と大きさ
+DECO_LAYOUT = {
+    "bow":     [(0.72, -0.04, 0.30)],
+    "flower":  [(0.02, -0.06, 0.28), (0.70, -0.06, 0.24)],
+    "sparkle": [(-0.08, 0.10, 0.20), (0.92, 0.28, 0.16), (0.02, 0.76, 0.14)],
+    "heart":   [(0.88, 0.58, 0.22), (-0.06, 0.30, 0.16)],
+    "star":    [(-0.06, 0.02, 0.22), (0.90, 0.10, 0.16)],
+}
+
+
+def paste_deco(canvas: Image.Image, rect: tuple[int, int, int, int], decos: list[str], phase: float) -> None:
+    """rect=(x,y,w,h) の周りにデコを置く。phase(0〜1)でキラキラが瞬く。"""
+    x, y, w, h = rect
+    base = max(w, h)
+    for i, name in enumerate(decos):
+        shape = DECO_SHAPES.get(name)
+        if not shape:
+            continue
+        for j, (rx, ry, rs) in enumerate(DECO_LAYOUT.get(name, [(0.8, 0.0, 0.25)])):
+            size = max(8, round(base * rs))
+            img = shape(size)
+            if name in ("sparkle", "star", "heart"):     # 瞬き
+                tw = 0.45 + 0.55 * (0.5 + 0.5 * math.sin(2 * math.pi * (phase + 0.27 * (i + j))))
+                img.putalpha(img.split()[3].point(lambda v: int(v * tw)))
+            dx = max(0, min(round(x + rx * w), canvas.width - size))
+            dy = max(0, min(round(y + ry * h), canvas.height - size))
+            canvas.alpha_composite(img, (dx, dy))
+
+
+def draw_text(canvas: Image.Image, text: str, font_path: str | None, pos: str, margin: int) -> None:
+    """白フチ付きのセリフ。フォントが無ければ黙って飛ばす。"""
+    if not text or not font_path:
+        return
+    d = ImageDraw.Draw(canvas)
+    maxw = canvas.width - margin * 2
+    size = round(canvas.height * 0.20)
+    while size > 10:
+        font = ImageFont.truetype(font_path, size)
+        if d.textlength(text, font=font) <= maxw:
+            break
+        size -= 2
+    font = ImageFont.truetype(font_path, size)
+    tw = d.textlength(text, font=font)
+    x = (canvas.width - tw) / 2
+    y = margin if pos == "top" else canvas.height - margin - size * 1.25
+    d.text((x, y), text, font=font, fill=(60, 45, 50, 255),
+           stroke_width=max(3, size // 8), stroke_fill=WHITE)
+
+
+# ---------------------------------------------------------------- モーション
+def motion_at(motion: str, t: float) -> tuple[float, float, float, float]:
+    """t(0〜1)における (dx, dy, 拡大率, 回転角)。"""
+    two = 2 * math.pi
+    return {
+        "bounce":  (0.0, -0.10 * abs(math.sin(math.pi * t * 2)), 1.0, 0.0),
+        "jump":    (0.0, -0.16 * max(0.0, math.sin(math.pi * t * 2)), 1.0, 0.0),
+        "shake":   (0.03 * math.sin(two * t * 2), 0.0, 1.0, 4.0 * math.sin(two * t * 2)),
+        "pop":     (0.0, 0.0, 1.0 + 0.09 * math.sin(two * t), 0.0),
+        "breathe": (0.0, 0.0, 1.0 + 0.04 * math.sin(two * t), 0.0),
+        "tilt":    (0.0, 0.0, 1.0, 9.0 * math.sin(two * t)),
+        "wiggle":  (0.02 * math.sin(two * t * 2), -0.03 * abs(math.sin(math.pi * t * 2)), 1.0,
+                    6.0 * math.sin(two * t * 2)),
+        "none":    (0.0, 0.0, 1.0, 0.0),
+    }.get(motion, (0.0, -0.10 * abs(math.sin(math.pi * t * 2)), 1.0, 0.0))
+
+
+# ---------------------------------------------------------------- 1スタンプの組み立て
+@dataclass
+class Item:
+    src: Path
+    text: str = ""
+    motion: str = "bounce"
+    deco: tuple[str, ...] = ()
+    text_pos: str = "bottom"
+
+
+def render_frames(item: Item, cfg: dict, font_path: str | None, n_frames: int, scale: float = 1.0):
+    canvas_w, canvas_h = cfg["canvas"]
+    margin = cfg["margin"]
+    body = load_cutout(item.src)
+    body = sticker_outline(body, cfg.get("outline", 8))
+
+    # 動きぶんの余白を残して本体を収める
+    head = 0.18
+    box = (round((canvas_w - margin * 2) * (1 - head) * scale),
+           round((canvas_h - margin * 2) * (1 - head) * scale))
+    body = fit_into(body, box)
+
+    frames = []
+    for i in range(n_frames):
+        t = i / n_frames
+        dx, dy, sc, ang = motion_at(item.motion, t)
+        layer = body
+        if abs(sc - 1.0) > 1e-3:
+            layer = layer.resize((max(1, round(layer.width * sc)), max(1, round(layer.height * sc))), Image.LANCZOS)
+        if abs(ang) > 1e-3:
+            layer = layer.rotate(ang, resample=Image.BICUBIC, expand=True)
+
+        canvas = Image.new("RGBA", (canvas_w, canvas_h), (0, 0, 0, 0))
+        px = round((canvas_w - layer.width) / 2 + dx * canvas_w)
+        py = round((canvas_h - layer.height) / 2 + dy * canvas_h)
+        px = max(margin, min(px, canvas_w - margin - layer.width))
+        py = max(margin, min(py, canvas_h - margin - layer.height))
+        canvas.alpha_composite(layer, (px, py))
+        paste_deco(canvas, (px, py, layer.width, layer.height), list(item.deco), t)
+        draw_text(canvas, item.text, font_path, item.text_pos, margin)
+        frames.append(canvas)
+    return frames
+
+
+def encode(frames, duration_ms: int, loop: int, colors: int = 0) -> bytes:
+    """colors>0 なら減色してから書き出す（アルファは8bitのまま保つ）。"""
+    if colors:
+        out = []
+        for f in frames:
+            r, g, b, a = f.split()
+            q = Image.merge("RGB", (r, g, b)).quantize(colors=colors, method=Image.FASTOCTREE).convert("RGB")
+            q.putalpha(a)
+            out.append(q)
+        frames = out
+    buf = BytesIO()
+    kw = dict(format="PNG", optimize=True)
+    if len(frames) > 1:
+        kw.update(save_all=True, append_images=frames[1:], duration=duration_ms,
+                  loop=loop, disposal=1, blend=0)
+    frames[0].save(buf, **kw)
+    return buf.getvalue()
+
+
+def build_one(item: Item, cfg: dict, font_path: str | None) -> bytes:
+    """300KB に収まるまで、フレーム数→減色→縮小 の順で自動的に落とす。"""
+    animated = cfg["type"] == "animation"
+    budget = cfg["max_bytes"]
+    if not animated:
+        for colors in (0, 256, 128):
+            data = encode(render_frames(item, cfg, font_path, 1), 0, 1, colors)
+            if len(data) <= budget:
+                return data
+        return data
+    f0 = cfg["frames"]
+    plan = [(f0, 0, 1.0), (f0, 256, 1.0), (f0, 128, 1.0), (8, 128, 1.0),
+            (8, 96, 1.0), (6, 96, 1.0), (6, 64, 0.95), (5, 64, 0.92), (5, 32, 0.85)]
+    last = b""
+    for n, colors, scale in plan:
+        if n < SPEC["animation"]["min_frames"]:
+            break
+        frames = render_frames(item, cfg, font_path, n, scale)
+        dur = round(cfg["loop_ms"] / n)
+        last = encode(frames, dur, cfg["loop"], colors)
+        if len(last) <= budget:
+            return last
+    print(f"  ! {item.src.name}: 300KBに収まらなかった（{len(last)//1024}KB）。写真をもっとシンプルに")
+    return last
+
+
+# ---------------------------------------------------------------- バリデータ
+def read_png_info(data: bytes) -> dict:
+    """PNG/APNGのチャンクを読んで、フレーム数・再生時間・ループ回数を取り出す。"""
+    info = dict(width=0, height=0, frames=1, plays=None, seconds=0.0, apng=False)
+    pos, n = 8, len(data)
+    while pos + 8 <= n:
+        ln = struct.unpack(">I", data[pos:pos + 4])[0]
+        typ = data[pos + 4:pos + 8]
+        body = data[pos + 8:pos + 8 + ln]
+        if typ == b"IHDR":
+            info["width"], info["height"] = struct.unpack(">II", body[:8])
+        elif typ == b"acTL":
+            info["apng"] = True
+            frames, plays = struct.unpack(">II", body[:8])
+            info["frames"], info["plays"] = frames, plays
+        elif typ == b"fcTL":
+            num, den = struct.unpack(">HH", body[20:24])
+            info["seconds"] += num / (den or 100)
+        pos += 12 + ln
+    return info
+
+
+def validate(data: bytes, cfg: dict, label: str) -> list[str]:
+    s, errs = SPEC[cfg["type"]], []
+    i = read_png_info(data)
+    cw, ch = s["canvas"]
+    if i["width"] > cw or i["height"] > ch:
+        errs.append(f"サイズ超過 {i['width']}x{i['height']} > {cw}x{ch}")
+    if i["width"] % 2 or i["height"] % 2:
+        errs.append("縦横は偶数にする必要あり")
+    if max(i["width"], i["height"]) < s["min_long_side"]:
+        errs.append(f"長辺が{s['min_long_side']}px未満")
+    if len(data) > s["max_bytes"]:
+        errs.append(f"容量超過 {len(data)//1024}KB > {s['max_bytes']//1024}KB")
+    if cfg["type"] == "animation":
+        if not i["apng"]:
+            errs.append("APNGになっていない")
+        if not (s["min_frames"] <= i["frames"] <= s["max_frames"]):
+            errs.append(f"フレーム数 {i['frames']} が5〜20の外")
+        if not (s["min_sec"] - 1e-3 <= i["seconds"] <= s["max_sec"] + 1e-3):
+            errs.append(f"1ループ {i['seconds']:.1f}秒 が1〜4秒の外")
+        if i["plays"] is not None and not (1 <= i["plays"] <= 4):
+            errs.append(f"ループ回数 {i['plays']} が1〜4の外")
+        if i["plays"] and i["seconds"] * i["plays"] > 4.001:
+            errs.append(f"総再生 {i['seconds']*i['plays']:.1f}秒 > 4秒")
+    return errs
+
+
+# ---------------------------------------------------------------- 出力まとめ
+def contact_sheet(images: list[Image.Image], cols: int = 6) -> Image.Image:
+    tw, th = images[0].size
+    rows = math.ceil(len(images) / cols)
+    sheet = Image.new("RGBA", (cols * tw, rows * th), (235, 235, 238, 255))
+    for i, im in enumerate(images):
+        sheet.alpha_composite(im, ((i % cols) * tw, (i // cols) * th))
+    return sheet
+
+
+def motion_preview(paths: list[Path], out: Path, cols: int = 4, limit: int = 8) -> None:
+    """Discord承認用に、動きが分かるGIFを1枚作る（明るい背景に合成）。"""
+    seqs = []
+    for p in paths[:limit]:
+        im = Image.open(p)
+        seqs.append([f.convert("RGBA") for f in ImageSequence.Iterator(im)])
+    if not seqs:
+        return
+    tw, th = seqs[0][0].size
+    rows = math.ceil(len(seqs) / cols)
+    n = max(len(s) for s in seqs)
+    frames = []
+    for k in range(n):
+        sheet = Image.new("RGBA", (cols * tw, rows * th), (245, 245, 247, 255))
+        for i, seq in enumerate(seqs):
+            sheet.alpha_composite(seq[k % len(seq)], ((i % cols) * tw, (i // cols) * th))
+        frames.append(sheet.convert("P", palette=Image.ADAPTIVE, colors=128))
+    frames[0].save(out, save_all=True, append_images=frames[1:], duration=100, loop=0, optimize=True)
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--config", default="config.json")
+    ap.add_argument("--out", default="build")
+    ap.add_argument("--font", default=None)
+    args = ap.parse_args()
+
+    root = Path(args.config).resolve().parent
+    raw = json.loads(Path(args.config).read_text(encoding="utf-8"))
+    stype = raw.get("type", "animation")
+    spec = SPEC[stype]
+    cfg = dict(type=stype, canvas=tuple(raw.get("canvas", spec["canvas"])),
+               margin=raw.get("margin", 10), outline=raw.get("outline", 8),
+               frames=raw.get("frames", 10), loop_ms=raw.get("loop_ms", 1000),
+               loop=raw.get("loop", 4), max_bytes=raw.get("max_bytes", spec["max_bytes"]))
+
+    font_path = find_font(args.font or raw.get("font"))
+    print(f"フォント: {font_path or '見つからず（セリフはスキップ）'}")
+
+    items = [Item(src=root / it["src"], text=it.get("text", ""), motion=it.get("motion", "bounce"),
+                  deco=tuple(it.get("deco", [])), text_pos=it.get("text_pos", "bottom"))
+             for it in raw["items"]]
+    if len(items) not in spec["counts"]:
+        print(f"! 個数 {len(items)} は販売できない数。{spec['counts']} のいずれかにする")
+
+    out = (root / args.out)
+    out.mkdir(parents=True, exist_ok=True)
+    results, previews = [], []
+
+    for idx, item in enumerate(items, 1):
+        data = build_one(item, cfg, font_path)
+        name = f"{idx:02d}.png"
+        (out / name).write_bytes(data)
+        errs = validate(data, cfg, name)
+        info = read_png_info(data)
+        results.append((name, len(data), info, errs))
+        previews.append(Image.open(BytesIO(data)).convert("RGBA"))
+        print(f"  {name}  {len(data)//1024:>3}KB  {info['frames']}f  "
+              f"{'OK' if not errs else '／'.join(errs)}")
+
+    # メイン画像・タブ画像
+    main_src = raw.get("main", raw["items"][0])
+    m_item = Item(src=root / main_src["src"], text=main_src.get("text", ""),
+                  motion=main_src.get("motion", "pop"), deco=tuple(main_src.get("deco", [])))
+    m_cfg = dict(cfg, canvas=MAIN_SIZE)
+    (out / "main.png").write_bytes(build_one(m_item, m_cfg, font_path))
+    t_cfg = dict(cfg, canvas=TAB_SIZE, type="static", outline=4, max_bytes=1_000_000)
+    (out / "tab.png").write_bytes(build_one(Item(src=m_item.src, motion="none"), t_cfg, font_path))
+
+    # プレビュー & ZIP
+    contact_sheet(previews).convert("RGB").save(out / "_preview.jpg", quality=88)
+    motion_preview(sorted(out.glob("[0-9][0-9].png")), out / "_motion.gif")
+    zpath = out / f"{raw.get('title','stamps')}.zip"
+    with zipfile.ZipFile(zpath, "w", zipfile.ZIP_DEFLATED) as z:
+        for p in sorted(out.glob("[0-9][0-9].png")) + [out / "main.png", out / "tab.png"]:
+            z.write(p, p.name)
+
+    ng = [r for r in results if r[3]]
+    total = zpath.stat().st_size
+    print(f"\nZIP: {zpath}  {total/1024/1024:.2f}MB（上限60MB）")
+    print(f"プレビュー: {out/'_preview.jpg'} / {out/'_motion.gif'}")
+    print("判定: " + ("全部OK。このZIPをそのままLINEに申請できる"
+                      if not ng else f"{len(ng)}件が規格NG。上のログを見て直す"))
+    return 1 if ng else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

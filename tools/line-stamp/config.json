@@ -1,0 +1,233 @@
+{
+  "title": "うちの猫スタンプ",
+  "type": "animation",
+  "canvas": [
+    320,
+    270
+  ],
+  "margin": 10,
+  "outline": 8,
+  "frames": 10,
+  "loop_ms": 1000,
+  "loop": 4,
+  "max_bytes": 300000,
+  "font": "auto",
+  "main": {
+    "src": "input/01.png",
+    "text": "",
+    "motion": "pop",
+    "deco": [
+      "bow",
+      "sparkle"
+    ]
+  },
+  "items": [
+    {
+      "src": "input/01.png",
+      "text": "おはよ",
+      "motion": "bounce",
+      "deco": [
+        "sparkle"
+      ],
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/02.png",
+      "text": "おつかれさま",
+      "motion": "breathe",
+      "deco": [
+        "heart"
+      ],
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/03.png",
+      "text": "ありがとう",
+      "motion": "bounce",
+      "deco": [
+        "heart",
+        "sparkle"
+      ],
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/04.png",
+      "text": "ごめんね",
+      "motion": "tilt",
+      "deco": [],
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/05.png",
+      "text": "おっけー",
+      "motion": "pop",
+      "deco": [
+        "star"
+      ],
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/06.png",
+      "text": "りょ",
+      "motion": "shake",
+      "deco": [],
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/07.png",
+      "text": "いいね",
+      "motion": "pop",
+      "deco": [
+        "star",
+        "sparkle"
+      ],
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/08.png",
+      "text": "うれしい",
+      "motion": "jump",
+      "deco": [
+        "heart",
+        "sparkle"
+      ],
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/09.png",
+      "text": "かなしい",
+      "motion": "tilt",
+      "deco": [],
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/10.png",
+      "text": "ねむい",
+      "motion": "breathe",
+      "deco": [],
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/11.png",
+      "text": "おなかすいた",
+      "motion": "wiggle",
+      "deco": [],
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/12.png",
+      "text": "まってる",
+      "motion": "breathe",
+      "deco": [
+        "sparkle"
+      ],
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/13.png",
+      "text": "いってきます",
+      "motion": "jump",
+      "deco": [
+        "bow"
+      ],
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/14.png",
+      "text": "おかえり",
+      "motion": "bounce",
+      "deco": [
+        "heart"
+      ],
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/15.png",
+      "text": "おやすみ",
+      "motion": "breathe",
+      "deco": [
+        "star"
+      ],
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/16.png",
+      "text": "むり",
+      "motion": "shake",
+      "deco": [],
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/17.png",
+      "text": "たすけて",
+      "motion": "shake",
+      "deco": [
+        "sparkle"
+      ],
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/18.png",
+      "text": "すき",
+      "motion": "pop",
+      "deco": [
+        "heart",
+        "heart"
+      ],
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/19.png",
+      "text": "えらい",
+      "motion": "bounce",
+      "deco": [
+        "star",
+        "sparkle"
+      ],
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/20.png",
+      "text": "がんばれ",
+      "motion": "jump",
+      "deco": [
+        "star"
+      ],
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/21.png",
+      "text": "なるほど",
+      "motion": "tilt",
+      "deco": [],
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/22.png",
+      "text": "ほんと？",
+      "motion": "shake",
+      "deco": [
+        "sparkle"
+      ],
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/23.png",
+      "text": "また今度",
+      "motion": "bounce",
+      "deco": [
+        "bow"
+      ],
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/24.png",
+      "text": "よろしく",
+      "motion": "pop",
+      "deco": [
+        "flower"
+      ],
+      "text_pos": "bottom"
+    }
+  ]
+}
