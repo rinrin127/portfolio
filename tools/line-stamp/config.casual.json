@@ -1,0 +1,387 @@
+{
+  "title": "うちの猫スタンプ",
+  "type": "animation",
+  "canvas": [
+    320,
+    270
+  ],
+  "margin": 10,
+  "outline": 8,
+  "frames": 10,
+  "loop_ms": 1000,
+  "loop": 4,
+  "max_bytes": 300000,
+  "font": "auto",
+  "main": {
+    "src": "input/01.png",
+    "text": "",
+    "motion": "pop",
+    "wear": [
+      "bow"
+    ],
+    "emo": [
+      "sparkle_burst"
+    ],
+    "deco": []
+  },
+  "items": [
+    {
+      "src": "input/01.png",
+      "text": "おはよ",
+      "motion": "bounce",
+      "wear": [
+        "bunny_ears"
+      ],
+      "emo": [],
+      "deco": [],
+      "tint": "",
+      "zoom": "face",
+      "flip": false,
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/02.png",
+      "text": "おやすみ",
+      "motion": "breathe",
+      "wear": [
+        "bao"
+      ],
+      "emo": [
+        "zzz"
+      ],
+      "deco": [],
+      "tint": "cool",
+      "zoom": "face",
+      "flip": false,
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/03.png",
+      "text": "おつかれ",
+      "motion": "breathe",
+      "wear": [],
+      "emo": [
+        "sweat"
+      ],
+      "deco": [],
+      "tint": "",
+      "zoom": "",
+      "flip": false,
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/04.png",
+      "text": "ありがとう",
+      "motion": "bounce",
+      "wear": [
+        "bow"
+      ],
+      "emo": [
+        "sparkle_burst"
+      ],
+      "deco": [],
+      "tint": "",
+      "zoom": "face",
+      "flip": false,
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/01.png",
+      "text": "うれしい",
+      "motion": "jump",
+      "wear": [
+        "flower_crown"
+      ],
+      "emo": [
+        "note"
+      ],
+      "deco": [],
+      "tint": "",
+      "zoom": "",
+      "flip": false,
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/02.png",
+      "text": "やったー",
+      "motion": "jump",
+      "wear": [
+        "crown"
+      ],
+      "emo": [
+        "sparkle_burst"
+      ],
+      "deco": [],
+      "tint": "",
+      "zoom": "",
+      "flip": false,
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/03.png",
+      "text": "すき",
+      "motion": "pop",
+      "wear": [],
+      "emo": [
+        "heart_eyes"
+      ],
+      "deco": [],
+      "tint": "",
+      "zoom": "face",
+      "flip": false,
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/04.png",
+      "text": "おめでとう",
+      "motion": "jump",
+      "wear": [
+        "party_hat"
+      ],
+      "emo": [
+        "note"
+      ],
+      "deco": [],
+      "tint": "",
+      "zoom": "",
+      "flip": false,
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/01.png",
+      "text": "むり",
+      "motion": "shake",
+      "wear": [],
+      "emo": [
+        "shock"
+      ],
+      "deco": [],
+      "tint": "cool",
+      "zoom": "",
+      "flip": true,
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/02.png",
+      "text": "なんでよ",
+      "motion": "shake",
+      "wear": [],
+      "emo": [
+        "anger"
+      ],
+      "deco": [],
+      "tint": "warm",
+      "zoom": "",
+      "flip": true,
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/03.png",
+      "text": "おこ",
+      "motion": "shake",
+      "wear": [
+        "cat_ears"
+      ],
+      "emo": [
+        "anger"
+      ],
+      "deco": [],
+      "tint": "warm",
+      "zoom": "face",
+      "flip": true,
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/04.png",
+      "text": "ちょっと！",
+      "motion": "shake",
+      "wear": [],
+      "emo": [
+        "exclaim"
+      ],
+      "deco": [],
+      "tint": "warm",
+      "zoom": "",
+      "flip": true,
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/01.png",
+      "text": "ごめん",
+      "motion": "tilt",
+      "wear": [],
+      "emo": [
+        "sweat"
+      ],
+      "deco": [],
+      "tint": "",
+      "zoom": "face",
+      "flip": false,
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/02.png",
+      "text": "かなしい",
+      "motion": "tilt",
+      "wear": [],
+      "emo": [
+        "tears"
+      ],
+      "deco": [],
+      "tint": "cool",
+      "zoom": "",
+      "flip": false,
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/03.png",
+      "text": "さみしい",
+      "motion": "breathe",
+      "wear": [],
+      "emo": [
+        "tears"
+      ],
+      "deco": [],
+      "tint": "cool",
+      "zoom": "face",
+      "flip": false,
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/04.png",
+      "text": "つらい",
+      "motion": "tilt",
+      "wear": [],
+      "emo": [
+        "shock"
+      ],
+      "deco": [],
+      "tint": "cool",
+      "zoom": "",
+      "flip": false,
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/01.png",
+      "text": "いってきます",
+      "motion": "jump",
+      "wear": [
+        "shark_hood"
+      ],
+      "emo": [],
+      "deco": [],
+      "tint": "",
+      "zoom": "",
+      "flip": false,
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/02.png",
+      "text": "おかえり",
+      "motion": "bounce",
+      "wear": [
+        "bear_hood"
+      ],
+      "emo": [
+        "note"
+      ],
+      "deco": [],
+      "tint": "",
+      "zoom": "",
+      "flip": false,
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/03.png",
+      "text": "りょ",
+      "motion": "shake",
+      "wear": [
+        "sunglasses"
+      ],
+      "emo": [],
+      "deco": [],
+      "tint": "",
+      "zoom": "face",
+      "flip": false,
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/04.png",
+      "text": "おっけー",
+      "motion": "pop",
+      "wear": [
+        "heart_glasses"
+      ],
+      "emo": [
+        "sparkle_burst"
+      ],
+      "deco": [],
+      "tint": "",
+      "zoom": "",
+      "flip": false,
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/01.png",
+      "text": "ねむい",
+      "motion": "breathe",
+      "wear": [],
+      "emo": [
+        "zzz"
+      ],
+      "deco": [],
+      "tint": "",
+      "zoom": "face",
+      "flip": true,
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/02.png",
+      "text": "おなかすいた",
+      "motion": "wiggle",
+      "wear": [
+        "mushroom"
+      ],
+      "emo": [
+        "sweat"
+      ],
+      "deco": [],
+      "tint": "",
+      "zoom": "",
+      "flip": true,
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/03.png",
+      "text": "まってる",
+      "motion": "breathe",
+      "wear": [
+        "ribbon_collar"
+      ],
+      "emo": [
+        "question"
+      ],
+      "deco": [],
+      "tint": "",
+      "zoom": "",
+      "flip": true,
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/04.png",
+      "text": "がんばれ",
+      "motion": "jump",
+      "wear": [
+        "strawberry_hat"
+      ],
+      "emo": [
+        "exclaim"
+      ],
+      "deco": [],
+      "tint": "",
+      "zoom": "",
+      "flip": true,
+      "text_pos": "bottom"
+    }
+  ]
+}

@@ -121,6 +121,47 @@ python3 make_demo_input.py     # input/ にダミー24枚
 python3 make_stamps.py --config config.json --out build
 ```
 
+## 喜怒哀楽（`emo`）
+
+写真が数枚しかなくても表情差を出すための、マンガ的な記号。`wear` と同じ仕組みで頭や顔に載る。
+
+| 喜 | 怒 | 哀 | その他 |
+|---|---|---|---|
+| `heart_eyes` 目がハート | `anger` 怒りマーク | `tears` なみだ | `zzz` すやすや |
+| `sparkle_burst` キラッ | `exclaim` びっくり | `shock` ガーン（青い縦線） | `question` はてな |
+| `note` 音符 | | `sweat` あせ | `spiral_eyes` ぐるぐる目 |
+
+```json
+{ "text": "おこ", "motion": "shake", "emo": ["anger"], "wear": ["cat_ears"], "tint": "warm" }
+```
+
+### 写真そのものを変える3つのスイッチ
+
+同じ写真を24回使っても単調にならないように、絵面を変えられる。
+
+| キー | 効果 |
+|---|---|
+| `"zoom": "face"` | 顔まわりだけ切り出す（全身の写真から顔アップ版を作る） |
+| `"flip": true` | 左右反転 |
+| `"tint": "warm"` / `"cool"` | 色味を少しだけ寄せる（怒り＝あたたかく、哀しみ＝つめたく） |
+
+## セリフ一式を自動で組む
+
+タメ口版と敬語版のセリフ表を持っているので、写真の枚数を渡すだけで config ができる。
+
+```bash
+python3 make_config.py --set casual --photos 4   # 毎日つかえる24個（タメ口）
+python3 make_config.py --set keigo  --photos 4   # 敬語24個（社会人向け）
+```
+
+写真を順番に使い回し、同じ写真の3回目は自動で左右反転する。
+セリフは `make_config.py` の表を直せば変えられる。長いセリフは `\n` で改行位置を指定できる。
+
+```bash
+python3 make_stamps.py --config config.casual.json --out build_casual
+python3 make_stamps.py --config config.keigo.json  --out build_keigo
+```
+
 ## 被り物をもっと本物っぽくしたい場合（AI着せ替えルート）
 
 上の方式は「イラストを写真に重ねる」。参考にした mushucalar 系のスタンプは

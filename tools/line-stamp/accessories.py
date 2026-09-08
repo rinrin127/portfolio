@@ -318,3 +318,185 @@ DRAW = {
 def render(name: str, width: int) -> Image.Image | None:
     fn = DRAW.get(name)
     return fn(max(8, width)) if fn else None
+
+
+# ================================================================== 感情エフェクト
+# 写真が数枚しかなくても喜怒哀楽を出すための、マンガ的な記号。
+def anger(w: int) -> Image.Image:
+    """怒りマーク（いわゆる 💢）。ヘの字を4方向に並べる。"""
+    h = w
+    im, d = _canvas(w, h)
+    W, H = w * SS, h * SS
+    col = (232, 70, 88, 255)
+    t = round(W * 0.11)
+    for k in range(4):
+        a = math.radians(45 + 90 * k)
+        cx, cy = W / 2 + math.cos(a) * W * 0.24, H / 2 + math.sin(a) * H * 0.24
+        ux, uy = math.cos(a), math.sin(a)          # 外向き
+        px, py = -uy, ux                            # 直交
+        L, D = W * 0.17, W * 0.13
+        d.line([(cx + px * L - ux * D, cy + py * L - uy * D), (cx + ux * D, cy + uy * D),
+                (cx - px * L - ux * D, cy - py * L - uy * D)], fill=col, width=t, joint="curve")
+    return _done(im, w, h)
+
+
+def sweat(w: int) -> Image.Image:
+    """あせ（一粒）。"""
+    h = round(w * 1.30)
+    im, d = _canvas(w, h)
+    W, H = w * SS, h * SS
+    col = (120, 196, 240, 255)
+    d.polygon([(W * 0.5, 0), (W * 0.94, H * 0.62), (W * 0.06, H * 0.62)], fill=col)
+    d.ellipse([W * 0.04, H * 0.34, W * 0.96, H * 0.99], fill=col)
+    d.ellipse([W * 0.24, H * 0.56, W * 0.44, H * 0.78], fill=(226, 246, 255, 220))
+    return _done(im, w, h)
+
+
+def tears(w: int) -> Image.Image:
+    """なみだ（両目の下）。"""
+    h = round(w * 0.60)
+    im, d = _canvas(w, h)
+    W, H = w * SS, h * SS
+    col = (110, 190, 240, 235)
+    for cx in (0.22, 0.78):
+        d.polygon([(W * cx, H * 0.02), (W * (cx + 0.075), H * 0.52), (W * (cx - 0.075), H * 0.52)], fill=col)
+        d.ellipse([W * (cx - 0.085), H * 0.34, W * (cx + 0.085), H * 0.98], fill=col)
+        d.ellipse([W * (cx - 0.045), H * 0.56, W * (cx - 0.005), H * 0.74], fill=(235, 250, 255, 230))
+    return _done(im, w, h)
+
+
+def zzz(w: int) -> Image.Image:
+    """すやすや。"""
+    h = round(w * 0.92)
+    im, d = _canvas(w, h)
+    W, H = w * SS, h * SS
+    col = (128, 158, 214, 255)
+    for i, (cx, cy, s) in enumerate(((0.10, 0.62, 0.30), (0.40, 0.34, 0.38), (0.74, 0.04, 0.48))):
+        x, y, k = W * cx, H * cy, W * s
+        t = max(SS * 2, round(k * 0.16))
+        d.line([(x, y), (x + k * 0.7, y)], fill=col, width=t)
+        d.line([(x + k * 0.7, y), (x, y + k * 0.62)], fill=col, width=t)
+        d.line([(x, y + k * 0.62), (x + k * 0.7, y + k * 0.62)], fill=col, width=t)
+    return _done(im, w, h)
+
+
+def note(w: int) -> Image.Image:
+    """音符。"""
+    h = round(w * 1.10)
+    im, d = _canvas(w, h)
+    W, H = w * SS, h * SS
+    col = (255, 158, 100, 255)
+    d.ellipse([0, H * 0.62, W * 0.52, H * 0.98], fill=col)
+    d.rectangle([W * 0.44, H * 0.06, W * 0.56, H * 0.82], fill=col)
+    d.polygon([(W * 0.56, H * 0.06), (W, H * 0.20), (W, H * 0.40), (W * 0.56, H * 0.26)], fill=col)
+    return _done(im, w, h)
+
+
+def question(w: int) -> Image.Image:
+    return _mark(w, "?", (128, 158, 214, 255))
+
+
+def exclaim(w: int) -> Image.Image:
+    return _mark(w, "!", (255, 176, 70, 255))
+
+
+def _mark(w: int, ch: str, col) -> Image.Image:
+    """?! を曲線で描く（フォントに依存させない）。"""
+    h = round(w * 1.50)
+    im, d = _canvas(w, h)
+    W, H = w * SS, h * SS
+    t = round(W * 0.24)
+    if ch == "?":
+        cx, cy, r = W * 0.50, H * 0.28, W * 0.30
+        pts = []
+        for i in range(40):                       # 上のフックを描く
+            a = math.radians(190 - 250 * i / 39)
+            pts.append((cx + r * math.cos(a), cy - r * math.sin(a)))
+        pts.append((cx, H * 0.66))
+        d.line(pts, fill=col, width=t, joint="curve")
+    else:
+        d.line([(W * 0.50, H * 0.04), (W * 0.50, H * 0.64)], fill=col, width=t)
+    d.ellipse([W * 0.50 - t * 0.60, H * 0.82, W * 0.50 + t * 0.60, H * 0.82 + t * 1.20], fill=col)
+    return _done(im, w, h)
+
+
+def shock(w: int) -> Image.Image:
+    """ガーン（青い縦線）。"""
+    h = round(w * 0.70)
+    im, d = _canvas(w, h)
+    W, H = w * SS, h * SS
+    for i in range(9):
+        x = W * (0.04 + 0.92 * i / 8)
+        a = 130 if i % 2 else 90
+        d.line([(x, 0), (x, H * (0.55 + 0.35 * (i % 3) / 2))], fill=(120, 140, 200, a),
+               width=round(W * 0.022))
+    return _done(im, w, h)
+
+
+def heart_eyes(w: int) -> Image.Image:
+    """目がハート。"""
+    h = round(w * 0.44)
+    im, d = _canvas(w, h)
+    W, H = w * SS, h * SS
+    for cx in (0.24, 0.76):
+        s = W * 0.17
+        top = H * 0.10
+        d.ellipse([W * cx - s, top, W * cx, top + s * 1.15], fill=DEEP_PINK)
+        d.ellipse([W * cx, top, W * cx + s, top + s * 1.15], fill=DEEP_PINK)
+        d.polygon([(W * cx - s * 0.99, top + s * 0.52), (W * cx + s * 0.99, top + s * 0.52),
+                   (W * cx, H * 0.96)], fill=DEEP_PINK)
+        d.ellipse([W * cx - s * 0.66, top + s * 0.16, W * cx - s * 0.22, top + s * 0.58],
+                  fill=(255, 255, 255, 150))
+    return _done(im, w, h)
+
+
+def spiral_eyes(w: int) -> Image.Image:
+    """ぐるぐる目（こまった・混乱）。"""
+    h = round(w * 0.42)
+    im, d = _canvas(w, h)
+    W, H = w * SS, h * SS
+    for cx in (0.24, 0.76):
+        cx_, cy_ = W * cx, H * 0.50
+        pts = []
+        for i in range(64):
+            t = i / 63
+            r = W * 0.16 * t
+            a = t * math.pi * 4
+            pts.append((cx_ + r * math.cos(a), cy_ + r * math.sin(a)))
+        d.line(pts, fill=INK, width=round(W * 0.038), joint="curve")
+    return _done(im, w, h)
+
+
+def sparkle_burst(w: int) -> Image.Image:
+    """キラッ（ひらめき・喜び）。"""
+    h = w
+    im, d = _canvas(w, h)
+    W, H = w * SS, h * SS
+    for i in range(8):
+        a = i * math.pi / 4
+        r0, r1 = W * 0.18, W * (0.46 if i % 2 == 0 else 0.34)
+        d.line([(W / 2 + r0 * math.cos(a), H / 2 + r0 * math.sin(a)),
+                (W / 2 + r1 * math.cos(a), H / 2 + r1 * math.sin(a))],
+               fill=(255, 214, 90, 255), width=round(W * 0.055))
+    d.ellipse([W * 0.34, H * 0.34, W * 0.66, H * 0.66], fill=(255, 244, 190, 255))
+    return _done(im, w, h)
+
+
+EMOTION_ANCHOR = {
+    "anger":         ("head", 0.34, -0.06, 0.34),
+    "sweat":         ("head", 0.20, 0.02, 0.36),
+    "tears":         ("face", 0.80, 0.16, 0.00),
+    "zzz":           ("head", 0.52, -0.34, 0.34),
+    "note":          ("head", 0.24, -0.14, -0.34),
+    "question":      ("head", 0.28, -0.32, 0.26),
+    "exclaim":       ("head", 0.24, -0.34, 0.24),
+    "shock":         ("head", 0.90, -0.10, 0.00),
+    "heart_eyes":    ("face", 0.88, 0.00, 0.00),
+    "spiral_eyes":   ("face", 0.86, 0.00, 0.00),
+    "sparkle_burst": ("head", 0.40, -0.26, -0.32),
+}
+
+ANCHOR.update(EMOTION_ANCHOR)
+DRAW.update({"anger": anger, "sweat": sweat, "tears": tears, "zzz": zzz, "note": note,
+             "question": question, "exclaim": exclaim, "shock": shock,
+             "heart_eyes": heart_eyes, "spiral_eyes": spiral_eyes, "sparkle_burst": sparkle_burst})

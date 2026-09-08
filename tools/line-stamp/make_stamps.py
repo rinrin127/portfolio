@@ -23,7 +23,7 @@ from dataclasses import dataclass
 from io import BytesIO
 from pathlib import Path
 
-from PIL import Image, ImageDraw, ImageFilter, ImageFont, ImageSequence
+from PIL import Image, ImageChops, ImageDraw, ImageFilter, ImageFont, ImageOps, ImageSequence
 
 import accessories as ACC
 
@@ -178,28 +178,61 @@ def paste_deco(canvas: Image.Image, rect: tuple[int, int, int, int], decos: list
             canvas.alpha_composite(img, (dx, dy))
 
 
+def split_lines(text: str, limit: int = 6) -> list[str]:
+    """長いセリフは2行に折る。敬語だと字数が増えるので効いてくる。
+
+    config で "よろしく\\nお願いします" と改行を書けばそこで折る。
+    書かなければ、真ん中あたりで切れ目のよさそうな位置を探す。
+    """
+    if "\n" in text:
+        return [ln for ln in text.split("\n") if ln][:2]
+    if len(text) <= limit:
+        return [text]
+    mid = len(text) // 2
+    best, best_score = mid, -99
+    for i in range(max(1, mid - 3), min(len(text), mid + 4)):
+        ch, prev = text[i], text[i - 1]
+        score = -abs(i - mid)
+        if ch in SMALL_KANA:
+            score -= 10                                   # 小さい字の前では切らない
+        if ch in "おご":
+            score += 4                                    # ご丁寧な接頭辞の前で切る
+        if ord(ch) > 0x4E00 and not (0x4E00 <= ord(prev) <= 0x9FFF):
+            score += 3                                    # ひらがな→漢字の変わり目
+        if score > best_score:
+            best, best_score = i, score
+    return [text[:best], text[best:]]
+
+
 def draw_text(canvas: Image.Image, text: str, font_path: str | None, pos: str, margin: int) -> None:
     """白フチ付きのセリフ。フォントが無ければ黙って飛ばす。"""
     if not text or not font_path:
         return
     d = ImageDraw.Draw(canvas)
+    lines = split_lines(text)
     maxw = canvas.width - margin * 2
-    size = round(canvas.height * 0.20)
+    maxh = canvas.height * (0.42 if len(lines) > 1 else 0.24)
+    size = round(canvas.height * 0.21)
     while size > 10:
         font = ImageFont.truetype(font_path, size)
-        if d.textlength(text, font=font) <= maxw:
+        wide = max(d.textlength(ln, font=font) for ln in lines)
+        if wide <= maxw and size * 1.18 * len(lines) <= maxh:
             break
         size -= 2
     font = ImageFont.truetype(font_path, size)
-    tw = d.textlength(text, font=font)
-    x = (canvas.width - tw) / 2
-    y = margin if pos == "top" else canvas.height - margin - size * 1.25
-    d.text((x, y), text, font=font, fill=(60, 45, 50, 255),
-           stroke_width=max(3, size // 8), stroke_fill=WHITE)
+    lh = size * 1.16
+    block = lh * len(lines)
+    y0 = margin if pos == "top" else canvas.height - margin - block
+    for i, ln in enumerate(lines):
+        x = (canvas.width - d.textlength(ln, font=font)) / 2
+        d.text((x, y0 + i * lh), ln, font=font, fill=(60, 45, 50, 255),
+               stroke_width=max(3, size // 8), stroke_fill=WHITE)
 
 
+# ---------------------------------------------------------------- 写真そのものの加工
+SMALL_KANA = set("ぁぃぅぇぉっゃゅょャュョッァィゥェォーん、。！？")
 
-# ---------------------------------------------------------------- 被り物を着せる
+
 def find_anchors(img: Image.Image) -> dict:
     """透過の形から、頭のてっぺん・頭の幅・顔の中心・首もとを推定する。"""
     alpha = img.split()[3]
@@ -225,12 +258,39 @@ def find_anchors(img: Image.Image) -> dict:
                 face_y=(top + span * fy) / sh, neck_y=(top + span * ny) / sh)
 
 
+def zoom_face(img: Image.Image) -> Image.Image:
+    """全身の切り抜きから顔まわりだけを切り出す。写真が少なくても絵面を変えられる。"""
+    a = find_anchors(img)
+    w, h = img.size
+    hw = max(a["head_w"] * w, w * 0.35)
+    cx, top = a["head_x"] * w, a["head_y"] * h
+    box = (max(0, round(cx - hw * 0.78)), max(0, round(top - hw * 0.14)),
+           min(w, round(cx + hw * 0.78)), min(h, round(top + hw * 1.30)))
+    if box[2] - box[0] < 20 or box[3] - box[1] < 20:
+        return img
+    return img.crop(box)
+
+
+def apply_tint(img: Image.Image, kind: str) -> Image.Image:
+    """怒り＝あたたかく、哀しみ＝つめたく。写真の印象をほんの少しだけ寄せる。"""
+    table = {"warm": ((255, 196, 180), 0.22), "cool": ((186, 206, 255), 0.22),
+             "pale": ((255, 255, 255), 0.20)}
+    if kind not in table:
+        return img
+    color, amount = table[kind]
+    rgb = Image.merge("RGB", img.split()[:3])
+    out = Image.blend(rgb, ImageChops.multiply(rgb, Image.new("RGB", img.size, color)), amount)
+    out.putalpha(img.split()[3])
+    return out
+
+
+# ---------------------------------------------------------------- 被り物を着せる
 def wear_items(body: Image.Image, wear: list) -> Image.Image:
-    """猫の切り抜きに被り物・小物を合成して、1枚の絵にまとめる。"""
+    """猫の切り抜きに被り物・小物・感情エフェクトを合成して1枚にまとめる。"""
     if not wear:
         return body
     a = find_anchors(body)
-    padx, padt, padb = round(body.width * 0.35), round(body.height * 0.55), round(body.height * 0.10)
+    padx, padt, padb = round(body.width * 0.40), round(body.height * 0.60), round(body.height * 0.12)
     canvas = Image.new("RGBA", (body.width + padx * 2, body.height + padt + padb), (0, 0, 0, 0))
     canvas.alpha_composite(body, (padx, padt))
     bw, bh = body.width, body.height
@@ -290,13 +350,23 @@ class Item:
     deco: tuple[str, ...] = ()
     text_pos: str = "bottom"
     wear: tuple = ()
+    emo: tuple = ()
+    flip: bool = False
+    zoom: str = ""
+    tint: str = ""
 
 
 def render_frames(item: Item, cfg: dict, font_path: str | None, n_frames: int, scale: float = 1.0):
     canvas_w, canvas_h = cfg["canvas"]
     margin = cfg["margin"]
     body = load_cutout(item.src)
-    body = wear_items(body, list(item.wear))
+    if item.flip:
+        body = ImageOps.mirror(body)
+    if item.zoom == "face":
+        body = zoom_face(body)
+    if item.tint:
+        body = apply_tint(body, item.tint)
+    body = wear_items(body, list(item.wear) + list(item.emo))
     body = sticker_outline(body, cfg.get("outline", 8))
 
     # 動きぶんの余白を残して本体を収める
@@ -471,7 +541,9 @@ def main() -> int:
 
     items = [Item(src=root / it["src"], text=it.get("text", ""), motion=it.get("motion", "bounce"),
                   deco=tuple(it.get("deco", [])), text_pos=it.get("text_pos", "bottom"),
-                  wear=tuple(it.get("wear", [])))
+                  wear=tuple(it.get("wear", [])), emo=tuple(it.get("emo", [])),
+                  flip=bool(it.get("flip", False)), zoom=it.get("zoom", ""),
+                  tint=it.get("tint", ""))
              for it in raw["items"]]
     if len(items) not in spec["counts"]:
         print(f"! 個数 {len(items)} は販売できない数。{spec['counts']} のいずれかにする")
