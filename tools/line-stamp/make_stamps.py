@@ -25,6 +25,8 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFilter, ImageFont, ImageSequence
 
+import accessories as ACC
+
 # ---------------------------------------------------------------- LINE 規格
 SPEC = {
     "animation": dict(canvas=(320, 270), min_long_side=270, max_bytes=300_000,
@@ -196,6 +198,72 @@ def draw_text(canvas: Image.Image, text: str, font_path: str | None, pos: str, m
            stroke_width=max(3, size // 8), stroke_fill=WHITE)
 
 
+
+# ---------------------------------------------------------------- 被り物を着せる
+def find_anchors(img: Image.Image) -> dict:
+    """透過の形から、頭のてっぺん・頭の幅・顔の中心・首もとを推定する。"""
+    alpha = img.split()[3]
+    sw = 64
+    small = alpha.resize((sw, max(2, round(img.height * sw / img.width))), Image.BILINEAR)
+    px, sh = small.load(), small.height
+    rows = []
+    for y in range(sh):
+        xs = [x for x in range(sw) if px[x, y] > 60]
+        rows.append((min(xs), max(xs)) if xs else None)
+    ys = [y for y, r in enumerate(rows) if r]
+    if not ys:
+        return dict(head_x=0.5, head_y=0.0, head_w=0.6, face_y=0.3, neck_y=0.5)
+    top, bottom = ys[0], ys[-1]
+    span = bottom - top + 1
+    band = [r for r in rows[top:top + max(1, round(span * 0.30))] if r]
+    head_x = sum((l + r) / 2 for l, r in band) / len(band) / sw
+    head_w = max(r - l + 1 for l, r in band) / sw
+    body_w = max(r[1] - r[0] + 1 for r in rows if r) / sw
+    head_only = head_w / body_w > 0.85          # 顔アップの切り抜きか、座り姿か
+    fy, ny = (0.42, 0.92) if head_only else (0.20, 0.42)
+    return dict(head_x=head_x, head_y=top / sh, head_w=head_w,
+                face_y=(top + span * fy) / sh, neck_y=(top + span * ny) / sh)
+
+
+def wear_items(body: Image.Image, wear: list) -> Image.Image:
+    """猫の切り抜きに被り物・小物を合成して、1枚の絵にまとめる。"""
+    if not wear:
+        return body
+    a = find_anchors(body)
+    padx, padt, padb = round(body.width * 0.35), round(body.height * 0.55), round(body.height * 0.10)
+    canvas = Image.new("RGBA", (body.width + padx * 2, body.height + padt + padb), (0, 0, 0, 0))
+    canvas.alpha_composite(body, (padx, padt))
+    bw, bh = body.width, body.height
+    hx = padx + a["head_x"] * bw
+
+    for w in wear:
+        spec = {"name": w} if isinstance(w, str) else dict(w)
+        name = spec.get("name", "")
+        meta = ACC.ANCHOR.get(name)
+        if not meta:
+            print(f"  ! 知らない被り物: {name}")
+            continue
+        where, rel_w, rel_y, rel_x = meta
+        width = max(10, round(a["head_w"] * bw * rel_w * float(spec.get("scale", 1.0))))
+        img = ACC.render(name, width)
+        if img is None:
+            continue
+        rot = float(spec.get("rot", 0))
+        if rot:
+            img = img.rotate(rot, resample=Image.BICUBIC, expand=True)
+        x = hx - img.width / 2 + (rel_x + float(spec.get("dx", 0))) * bw
+        if where == "head":
+            y = padt + a["head_y"] * bh + rel_y * bh
+        elif where == "face":
+            y = padt + a["face_y"] * bh - img.height / 2 + rel_y * bh
+        else:
+            y = padt + a["neck_y"] * bh - img.height / 2 + rel_y * bh
+        y += float(spec.get("dy", 0)) * bh
+        canvas.alpha_composite(img, (round(x), round(y)))
+
+    return canvas.crop(canvas.split()[3].getbbox())
+
+
 # ---------------------------------------------------------------- モーション
 def motion_at(motion: str, t: float) -> tuple[float, float, float, float]:
     """t(0〜1)における (dx, dy, 拡大率, 回転角)。"""
@@ -221,12 +289,14 @@ class Item:
     motion: str = "bounce"
     deco: tuple[str, ...] = ()
     text_pos: str = "bottom"
+    wear: tuple = ()
 
 
 def render_frames(item: Item, cfg: dict, font_path: str | None, n_frames: int, scale: float = 1.0):
     canvas_w, canvas_h = cfg["canvas"]
     margin = cfg["margin"]
     body = load_cutout(item.src)
+    body = wear_items(body, list(item.wear))
     body = sticker_outline(body, cfg.get("outline", 8))
 
     # 動きぶんの余白を残して本体を収める
@@ -400,7 +470,8 @@ def main() -> int:
     print(f"フォント: {font_path or '見つからず（セリフはスキップ）'}")
 
     items = [Item(src=root / it["src"], text=it.get("text", ""), motion=it.get("motion", "bounce"),
-                  deco=tuple(it.get("deco", [])), text_pos=it.get("text_pos", "bottom"))
+                  deco=tuple(it.get("deco", [])), text_pos=it.get("text_pos", "bottom"),
+                  wear=tuple(it.get("wear", [])))
              for it in raw["items"]]
     if len(items) not in spec["counts"]:
         print(f"! 個数 {len(items)} は販売できない数。{spec['counts']} のいずれかにする")
@@ -423,11 +494,13 @@ def main() -> int:
     # メイン画像・タブ画像
     main_src = raw.get("main", raw["items"][0])
     m_item = Item(src=root / main_src["src"], text=main_src.get("text", ""),
-                  motion=main_src.get("motion", "pop"), deco=tuple(main_src.get("deco", [])))
+                  motion=main_src.get("motion", "pop"), deco=tuple(main_src.get("deco", [])),
+                  wear=tuple(main_src.get("wear", [])))
     m_cfg = dict(cfg, canvas=MAIN_SIZE)
     (out / "main.png").write_bytes(build_one(m_item, m_cfg, font_path))
     t_cfg = dict(cfg, canvas=TAB_SIZE, type="static", outline=4, max_bytes=1_000_000)
-    (out / "tab.png").write_bytes(build_one(Item(src=m_item.src, motion="none"), t_cfg, font_path))
+    (out / "tab.png").write_bytes(build_one(Item(src=m_item.src, motion="none", wear=m_item.wear),
+                                            t_cfg, font_path))
 
     # プレビュー & ZIP
     contact_sheet(previews).convert("RGB").save(out / "_preview.jpg", quality=88)

@@ -17,8 +17,10 @@
     "text": "",
     "motion": "pop",
     "deco": [
-      "bow",
       "sparkle"
+    ],
+    "wear": [
+      "bow"
     ]
   },
   "items": [
@@ -29,6 +31,9 @@
       "deco": [
         "sparkle"
       ],
+      "wear": [
+        "bunny_ears"
+      ],
       "text_pos": "bottom"
     },
     {
@@ -37,6 +42,9 @@
       "motion": "breathe",
       "deco": [
         "heart"
+      ],
+      "wear": [
+        "blush"
       ],
       "text_pos": "bottom"
     },
@@ -48,6 +56,9 @@
         "heart",
         "sparkle"
       ],
+      "wear": [
+        "bow"
+      ],
       "text_pos": "bottom"
     },
     {
@@ -55,6 +66,9 @@
       "text": "ごめんね",
       "motion": "tilt",
       "deco": [],
+      "wear": [
+        "bear_hood"
+      ],
       "text_pos": "bottom"
     },
     {
@@ -64,6 +78,9 @@
       "deco": [
         "star"
       ],
+      "wear": [
+        "sunglasses"
+      ],
       "text_pos": "bottom"
     },
     {
@@ -71,6 +88,9 @@
       "text": "りょ",
       "motion": "shake",
       "deco": [],
+      "wear": [
+        "cat_ears"
+      ],
       "text_pos": "bottom"
     },
     {
@@ -80,6 +100,9 @@
       "deco": [
         "star",
         "sparkle"
+      ],
+      "wear": [
+        "crown"
       ],
       "text_pos": "bottom"
     },
@@ -91,6 +114,9 @@
         "heart",
         "sparkle"
       ],
+      "wear": [
+        "strawberry_hat"
+      ],
       "text_pos": "bottom"
     },
     {
@@ -98,6 +124,9 @@
       "text": "かなしい",
       "motion": "tilt",
       "deco": [],
+      "wear": [
+        "whiskers"
+      ],
       "text_pos": "bottom"
     },
     {
@@ -105,6 +134,9 @@
       "text": "ねむい",
       "motion": "breathe",
       "deco": [],
+      "wear": [
+        "bao"
+      ],
       "text_pos": "bottom"
     },
     {
@@ -112,6 +144,9 @@
       "text": "おなかすいた",
       "motion": "wiggle",
       "deco": [],
+      "wear": [
+        "mushroom"
+      ],
       "text_pos": "bottom"
     },
     {
@@ -120,6 +155,9 @@
       "motion": "breathe",
       "deco": [
         "sparkle"
+      ],
+      "wear": [
+        "ribbon_collar"
       ],
       "text_pos": "bottom"
     },
@@ -130,6 +168,9 @@
       "deco": [
         "bow"
       ],
+      "wear": [
+        "shark_hood"
+      ],
       "text_pos": "bottom"
     },
     {
@@ -138,6 +179,9 @@
       "motion": "bounce",
       "deco": [
         "heart"
+      ],
+      "wear": [
+        "flower_crown"
       ],
       "text_pos": "bottom"
     },
@@ -148,6 +192,10 @@
       "deco": [
         "star"
       ],
+      "wear": [
+        "bunny_ears",
+        "blush"
+      ],
       "text_pos": "bottom"
     },
     {
@@ -155,6 +203,9 @@
       "text": "むり",
       "motion": "shake",
       "deco": [],
+      "wear": [
+        "round_glasses"
+      ],
       "text_pos": "bottom"
     },
     {
@@ -164,6 +215,9 @@
       "deco": [
         "sparkle"
       ],
+      "wear": [
+        "shark_hood"
+      ],
       "text_pos": "bottom"
     },
     {
@@ -171,8 +225,10 @@
       "text": "すき",
       "motion": "pop",
       "deco": [
-        "heart",
         "heart"
+      ],
+      "wear": [
+        "heart_glasses"
       ],
       "text_pos": "bottom"
     },
@@ -184,6 +240,10 @@
         "star",
         "sparkle"
       ],
+      "wear": [
+        "crown",
+        "ribbon_collar"
+      ],
       "text_pos": "bottom"
     },
     {
@@ -193,6 +253,9 @@
       "deco": [
         "star"
       ],
+      "wear": [
+        "party_hat"
+      ],
       "text_pos": "bottom"
     },
     {
@@ -200,6 +263,10 @@
       "text": "なるほど",
       "motion": "tilt",
       "deco": [],
+      "wear": [
+        "round_glasses",
+        "bow"
+      ],
       "text_pos": "bottom"
     },
     {
@@ -208,6 +275,10 @@
       "motion": "shake",
       "deco": [
         "sparkle"
+      ],
+      "wear": [
+        "cat_ears",
+        "whiskers"
       ],
       "text_pos": "bottom"
     },
@@ -218,6 +289,9 @@
       "deco": [
         "bow"
       ],
+      "wear": [
+        "bear_hood"
+      ],
       "text_pos": "bottom"
     },
     {
@@ -226,6 +300,10 @@
       "motion": "pop",
       "deco": [
         "flower"
+      ],
+      "wear": [
+        "flower_crown",
+        "blush"
       ],
       "text_pos": "bottom"
     }
