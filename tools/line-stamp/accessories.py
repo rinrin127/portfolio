@@ -13,7 +13,7 @@ accessories.py — 猫にかぶせる「被り物・小物」を描くライブ�
 from __future__ import annotations
 
 import math
-from PIL import Image, ImageChops, ImageDraw
+from PIL import Image, ImageChops, ImageDraw, ImageFilter
 
 SS = 4  # スーパーサンプリング倍率
 
@@ -28,6 +28,14 @@ BROWN = (176, 138, 106, 255)
 CREAM = (245, 226, 190, 255)
 GOLD = (247, 200, 78, 255)
 INK = (48, 44, 52, 255)
+
+
+
+def _bez(p0, p1, p2, n=24):
+    """2次ベジェ曲線を点の並びにする。手描きっぽいやわらかい輪郭をつくるのに使う。"""
+    return [((1 - t) ** 2 * p0[0] + 2 * (1 - t) * t * p1[0] + t ** 2 * p2[0],
+             (1 - t) ** 2 * p0[1] + 2 * (1 - t) * t * p1[1] + t ** 2 * p2[1])
+            for t in (i / (n - 1) for i in range(n))]
 
 
 def _canvas(w: int, h: int):
@@ -63,16 +71,18 @@ def shark_hood(w: int) -> Image.Image:
     W, H = w * SS, h * SS
     d.polygon([(W * 0.42, H * 0.16), (W * 0.56, -H * 0.06), (W * 0.68, H * 0.18)], fill=GREY_D)  # 背びれ
     d.ellipse([0, H * 0.02, W, H * 1.24], fill=GREY)                                             # フード
-    d.ellipse([W * 0.03, H * 0.06, W * 0.97, H * 1.16], fill=(163, 171, 181, 255))
+    d.ellipse([W * 0.05, H * 0.10, W * 0.95, H * 1.12], fill=(172, 180, 190, 255))
     _cut_face_hole(im)
-    n = 12                                                                                        # 歯
-    for i in range(n):
-        a = math.pi * (0.06 + 0.88 * i / (n - 1))
-        cx = W * (0.5 - HOLE_RX * 0.98 * math.cos(a))
-        cy = H * (HOLE_CY - HOLE_RY * 0.98 * math.sin(a))
+    n = 16                                                                                        # 歯
+    for k in range(n):
+        a = 2 * math.pi * k / n
+        ex = W * (0.5 + HOLE_RX * math.cos(a))
+        ey = H * (HOLE_CY + HOLE_RY * math.sin(a))
+        ix, iy = -math.cos(a), -math.sin(a)                     # 穴の内側へ向かう向き
+        px, py = -iy, ix
         t = W * 0.042
-        d.polygon([(cx - t, cy - t * 0.3), (cx + t, cy - t * 0.3),
-                   (cx, cy + t * 2.1 * (1 if math.sin(a) > 0 else -1))], fill=WHITE)
+        d.polygon([(ex + px * t, ey + py * t), (ex - px * t, ey - py * t),
+                   (ex + ix * t * 2.2, ey + iy * t * 2.2)], fill=WHITE)
     for cx in (0.17, 0.83):                                                                       # 目
         d.ellipse([W * (cx - 0.085), H * 0.20, W * (cx + 0.085), H * 0.37], fill=WHITE, outline=INK,
                   width=SS * 2)
@@ -118,12 +128,15 @@ def bao(w: int) -> Image.Image:
     h = round(w * 0.96)
     im, d = _canvas(w, h)
     W, H = w * SS, h * SS
-    d.ellipse([0, H * 0.06, W, H * 1.20], fill=CREAM)
-    for i in range(9):                                                                            # ひだ
-        a = math.pi * (0.04 + 0.92 * i / 8)
-        d.line([(W * 0.5, H * 0.30), (W * (0.5 - 0.52 * math.cos(a)), H * (0.58 - 0.62 * math.sin(a)))],
-               fill=(228, 204, 164, 255), width=SS * 3)
-    d.ellipse([W * 0.41, H * 0.10, W * 0.59, H * 0.28], fill=(252, 240, 212, 255))
+    d.ellipse([0, H * 0.06, W, H * 1.20], fill=(242, 224, 188, 255))
+    d.ellipse([W * 0.06, H * 0.12, W * 0.94, H * 1.12], fill=(232, 210, 170, 255))
+    for i in range(8):                                          # ひだ（やわらかい曲線）
+        a = math.pi * (0.10 + 0.80 * i / 7)
+        pts = _bez((W * 0.5, H * 0.26),
+                   (W * (0.5 - 0.30 * math.cos(a)), H * (0.44 - 0.24 * math.sin(a))),
+                   (W * (0.5 - 0.50 * math.cos(a)), H * (0.60 - 0.54 * math.sin(a))))
+        d.line(pts, fill=(226, 204, 168, 255), width=round(W * 0.020), joint="curve")
+    d.ellipse([W * 0.40, H * 0.12, W * 0.60, H * 0.32], fill=(250, 240, 216, 255))
     _cut_face_hole(im)
     return _done(im, w, h)
 
@@ -262,34 +275,70 @@ def round_glasses(w: int) -> Image.Image:
 
 
 def whiskers(w: int) -> Image.Image:
-    """ピンクの描きひげ。参考画像にもある定番の加工。"""
-    h = round(w * 0.42)
+    """ピンクの描きヒゲ。参考画像の定番加工。少しカーブさせる。"""
+    h = round(w * 0.46)
     im, d = _canvas(w, h)
     W, H = w * SS, h * SS
-    for s, x0 in ((-1, 0.42), (1, 0.58)):
-        for i, (dy0, dy1) in enumerate(((-0.14, -0.22), (0.02, 0.02), (0.18, 0.24))):
-            d.line([(W * x0, H * (0.5 + dy0)), (W * (x0 + s * 0.40), H * (0.5 + dy1))],
-                   fill=PINK, width=SS * 5)
+    col = (255, 170, 198, 255)
+    t = round(W * 0.016)
+    for sgn, x0 in ((-1, 0.44), (1, 0.56)):
+        for dy0, dy1, ln in ((-0.15, -0.26, 0.36), (0.00, -0.02, 0.42), (0.15, 0.22, 0.36)):
+            pts = _bez((W * x0, H * (0.5 + dy0)),
+                       (W * (x0 + sgn * ln * 0.5), H * (0.5 + dy0 * 0.6)),
+                       (W * (x0 + sgn * ln), H * (0.5 + dy1)))
+            d.line(pts, fill=col, width=t, joint="curve")
     return _done(im, w, h)
 
 
 def blush(w: int) -> Image.Image:
-    h = round(w * 0.26)
+    """ほっぺ。ふわっとにじませる。"""
+    h = round(w * 0.30)
     im, d = _canvas(w, h)
     W, H = w * SS, h * SS
-    for cx in (0.16, 0.84):
-        d.ellipse([W * (cx - 0.15), H * 0.10, W * (cx + 0.15), H * 0.90], fill=(255, 150, 165, 120))
+    for cx in (0.15, 0.85):
+        for k, alpha in ((1.00, 30), (0.80, 30), (0.58, 34)):
+            d.ellipse([W * (cx - 0.145 * k), H * (0.5 - 0.42 * k),
+                       W * (cx + 0.145 * k), H * (0.5 + 0.42 * k)],
+                      fill=(255, 146, 168, alpha))
+    im = im.filter(ImageFilter.GaussianBlur(W * 0.012))
     return _done(im, w, h)
 
 
 # ------------------------------------------------------------------ 首もと
+BOW_PINK = (247, 160, 192, 255)
+BOW_DARK = (231, 116, 162, 255)
+BOW_LIGHT = (255, 205, 222, 255)
+
+
 def bow(w: int) -> Image.Image:
-    h = round(w * 0.72)
+    """ピンクの蝶結び。参考画像でいちばん出てくるモチーフ。
+
+    輪っか2つ・結び目・下がるリボンの3パーツで、輪郭はベジェ曲線でやわらかく。
+    """
+    h = round(w * 0.88)
     im, d = _canvas(w, h)
     W, H = w * SS, h * SS
-    d.ellipse([0, H * 0.10, W * 0.46, H * 0.92], fill=PINK, outline=WHITE, width=SS * 2)
-    d.ellipse([W * 0.54, H * 0.10, W, H * 0.92], fill=PINK, outline=WHITE, width=SS * 2)
-    d.ellipse([W * 0.36, H * 0.32, W * 0.64, H * 0.72], fill=DEEP_PINK, outline=WHITE, width=SS * 2)
+    kx, ky = W * 0.50, H * 0.44                       # 結び目の位置
+
+    for sgn in (-1, 1):                                # 下がるリボン（左右）
+        tip = (kx + sgn * W * 0.34, H * 0.99)
+        pts = _bez((kx, ky), (kx + sgn * W * 0.04, H * 0.80), tip)
+        pts += [(kx + sgn * W * 0.22, H * 0.86), (kx + sgn * W * 0.30, H * 0.72)]
+        pts += _bez((kx + sgn * W * 0.30, H * 0.72), (kx + sgn * W * 0.16, H * 0.66), (kx, ky))
+        d.polygon(pts, fill=BOW_DARK)
+
+    for sgn in (-1, 1):                                # 輪っか（左右）
+        outer = _bez((kx, ky), (kx + sgn * W * 0.30, H * 0.00), (kx + sgn * W * 0.50, H * 0.22))
+        outer += _bez((kx + sgn * W * 0.50, H * 0.22), (kx + sgn * W * 0.50, H * 0.62),
+                      (kx + sgn * W * 0.16, H * 0.62))
+        outer += _bez((kx + sgn * W * 0.16, H * 0.62), (kx + sgn * W * 0.10, H * 0.56), (kx, ky))
+        d.polygon(outer, fill=BOW_PINK)
+        hl = _bez((kx + sgn * W * 0.12, H * 0.16), (kx + sgn * W * 0.34, H * 0.09),
+                  (kx + sgn * W * 0.40, H * 0.26))
+        d.line(hl, fill=(255, 226, 238, 190), width=round(W * 0.030), joint="curve")
+
+    d.ellipse([kx - W * 0.115, ky - H * 0.115, kx + W * 0.115, ky + H * 0.115], fill=BOW_DARK)
+    d.ellipse([kx - W * 0.055, ky - H * 0.085, kx - W * 0.005, ky - H * 0.030], fill=(255, 255, 255, 120))
     return _done(im, w, h)
 
 
@@ -310,16 +359,16 @@ ANCHOR = {
     # name: (置き場所, 頭の幅に対する横幅, 縦のズレ, 横のズレ)
     #   縦横のズレはどちらも「頭の大きさ」に対する比。head は頭のてっぺん基準（マイナスで上）、
     #   face は目の高さ基準。
-    "shark_hood":    ("hood", 1.34, -0.10, 0.00),
-    "strawberry_hat":("hood", 1.30, -0.10, 0.00),
-    "bear_hood":     ("hood", 1.32, -0.10, 0.00),
+    "shark_hood":    ("hood", 1.34, -0.02, 0.00),
+    "strawberry_hat":("hood", 1.30, -0.02, 0.00),
+    "bear_hood":     ("hood", 1.32, -0.02, 0.00),
     "bunny_ears":     ("head", 0.86, -0.50, 0.00),
     "cat_ears":      ("head", 0.92, -0.44, 0.00),
     "flower_crown":   ("head", 0.92, -0.20, 0.00),
     "crown":          ("head", 0.62, -0.26, 0.00),
     "party_hat":      ("head", 0.54, -0.66, 0.14),
     "mushroom":       ("head", 0.86, -0.30, 0.00),
-    "bao":           ("hood", 1.30, -0.10, 0.00),
+    "bao":           ("hood", 1.30, -0.02, 0.00),
     "bow":            ("head", 0.32, -0.22, 0.30),
     "sunglasses":     ("face", 0.64, 0.00, 0.00),
     "heart_glasses":  ("face", 0.68, 0.00, 0.00),

@@ -72,18 +72,26 @@ def load_cutout(path: Path) -> Image.Image:
     return img.crop(bbox)
 
 
-def sticker_outline(img: Image.Image, width: int = 8, color=WHITE) -> Image.Image:
-    """シールっぽい白フチを付ける。アルファを膨張させて塗りつぶす。"""
+def sticker_outline(img: Image.Image, width: int = 11, color=WHITE) -> Image.Image:
+    """シールらしい白フチを付ける。
+
+    参考画像のフチは、ヒゲのような細い部分を無視して、丸くなめらかに回り込んでいる。
+    そこで一度アルファをぼかして角を落とし（＝細い線を輪郭から外し）、それから太らせる。
+    ヒゲ自体は写真として上に残るので、フチからはみ出して見える。
+    """
     if width <= 0:
         return img
-    pad = width + 2
+    pad = width + 4
     base = Image.new("RGBA", (img.width + pad * 2, img.height + pad * 2), (0, 0, 0, 0))
     base.paste(img, (pad, pad))
     alpha = base.split()[3]
-    grown = alpha.filter(ImageFilter.MaxFilter(width * 2 + 1)).filter(ImageFilter.GaussianBlur(1.2))
-    grown = grown.point(lambda v: 255 if v > 90 else 0)
+    round_r = max(2.0, width * 0.75)
+    shape = alpha.filter(ImageFilter.GaussianBlur(round_r)).point(lambda v: 255 if v > 132 else 0)
+    grown = shape.filter(ImageFilter.MaxFilter(width * 2 + 1))
+    grown = grown.filter(ImageFilter.GaussianBlur(width * 0.30)).point(lambda v: 255 if v > 96 else 0)
+    grown = grown.filter(ImageFilter.GaussianBlur(0.8))
     edge = Image.new("RGBA", base.size, color)
-    edge.putalpha(grown)
+    edge.putalpha(ImageChops.lighter(grown, alpha))
     return Image.alpha_composite(edge, base)
 
 
@@ -417,7 +425,7 @@ def prepare_body(item: Item, cfg: dict) -> tuple[Image.Image, dict]:
     容量調整でフレーム数を変えながら何度も呼ばれるので、結果を覚えておく
     （この工程がいちばん重い）。
     """
-    key = (str(item.src), item.flip, item.zoom, item.tint, cfg.get("outline", 8),
+    key = (str(item.src), item.flip, item.zoom, item.tint, cfg.get("outline_ratio", 0.030),
            repr(item.wear), repr(item.emo))
     if key in _BODY_CACHE:
         return _BODY_CACHE[key]
@@ -430,8 +438,10 @@ def prepare_body(item: Item, cfg: dict) -> tuple[Image.Image, dict]:
     if item.tint:
         body = apply_tint(body, item.tint)
     body, meta = wear_items(body, list(item.wear) + list(item.emo), item.src.name)
-    pad = cfg.get("outline", 8) + 2
-    body = sticker_outline(body, cfg.get("outline", 8))
+    # フチの太さは写真の大きさに比例させる。固定pxだと縮小後に細く見えてしまう
+    ow = max(5, round(body.width * cfg.get("outline_ratio", 0.030)))
+    pad = ow + 4
+    body = sticker_outline(body, ow)
     meta = dict(meta, head_cx=meta["head_cx"] + pad, head_cy=meta["head_cy"] + pad)
     _BODY_CACHE[key] = (body, meta)
     return _BODY_CACHE[key]
@@ -621,7 +631,7 @@ def main() -> int:
     stype = raw.get("type", "animation")
     spec = SPEC[stype]
     cfg = dict(type=stype, canvas=tuple(raw.get("canvas", spec["canvas"])),
-               margin=raw.get("margin", 10), outline=raw.get("outline", 8),
+               margin=raw.get("margin", 10), outline_ratio=raw.get("outline_ratio", 0.030),
                frames=raw.get("frames", 10), loop_ms=raw.get("loop_ms", 1000),
                loop=raw.get("loop", 4), max_bytes=raw.get("max_bytes", spec["max_bytes"]),
                feather=raw.get("feather", 0.08))
@@ -661,7 +671,7 @@ def main() -> int:
                   wear=tuple(main_src.get("wear", [])))
     m_cfg = dict(cfg, canvas=MAIN_SIZE)
     (out / "main.png").write_bytes(build_one(m_item, m_cfg, font_path))
-    t_cfg = dict(cfg, canvas=TAB_SIZE, type="static", outline=4, max_bytes=1_000_000)
+    t_cfg = dict(cfg, canvas=TAB_SIZE, type="static", outline_ratio=0.022, max_bytes=1_000_000)
     (out / "tab.png").write_bytes(build_one(Item(src=m_item.src, motion="none", wear=m_item.wear),
                                             t_cfg, font_path))
 

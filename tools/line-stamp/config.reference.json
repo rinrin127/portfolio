@@ -1,0 +1,386 @@
+{
+  "title": "うちの猫スタンプ 写真",
+  "type": "animation",
+  "canvas": [
+    320,
+    270
+  ],
+  "margin": 10,
+  "outline": 8,
+  "frames": 10,
+  "loop_ms": 1000,
+  "loop": 4,
+  "max_bytes": 300000,
+  "font": "auto",
+  "main": {
+    "src": "input/01.png",
+    "text": "",
+    "motion": "pop",
+    "wear": [
+      "bow"
+    ],
+    "emo": [
+      "sparkle_burst"
+    ],
+    "deco": []
+  },
+  "items": [
+    {
+      "src": "input/01.png",
+      "text": "",
+      "motion": "breathe",
+      "wear": [
+        "bow",
+        "blush"
+      ],
+      "emo": [],
+      "deco": [],
+      "tint": "",
+      "zoom": "",
+      "flip": false,
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/02.png",
+      "text": "",
+      "motion": "bounce",
+      "wear": [
+        "bow",
+        "whiskers",
+        "blush"
+      ],
+      "emo": [],
+      "deco": [],
+      "tint": "",
+      "zoom": "",
+      "flip": false,
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/03.png",
+      "text": "",
+      "motion": "pop",
+      "wear": [
+        "heart_glasses",
+        "blush"
+      ],
+      "emo": [],
+      "deco": [],
+      "tint": "",
+      "zoom": "",
+      "flip": false,
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/04.png",
+      "text": "",
+      "motion": "tilt",
+      "wear": [
+        "bow"
+      ],
+      "emo": [],
+      "deco": [],
+      "tint": "",
+      "zoom": "",
+      "flip": false,
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/01.png",
+      "text": "",
+      "motion": "breathe",
+      "wear": [
+        "flower_crown",
+        "blush"
+      ],
+      "emo": [],
+      "deco": [],
+      "tint": "",
+      "zoom": "",
+      "flip": false,
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/02.png",
+      "text": "",
+      "motion": "bounce",
+      "wear": [
+        "shark_hood"
+      ],
+      "emo": [],
+      "deco": [],
+      "tint": "",
+      "zoom": "",
+      "flip": false,
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/03.png",
+      "text": "",
+      "motion": "wiggle",
+      "wear": [
+        "bow",
+        "whiskers"
+      ],
+      "emo": [],
+      "deco": [],
+      "tint": "",
+      "zoom": "",
+      "flip": false,
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/04.png",
+      "text": "",
+      "motion": "pop",
+      "wear": [
+        "heart_glasses"
+      ],
+      "emo": [],
+      "deco": [],
+      "tint": "",
+      "zoom": "",
+      "flip": false,
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/01.png",
+      "text": "",
+      "motion": "breathe",
+      "wear": [
+        "strawberry_hat"
+      ],
+      "emo": [],
+      "deco": [],
+      "tint": "",
+      "zoom": "",
+      "flip": true,
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/02.png",
+      "text": "",
+      "motion": "bounce",
+      "wear": [
+        "bow",
+        "blush"
+      ],
+      "emo": [],
+      "deco": [],
+      "tint": "",
+      "zoom": "",
+      "flip": true,
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/03.png",
+      "text": "",
+      "motion": "pop",
+      "wear": [
+        "crown",
+        "blush"
+      ],
+      "emo": [
+        "sparkle_burst"
+      ],
+      "deco": [],
+      "tint": "",
+      "zoom": "",
+      "flip": true,
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/04.png",
+      "text": "",
+      "motion": "breathe",
+      "wear": [
+        "bao"
+      ],
+      "emo": [],
+      "deco": [],
+      "tint": "",
+      "zoom": "",
+      "flip": true,
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/01.png",
+      "text": "",
+      "motion": "jump",
+      "wear": [
+        "bunny_ears",
+        "blush"
+      ],
+      "emo": [],
+      "deco": [],
+      "tint": "",
+      "zoom": "",
+      "flip": false,
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/02.png",
+      "text": "",
+      "motion": "tilt",
+      "wear": [
+        "round_glasses",
+        "blush"
+      ],
+      "emo": [],
+      "deco": [],
+      "tint": "",
+      "zoom": "",
+      "flip": false,
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/03.png",
+      "text": "",
+      "motion": "pop",
+      "wear": [
+        "bow"
+      ],
+      "emo": [
+        "heart_eyes"
+      ],
+      "deco": [],
+      "tint": "",
+      "zoom": "",
+      "flip": false,
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/04.png",
+      "text": "",
+      "motion": "wiggle",
+      "wear": [
+        "mushroom"
+      ],
+      "emo": [],
+      "deco": [],
+      "tint": "",
+      "zoom": "",
+      "flip": false,
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/01.png",
+      "text": "",
+      "motion": "breathe",
+      "wear": [
+        "bow",
+        "whiskers",
+        "blush"
+      ],
+      "emo": [],
+      "deco": [],
+      "tint": "",
+      "zoom": "",
+      "flip": false,
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/02.png",
+      "text": "",
+      "motion": "bounce",
+      "wear": [
+        "bear_hood"
+      ],
+      "emo": [],
+      "deco": [],
+      "tint": "",
+      "zoom": "",
+      "flip": false,
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/03.png",
+      "text": "",
+      "motion": "pop",
+      "wear": [
+        "bow",
+        "blush"
+      ],
+      "emo": [
+        "sparkle_burst"
+      ],
+      "deco": [],
+      "tint": "",
+      "zoom": "",
+      "flip": false,
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/04.png",
+      "text": "",
+      "motion": "tilt",
+      "wear": [
+        "whiskers"
+      ],
+      "emo": [],
+      "deco": [],
+      "tint": "",
+      "zoom": "",
+      "flip": false,
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/01.png",
+      "text": "",
+      "motion": "breathe",
+      "wear": [
+        "flower_crown"
+      ],
+      "emo": [],
+      "deco": [],
+      "tint": "",
+      "zoom": "",
+      "flip": true,
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/02.png",
+      "text": "",
+      "motion": "bounce",
+      "wear": [
+        "bow",
+        "blush"
+      ],
+      "emo": [],
+      "deco": [],
+      "tint": "",
+      "zoom": "",
+      "flip": true,
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/03.png",
+      "text": "",
+      "motion": "jump",
+      "wear": [
+        "party_hat",
+        "blush"
+      ],
+      "emo": [],
+      "deco": [],
+      "tint": "",
+      "zoom": "",
+      "flip": true,
+      "text_pos": "bottom"
+    },
+    {
+      "src": "input/04.png",
+      "text": "",
+      "motion": "breathe",
+      "wear": [
+        "shark_hood"
+      ],
+      "emo": [],
+      "deco": [],
+      "tint": "",
+      "zoom": "",
+      "flip": true,
+      "text_pos": "bottom"
+    }
+  ]
+}

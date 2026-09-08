@@ -69,12 +69,47 @@ KEIGO = [
     ("おやすみ\nなさい",     "breathe", ["zzz"],           ["bao"],            "cool", ""),
 ]
 
-SETS = {"casual": ("うちの猫スタンプ", CASUAL), "keigo": ("うちの猫スタンプ 敬語", KEIGO)}
+
+# 参考画像（mushucalar系）に寄せた、文字なしの写真スタンプ。
+# リボン・ほっぺ・描きヒゲを軸に、たまに被り物を混ぜる構成。
+REFERENCE = [
+    ("", "breathe", [],                ["bow", "blush"]),
+    ("", "bounce",  [],                ["bow", "whiskers", "blush"]),
+    ("", "pop",     [],                ["heart_glasses", "blush"]),
+    ("", "tilt",    [],                ["bow"]),
+    ("", "breathe", [],                ["flower_crown", "blush"]),
+    ("", "bounce",  [],                ["shark_hood"]),
+    ("", "wiggle",  [],                ["bow", "whiskers"]),
+    ("", "pop",     [],                ["sunglasses"]),
+    ("", "breathe", [],                ["strawberry_hat"]),
+    ("", "bounce",  [],                ["bow", "blush"]),
+    ("", "pop",     ["sparkle_burst"], ["crown", "blush"]),
+    ("", "breathe", [],                ["bao"]),
+    ("", "jump",    [],                ["bunny_ears", "blush"]),
+    ("", "tilt",    [],                ["round_glasses", "blush"]),
+    ("", "pop",     ["heart_eyes"],    ["bow"]),
+    ("", "wiggle",  [],                ["mushroom"]),
+    ("", "breathe", [],                ["bow", "whiskers", "blush"]),
+    ("", "bounce",  [],                ["bear_hood"]),
+    ("", "pop",     ["sparkle_burst"], ["bow", "blush"]),
+    ("", "tilt",    [],                ["whiskers"]),
+    ("", "breathe", [],                ["flower_crown"]),
+    ("", "bounce",  [],                ["bow", "blush"]),
+    ("", "jump",    [],                ["party_hat", "blush"]),
+    ("", "breathe", [],                ["shark_hood"]),
+]
+
+# 毛色が濃い子は、ほっぺ・黒いめがねが見えないので差し替える（写真の番号）
+DARK_PHOTOS = {4}
+
+SETS = {"casual": ("うちの猫スタンプ", CASUAL), "keigo": ("うちの猫スタンプ 敬語", KEIGO),
+        "reference": ("うちの猫スタンプ 写真", REFERENCE)}
 
 
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--set", choices=SETS, default="casual")
+    ap.add_argument("--no-text", action="store_true", help="セリフを入れない（写真だけのスタンプ）")
     ap.add_argument("--photos", type=int, default=4, help="input/ にある写真の枚数")
     ap.add_argument("--count", type=int, default=24, choices=(8, 16, 24))
     ap.add_argument("--out", default=None)
@@ -83,11 +118,17 @@ def main() -> None:
     title, table = SETS[args.set]
     rows = table[:args.count]
     items, used = [], {}
-    for i, (text, motion, emo, wear, tint, zoom) in enumerate(rows):
+    for i, row in enumerate(rows):
+        text, motion, emo, wear = row[0], row[1], row[2], row[3]
+        tint, zoom = (row[4], row[5]) if len(row) > 5 else ("", "")
         pid = i % args.photos + 1
         used[pid] = used.get(pid, 0) + 1
+        if pid in DARK_PHOTOS:
+            # 毛色が濃い子は、ほっぺも黒いサングラスも沈んで見えないので置き換える
+            wear = [("heart_glasses" if w in ("sunglasses", "round_glasses") else w)
+                    for w in wear if w != "blush"]
         items.append({
-            "src": f"input/{pid:02d}.png", "text": text, "motion": motion,
+            "src": f"input/{pid:02d}.png", "text": "" if args.no_text else text, "motion": motion,
             "wear": wear, "emo": emo, "deco": [], "tint": tint, "zoom": zoom,
             "flip": used[pid] % 3 == 0,          # 同じ写真の3回目は左右反転して変化をつける
             "text_pos": "bottom",
