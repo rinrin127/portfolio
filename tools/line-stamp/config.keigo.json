@@ -35,7 +35,7 @@
       "emo": [],
       "deco": [],
       "tint": "",
-      "zoom": "face",
+      "zoom": "",
       "flip": false,
       "text_pos": "bottom"
     },
@@ -65,7 +65,7 @@
       ],
       "deco": [],
       "tint": "",
-      "zoom": "face",
+      "zoom": "",
       "flip": false,
       "text_pos": "bottom"
     },
@@ -74,7 +74,7 @@
       "text": "よろしく\nお願いします",
       "motion": "bounce",
       "wear": [
-        "ribbon_collar"
+        "bow"
       ],
       "emo": [],
       "deco": [],
@@ -93,7 +93,7 @@
       "emo": [],
       "deco": [],
       "tint": "",
-      "zoom": "face",
+      "zoom": "",
       "flip": false,
       "text_pos": "bottom"
     },
@@ -135,7 +135,7 @@
       ],
       "deco": [],
       "tint": "cool",
-      "zoom": "face",
+      "zoom": "",
       "flip": false,
       "text_pos": "bottom"
     },
@@ -163,7 +163,7 @@
       "emo": [],
       "deco": [],
       "tint": "",
-      "zoom": "face",
+      "zoom": "",
       "flip": true,
       "text_pos": "bottom"
     },
@@ -186,7 +186,7 @@
       "text": "お世話に\nなります",
       "motion": "bounce",
       "wear": [
-        "cat_ears"
+        "bow"
       ],
       "emo": [],
       "deco": [],
@@ -207,7 +207,7 @@
       ],
       "deco": [],
       "tint": "",
-      "zoom": "face",
+      "zoom": "",
       "flip": false,
       "text_pos": "bottom"
     },
@@ -244,7 +244,7 @@
       "text": "お待ち\nしております",
       "motion": "breathe",
       "wear": [
-        "ribbon_collar"
+        "bow"
       ],
       "emo": [
         "note"
@@ -309,7 +309,7 @@
       ],
       "deco": [],
       "tint": "",
-      "zoom": "face",
+      "zoom": "",
       "flip": false,
       "text_pos": "bottom"
     },
@@ -373,7 +373,7 @@
       ],
       "deco": [],
       "tint": "cool",
-      "zoom": "face",
+      "zoom": "",
       "flip": true,
       "text_pos": "bottom"
     }

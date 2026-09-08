@@ -13,7 +13,7 @@ accessories.py — 猫にかぶせる「被り物・小物」を描くライブ�
 from __future__ import annotations
 
 import math
-from PIL import Image, ImageDraw
+from PIL import Image, ImageChops, ImageDraw
 
 SS = 4  # スーパーサンプリング倍率
 
@@ -39,57 +39,92 @@ def _done(im: Image.Image, w: int, h: int) -> Image.Image:
     return im.resize((w, h), Image.LANCZOS)
 
 
+
+# ------------------------------------------------------------------ フード（顔の穴あき）
+HOLE_CY = 0.60          # フードの高さに対する「顔の穴」の中心位置
+HOLE_RX, HOLE_RY = 0.385, 0.405
+
+
+def _cut_face_hole(im: Image.Image) -> Image.Image:
+    """フードの真ん中に顔の穴を開ける。ここから猫の顔がのぞく。"""
+    W, H = im.size
+    mask = Image.new("L", (W, H), 255)
+    ImageDraw.Draw(mask).ellipse([W * (0.5 - HOLE_RX), H * (HOLE_CY - HOLE_RY),
+                                  W * (0.5 + HOLE_RX), H * (HOLE_CY + HOLE_RY)], fill=0)
+    im.putalpha(ImageChops.multiply(im.split()[3], mask))
+    return im
+
+
 # ------------------------------------------------------------------ 被り物
 def shark_hood(w: int) -> Image.Image:
-    """サメの被り物。ギザギザの歯が顔まわりを囲む。"""
-    h = round(w * 0.86)
+    """サメの被り物。まん中に顔の穴があき、そのふちにギザギザの歯が並ぶ。"""
+    h = round(w * 0.98)
     im, d = _canvas(w, h)
     W, H = w * SS, h * SS
-    d.ellipse([W * 0.30, -H * 0.10, W * 0.86, H * 0.34], fill=GREY_D)      # 背びれ
-    d.polygon([(W * 0.46, H * 0.20), (W * 0.62, -H * 0.02), (W * 0.72, H * 0.22)], fill=GREY_D)
-    d.pieslice([0, H * 0.04, W, H * 1.34], 180, 360, fill=GREY)            # フード本体
-    d.pieslice([W * 0.10, H * 0.30, W * 0.90, H * 1.30], 180, 360, fill=(0, 0, 0, 55))
-    n = 11                                                                  # 歯
+    d.polygon([(W * 0.42, H * 0.16), (W * 0.56, -H * 0.06), (W * 0.68, H * 0.18)], fill=GREY_D)  # 背びれ
+    d.ellipse([0, H * 0.02, W, H * 1.24], fill=GREY)                                             # フード
+    d.ellipse([W * 0.03, H * 0.06, W * 0.97, H * 1.16], fill=(163, 171, 181, 255))
+    _cut_face_hole(im)
+    n = 12                                                                                        # 歯
     for i in range(n):
-        x0 = W * 0.06 + (W * 0.88) * i / n
-        x1 = x0 + (W * 0.88) / n
-        y = H * (0.62 - 0.30 * math.cos(math.pi * (i + 0.5) / n) ** 2)
-        d.polygon([(x0, y), (x1, y), ((x0 + x1) / 2, y + H * 0.17)], fill=WHITE)
-    d.ellipse([W * 0.10, H * 0.30, W * 0.24, H * 0.44], fill=WHITE, outline=INK, width=SS)
-    d.ellipse([W * 0.76, H * 0.30, W * 0.90, H * 0.44], fill=WHITE, outline=INK, width=SS)
-    d.ellipse([W * 0.15, H * 0.34, W * 0.21, H * 0.41], fill=INK)
-    d.ellipse([W * 0.79, H * 0.34, W * 0.85, H * 0.41], fill=INK)
+        a = math.pi * (0.06 + 0.88 * i / (n - 1))
+        cx = W * (0.5 - HOLE_RX * 0.98 * math.cos(a))
+        cy = H * (HOLE_CY - HOLE_RY * 0.98 * math.sin(a))
+        t = W * 0.042
+        d.polygon([(cx - t, cy - t * 0.3), (cx + t, cy - t * 0.3),
+                   (cx, cy + t * 2.1 * (1 if math.sin(a) > 0 else -1))], fill=WHITE)
+    for cx in (0.17, 0.83):                                                                       # 目
+        d.ellipse([W * (cx - 0.085), H * 0.20, W * (cx + 0.085), H * 0.37], fill=WHITE, outline=INK,
+                  width=SS * 2)
+        d.ellipse([W * (cx - 0.042), H * 0.25, W * (cx + 0.042), H * 0.33], fill=INK)
     return _done(im, w, h)
 
 
 def strawberry_hat(w: int) -> Image.Image:
     """いちごの被り物。"""
-    h = round(w * 0.82)
+    h = round(w * 0.98)
     im, d = _canvas(w, h)
     W, H = w * SS, h * SS
-    d.pieslice([0, H * 0.10, W, H * 1.40], 180, 360, fill=(233, 76, 88, 255))
-    for i in range(14):                                                     # つぶつぶ
-        a = math.pi * (0.10 + 0.80 * (i % 7) / 6)
-        r = 0.34 if i < 7 else 0.20
-        cx = W / 2 - W * r * math.cos(a)
-        cy = H * 0.66 - H * (r * 1.5) * math.sin(a)
-        d.ellipse([cx - W * 0.018, cy - W * 0.026, cx + W * 0.018, cy + W * 0.026], fill=(255, 236, 180, 255))
-    d.polygon([(W * 0.34, H * 0.20), (W * 0.50, H * 0.02), (W * 0.66, H * 0.20),
-               (W * 0.58, H * 0.24), (W * 0.42, H * 0.24)], fill=GREEN)     # へた
-    d.rectangle([W * 0.47, -H * 0.06, W * 0.53, H * 0.08], fill=GREEN)
+    d.ellipse([0, H * 0.04, W, H * 1.22], fill=(233, 76, 88, 255))
+    for i in range(26):                                                                           # つぶつぶ
+        a = math.pi * (0.02 + 0.96 * (i % 13) / 12)
+        rr = 0.50 if i < 13 else 0.60
+        cx = W * (0.5 - rr * math.cos(a))
+        cy = H * (0.58 - rr * 1.05 * math.sin(a))
+        d.ellipse([cx - W * 0.016, cy - W * 0.023, cx + W * 0.016, cy + W * 0.023],
+                  fill=(255, 238, 186, 255))
+    d.polygon([(W * 0.33, H * 0.14), (W * 0.50, -H * 0.04), (W * 0.67, H * 0.14),
+               (W * 0.57, H * 0.19), (W * 0.43, H * 0.19)], fill=GREEN)                            # へた
+    _cut_face_hole(im)
     return _done(im, w, h)
 
 
 def bear_hood(w: int) -> Image.Image:
     """くまの被り物。"""
-    h = round(w * 0.80)
+    h = round(w * 0.96)
     im, d = _canvas(w, h)
     W, H = w * SS, h * SS
-    for cx in (0.16, 0.84):                                                 # 耳
-        d.ellipse([W * (cx - 0.16), H * 0.02, W * (cx + 0.16), H * 0.42], fill=BROWN)
-        d.ellipse([W * (cx - 0.09), H * 0.12, W * (cx + 0.09), H * 0.34], fill=(226, 188, 156, 255))
-    d.pieslice([0, H * 0.14, W, H * 1.40], 180, 360, fill=BROWN)
-    d.pieslice([W * 0.12, H * 0.42, W * 0.88, H * 1.30], 180, 360, fill=(0, 0, 0, 45))
+    for cx in (0.14, 0.86):                                                                       # 耳
+        d.ellipse([W * (cx - 0.145), H * 0.00, W * (cx + 0.145), H * 0.34], fill=BROWN)
+        d.ellipse([W * (cx - 0.082), H * 0.08, W * (cx + 0.082), H * 0.26], fill=(228, 192, 160, 255))
+    d.ellipse([0, H * 0.06, W, H * 1.22], fill=BROWN)
+    d.ellipse([W * 0.04, H * 0.10, W * 0.96, H * 1.14], fill=(186, 148, 116, 255))
+    _cut_face_hole(im)
+    return _done(im, w, h)
+
+
+def bao(w: int) -> Image.Image:
+    """肉まんの皮の被り物。"""
+    h = round(w * 0.96)
+    im, d = _canvas(w, h)
+    W, H = w * SS, h * SS
+    d.ellipse([0, H * 0.06, W, H * 1.20], fill=CREAM)
+    for i in range(9):                                                                            # ひだ
+        a = math.pi * (0.04 + 0.92 * i / 8)
+        d.line([(W * 0.5, H * 0.30), (W * (0.5 - 0.52 * math.cos(a)), H * (0.58 - 0.62 * math.sin(a)))],
+               fill=(228, 204, 164, 255), width=SS * 3)
+    d.ellipse([W * 0.41, H * 0.10, W * 0.59, H * 0.28], fill=(252, 240, 212, 255))
+    _cut_face_hole(im)
     return _done(im, w, h)
 
 
@@ -186,20 +221,6 @@ def mushroom(w: int) -> Image.Image:
     return _done(im, w, h)
 
 
-def bao(w: int) -> Image.Image:
-    """肉まんの皮っぽい被り物。"""
-    h = round(w * 0.78)
-    im, d = _canvas(w, h)
-    W, H = w * SS, h * SS
-    d.pieslice([0, H * 0.16, W, H * 1.34], 180, 360, fill=CREAM)
-    for i in range(7):                                                      # ひだ
-        a = math.pi * (0.08 + 0.84 * i / 6)
-        x = W / 2 - W * 0.46 * math.cos(a)
-        d.line([(W / 2, H * 0.30), (x, H * 0.80)], fill=(226, 202, 160, 255), width=SS * 3)
-    d.ellipse([W * 0.40, H * 0.14, W * 0.60, H * 0.34], fill=(252, 238, 208, 255))
-    return _done(im, w, h)
-
-
 # ------------------------------------------------------------------ 顔まわり
 def sunglasses(w: int) -> Image.Image:
     h = round(w * 0.34)
@@ -286,23 +307,25 @@ def ribbon_collar(w: int) -> Image.Image:
 # ------------------------------------------------------------------ 一覧
 # name: (アンカー, 本体幅に対する横幅, 縦のズレ（本体高さ比・マイナスで上）)
 ANCHOR = {
-    # name: (置き場所, 頭幅に対する横幅, 縦のズレ, 横のズレ)
-    "shark_hood":     ("head", 1.22, -0.30, 0.00),
-    "strawberry_hat": ("head", 1.06, -0.34, 0.00),
-    "bear_hood":      ("head", 1.18, -0.28, 0.00),
-    "bunny_ears":     ("head", 0.94, -0.40, 0.00),
-    "cat_ears":       ("head", 0.92, -0.30, 0.00),
-    "flower_crown":   ("head", 0.98, -0.22, 0.00),
-    "crown":          ("head", 0.72, -0.22, 0.00),
-    "party_hat":      ("head", 0.62, -0.44, 0.10),
-    "mushroom":       ("head", 0.92, -0.24, 0.00),
-    "bao":            ("head", 1.14, -0.26, 0.00),
-    "sunglasses":     ("face", 0.86, 0.00, 0.00),
-    "heart_glasses":  ("face", 0.92, 0.00, 0.00),
-    "round_glasses":  ("face", 0.86, 0.00, 0.00),
-    "whiskers":       ("face", 1.30, 0.06, 0.00),
-    "blush":          ("face", 0.94, 0.10, 0.00),
-    "bow":            ("head", 0.36, -0.08, 0.22),
+    # name: (置き場所, 頭の幅に対する横幅, 縦のズレ, 横のズレ)
+    #   縦横のズレはどちらも「頭の大きさ」に対する比。head は頭のてっぺん基準（マイナスで上）、
+    #   face は目の高さ基準。
+    "shark_hood":    ("hood", 1.34, -0.10, 0.00),
+    "strawberry_hat":("hood", 1.30, -0.10, 0.00),
+    "bear_hood":     ("hood", 1.32, -0.10, 0.00),
+    "bunny_ears":     ("head", 0.86, -0.50, 0.00),
+    "cat_ears":      ("head", 0.92, -0.44, 0.00),
+    "flower_crown":   ("head", 0.92, -0.20, 0.00),
+    "crown":          ("head", 0.62, -0.26, 0.00),
+    "party_hat":      ("head", 0.54, -0.66, 0.14),
+    "mushroom":       ("head", 0.86, -0.30, 0.00),
+    "bao":           ("hood", 1.30, -0.10, 0.00),
+    "bow":            ("head", 0.32, -0.22, 0.30),
+    "sunglasses":     ("face", 0.64, 0.00, 0.00),
+    "heart_glasses":  ("face", 0.68, 0.00, 0.00),
+    "round_glasses":  ("face", 0.64, 0.00, 0.00),
+    "whiskers":       ("face", 1.10, 0.22, 0.00),
+    "blush":          ("face", 0.88, 0.20, 0.00),
     "ribbon_collar":  ("neck", 0.86, 0.00, 0.00),
 }
 
@@ -483,17 +506,17 @@ def sparkle_burst(w: int) -> Image.Image:
 
 
 EMOTION_ANCHOR = {
-    "anger":         ("head", 0.34, -0.06, 0.34),
-    "sweat":         ("head", 0.20, 0.02, 0.36),
-    "tears":         ("face", 0.80, 0.16, 0.00),
-    "zzz":           ("head", 0.52, -0.34, 0.34),
-    "note":          ("head", 0.24, -0.14, -0.34),
-    "question":      ("head", 0.28, -0.32, 0.26),
-    "exclaim":       ("head", 0.24, -0.34, 0.24),
-    "shock":         ("head", 0.90, -0.10, 0.00),
-    "heart_eyes":    ("face", 0.88, 0.00, 0.00),
-    "spiral_eyes":   ("face", 0.86, 0.00, 0.00),
-    "sparkle_burst": ("head", 0.40, -0.26, -0.32),
+    "anger":         ("head", 0.38, -0.02, -0.36),
+    "sweat":         ("head", 0.15, 0.12, 0.38),
+    "tears":         ("face", 0.46, 0.16, 0.00),
+    "zzz":           ("head", 0.42, -0.40, 0.34),
+    "note":          ("head", 0.19, -0.22, -0.40),
+    "question":      ("head", 0.24, -0.38, 0.32),
+    "exclaim":       ("head", 0.26, -0.40, 0.30),
+    "shock":         ("head", 0.86, -0.18, 0.00),
+    "heart_eyes":    ("face", 0.62, 0.00, 0.00),
+    "spiral_eyes":   ("face", 0.60, 0.00, 0.00),
+    "sparkle_burst": ("head", 0.30, -0.28, -0.38),
 }
 
 ANCHOR.update(EMOTION_ANCHOR)

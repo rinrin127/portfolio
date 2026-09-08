@@ -211,8 +211,8 @@ def draw_text(canvas: Image.Image, text: str, font_path: str | None, pos: str, m
     d = ImageDraw.Draw(canvas)
     lines = split_lines(text)
     maxw = canvas.width - margin * 2
-    maxh = canvas.height * (0.42 if len(lines) > 1 else 0.24)
-    size = round(canvas.height * 0.21)
+    maxh = canvas.height * (0.34 if len(lines) > 1 else 0.20)
+    size = round(canvas.height * 0.18)
     while size > 10:
         font = ImageFont.truetype(font_path, size)
         wide = max(d.textlength(ln, font=font) for ln in lines)
@@ -233,8 +233,24 @@ def draw_text(canvas: Image.Image, text: str, font_path: str | None, pos: str, m
 SMALL_KANA = set("ぁぃぅぇぉっゃゅょャュョッァィゥェォーん、。！？")
 
 
-def find_anchors(img: Image.Image) -> dict:
+PHOTO_ANCHORS: dict = {}
+
+
+def load_photo_anchors(root: Path) -> None:
+    """photos.json に書いた実測値を読み込む。無ければ自動推定にまかせる。"""
+    f = root / "photos.json"
+    if f.exists():
+        PHOTO_ANCHORS.update({k: v for k, v in json.loads(f.read_text(encoding="utf-8")).items()
+                              if not k.startswith("_")})
+        print(f"顔の位置: photos.json から {len(PHOTO_ANCHORS)}枚ぶん読み込み")
+
+
+def find_anchors(img: Image.Image, name: str = "") -> dict:
     """透過の形から、頭のてっぺん・頭の幅・顔の中心・首もとを推定する。"""
+    if name in PHOTO_ANCHORS:                    # 実測値があればそれを使う
+        m = PHOTO_ANCHORS[name]
+        return dict(head_x=m["head_x"], head_y=m["head_top"], head_w=m["head_w"],
+                    face_y=m["eye_y"], neck_y=m.get("neck_y", 1.05))
     alpha = img.split()[3]
     sw = 64
     small = alpha.resize((sw, max(2, round(img.height * sw / img.width))), Image.BILINEAR)
@@ -256,6 +272,29 @@ def find_anchors(img: Image.Image) -> dict:
     fy, ny = (0.42, 0.92) if head_only else (0.20, 0.42)
     return dict(head_x=head_x, head_y=top / sh, head_w=head_w,
                 face_y=(top + span * fy) / sh, neck_y=(top + span * ny) / sh)
+
+
+def tidy_alpha(img: Image.Image, feather: float = 0.08) -> Image.Image:
+    """切り抜きのギザギザをならし、写真を切った直線的な下端をぼかす。
+
+    白フチを付けるとアラが目立つので、その前に軽く整える。
+    ヒゲは細いので消さない程度のぼかしにとどめる。
+    """
+    a = img.split()[3]
+    a = a.filter(ImageFilter.GaussianBlur(1.2)).point(lambda v: 0 if v < 110 else min(255, round(v * 1.25)))
+    a = a.filter(ImageFilter.MinFilter(3))       # 切り抜きに残った白フチを1pxぶん削る
+    if feather > 0:                              # 下端が画像の縁で切れていたらぼかす
+        w, h = a.size
+        band = max(2, round(h * feather))
+        row = a.crop((0, h - 2, w, h - 1)).getextrema()
+        if row[1] > 40:
+            grad = Image.linear_gradient("L").resize((w, band))   # 上が黒→下が白
+            grad = grad.point(lambda v: 255 - v)                  # 上が白→下が黒
+            region = a.crop((0, h - band, w, h))
+            a.paste(ImageChops.multiply(region, grad), (0, h - band))
+    out = img.copy()
+    out.putalpha(a)
+    return out
 
 
 def zoom_face(img: Image.Image) -> Image.Image:
@@ -285,16 +324,25 @@ def apply_tint(img: Image.Image, kind: str) -> Image.Image:
 
 
 # ---------------------------------------------------------------- 被り物を着せる
-def wear_items(body: Image.Image, wear: list) -> Image.Image:
-    """猫の切り抜きに被り物・小物・感情エフェクトを合成して1枚にまとめる。"""
+def wear_items(body: Image.Image, wear: list, name: str = "") -> tuple[Image.Image, dict]:
+    """猫の切り抜きに被り物・小物・感情エフェクトを合成して1枚にまとめる。
+
+    位置と大きさはすべて「頭の大きさ」を基準にする。顔だけ切り抜いた写真でも
+    全身の写真でも、同じ設定で同じ見え方になる。
+    """
+    a = find_anchors(body, name)
     if not wear:
-        return body
-    a = find_anchors(body)
+        return body, dict(head_cx=a["head_x"] * body.width, head_w=a["head_w"] * body.width,
+                          head_cy=a["head_y"] * body.height + a["head_w"] * body.width * 0.525)
     padx, padt, padb = round(body.width * 0.40), round(body.height * 0.60), round(body.height * 0.12)
     canvas = Image.new("RGBA", (body.width + padx * 2, body.height + padt + padb), (0, 0, 0, 0))
     canvas.alpha_composite(body, (padx, padt))
     bw, bh = body.width, body.height
     hx = padx + a["head_x"] * bw
+    head_w = a["head_w"] * bw                    # 頭の幅（px）
+    head_h = head_w * 1.05                       # 頭の高さはだいたい幅と同じ
+    head_top = padt + a["head_y"] * bh
+    eye_y = padt + a["face_y"] * bh
 
     for w in wear:
         spec = {"name": w} if isinstance(w, str) else dict(w)
@@ -304,24 +352,28 @@ def wear_items(body: Image.Image, wear: list) -> Image.Image:
             print(f"  ! 知らない被り物: {name}")
             continue
         where, rel_w, rel_y, rel_x = meta
-        width = max(10, round(a["head_w"] * bw * rel_w * float(spec.get("scale", 1.0))))
+        width = max(10, round(head_w * rel_w * float(spec.get("scale", 1.0))))
         img = ACC.render(name, width)
         if img is None:
             continue
         rot = float(spec.get("rot", 0))
         if rot:
             img = img.rotate(rot, resample=Image.BICUBIC, expand=True)
-        x = hx - img.width / 2 + (rel_x + float(spec.get("dx", 0))) * bw
-        if where == "head":
-            y = padt + a["head_y"] * bh + rel_y * bh
+        x = hx - img.width / 2 + (rel_x + float(spec.get("dx", 0))) * head_w
+        if where == "hood":                       # 顔の穴が顔に重なるように置く
+            y = eye_y - img.height * ACC.HOLE_CY + rel_y * head_h
+        elif where == "head":
+            y = head_top + rel_y * head_h
         elif where == "face":
-            y = padt + a["face_y"] * bh - img.height / 2 + rel_y * bh
+            y = eye_y - img.height / 2 + rel_y * head_h
         else:
-            y = padt + a["neck_y"] * bh - img.height / 2 + rel_y * bh
-        y += float(spec.get("dy", 0)) * bh
+            y = padt + a["neck_y"] * bh - img.height / 2 + rel_y * head_h
+        y += float(spec.get("dy", 0)) * head_h
         canvas.alpha_composite(img, (round(x), round(y)))
 
-    return canvas.crop(canvas.split()[3].getbbox())
+    box = canvas.split()[3].getbbox()
+    return canvas.crop(box), dict(head_cx=hx - box[0], head_w=head_w,
+                                  head_cy=head_top + head_h * 0.5 - box[1])
 
 
 # ---------------------------------------------------------------- モーション
@@ -356,24 +408,50 @@ class Item:
     tint: str = ""
 
 
-def render_frames(item: Item, cfg: dict, font_path: str | None, n_frames: int, scale: float = 1.0):
-    canvas_w, canvas_h = cfg["canvas"]
-    margin = cfg["margin"]
+_BODY_CACHE: dict = {}
+
+
+def prepare_body(item: Item, cfg: dict) -> tuple[Image.Image, dict]:
+    """写真を読んで加工し、被り物を着せて白フチを付けるまで。
+
+    容量調整でフレーム数を変えながら何度も呼ばれるので、結果を覚えておく
+    （この工程がいちばん重い）。
+    """
+    key = (str(item.src), item.flip, item.zoom, item.tint, cfg.get("outline", 8),
+           repr(item.wear), repr(item.emo))
+    if key in _BODY_CACHE:
+        return _BODY_CACHE[key]
     body = load_cutout(item.src)
+    body = tidy_alpha(body, cfg.get("feather", 0.08))
     if item.flip:
         body = ImageOps.mirror(body)
     if item.zoom == "face":
         body = zoom_face(body)
     if item.tint:
         body = apply_tint(body, item.tint)
-    body = wear_items(body, list(item.wear) + list(item.emo))
+    body, meta = wear_items(body, list(item.wear) + list(item.emo), item.src.name)
+    pad = cfg.get("outline", 8) + 2
     body = sticker_outline(body, cfg.get("outline", 8))
+    meta = dict(meta, head_cx=meta["head_cx"] + pad, head_cy=meta["head_cy"] + pad)
+    _BODY_CACHE[key] = (body, meta)
+    return _BODY_CACHE[key]
 
-    # 動きぶんの余白を残して本体を収める
-    head = 0.18
-    box = (round((canvas_w - margin * 2) * (1 - head) * scale),
-           round((canvas_h - margin * 2) * (1 - head) * scale))
-    body = fit_into(body, box)
+
+def render_frames(item: Item, cfg: dict, font_path: str | None, n_frames: int, scale: float = 1.0):
+    canvas_w, canvas_h = cfg["canvas"]
+    margin = cfg["margin"]
+    head = 0.08                                  # 動きぶんに残す余白
+    body, meta = prepare_body(item, cfg)
+
+    # どの写真でも顔が同じくらいの大きさに見えるよう、頭の幅を基準に倍率を決める。
+    # 被り物が大きいときは、はみ出さないほうを優先する。
+    boxw = (canvas_w - margin * 2) * (1 - head) * scale
+    boxh = (canvas_h - margin * 2) * (1 - head) * scale
+    by_head = canvas_w * cfg.get("head_ratio", 0.56) / max(1.0, meta["head_w"])
+    by_fit = min(boxw / body.width, boxh / body.height)
+    k = min(by_head, by_fit)
+    body = body.resize((max(1, round(body.width * k)), max(1, round(body.height * k))), Image.LANCZOS)
+    head_cx, head_cy = meta["head_cx"] * k, meta["head_cy"] * k
 
     frames = []
     for i in range(n_frames):
@@ -386,10 +464,13 @@ def render_frames(item: Item, cfg: dict, font_path: str | None, n_frames: int, s
             layer = layer.rotate(ang, resample=Image.BICUBIC, expand=True)
 
         canvas = Image.new("RGBA", (canvas_w, canvas_h), (0, 0, 0, 0))
-        px = round((canvas_w - layer.width) / 2 + dx * canvas_w)
-        py = round((canvas_h - layer.height) / 2 + dy * canvas_h)
-        px = max(margin, min(px, canvas_w - margin - layer.width))
-        py = max(margin, min(py, canvas_h - margin - layer.height))
+        gx, gy = (layer.width - body.width) / 2, (layer.height - body.height) / 2
+        px = round(canvas_w * 0.50 - (head_cx + gx) * sc + dx * canvas_w)
+        py = round(canvas_h * 0.44 - (head_cy + gy) * sc + dy * canvas_h)
+        px = max(min(px, margin), min(0, canvas_w - margin - layer.width)) if layer.width > canvas_w - margin * 2 \
+            else max(margin, min(px, canvas_w - margin - layer.width))
+        py = max(min(py, margin), min(0, canvas_h - margin - layer.height)) if layer.height > canvas_h - margin * 2 \
+            else max(margin, min(py, canvas_h - margin - layer.height))
         canvas.alpha_composite(layer, (px, py))
         paste_deco(canvas, (px, py, layer.width, layer.height), list(item.deco), t)
         draw_text(canvas, item.text, font_path, item.text_pos, margin)
@@ -397,7 +478,16 @@ def render_frames(item: Item, cfg: dict, font_path: str | None, n_frames: int, s
     return frames
 
 
-def encode(frames, duration_ms: int, loop: int, colors: int = 0) -> bytes:
+def frame_durations(total_ms: int, n: int) -> list[int]:
+    """1ループがきっかり total_ms になるよう、各フレームの表示時間を整数で配る。
+
+    単純に割ると端数で4秒をわずかに超え、LINEの規格に引っかかる。
+    """
+    base, rem = divmod(total_ms, n)
+    return [base + (1 if i < rem else 0) for i in range(n)]
+
+
+def encode(frames, duration_ms, loop: int, colors: int = 0) -> bytes:
     """colors>0 なら減色してから書き出す（アルファは8bitのまま保つ）。"""
     if colors:
         out = []
@@ -434,8 +524,7 @@ def build_one(item: Item, cfg: dict, font_path: str | None) -> bytes:
         if n < SPEC["animation"]["min_frames"]:
             break
         frames = render_frames(item, cfg, font_path, n, scale)
-        dur = round(cfg["loop_ms"] / n)
-        last = encode(frames, dur, cfg["loop"], colors)
+        last = encode(frames, frame_durations(cfg["loop_ms"], n), cfg["loop"], colors)
         if len(last) <= budget:
             return last
     print(f"  ! {item.src.name}: 300KBに収まらなかった（{len(last)//1024}KB）。写真をもっとシンプルに")
@@ -534,8 +623,10 @@ def main() -> int:
     cfg = dict(type=stype, canvas=tuple(raw.get("canvas", spec["canvas"])),
                margin=raw.get("margin", 10), outline=raw.get("outline", 8),
                frames=raw.get("frames", 10), loop_ms=raw.get("loop_ms", 1000),
-               loop=raw.get("loop", 4), max_bytes=raw.get("max_bytes", spec["max_bytes"]))
+               loop=raw.get("loop", 4), max_bytes=raw.get("max_bytes", spec["max_bytes"]),
+               feather=raw.get("feather", 0.08))
 
+    load_photo_anchors(root)
     font_path = find_font(args.font or raw.get("font"))
     print(f"フォント: {font_path or '見つからず（セリフはスキップ）'}")
 

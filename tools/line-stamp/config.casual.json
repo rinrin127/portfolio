@@ -35,7 +35,7 @@
       "emo": [],
       "deco": [],
       "tint": "",
-      "zoom": "face",
+      "zoom": "",
       "flip": false,
       "text_pos": "bottom"
     },
@@ -51,7 +51,7 @@
       ],
       "deco": [],
       "tint": "cool",
-      "zoom": "face",
+      "zoom": "",
       "flip": false,
       "text_pos": "bottom"
     },
@@ -81,7 +81,7 @@
       ],
       "deco": [],
       "tint": "",
-      "zoom": "face",
+      "zoom": "",
       "flip": false,
       "text_pos": "bottom"
     },
@@ -127,7 +127,7 @@
       ],
       "deco": [],
       "tint": "",
-      "zoom": "face",
+      "zoom": "",
       "flip": false,
       "text_pos": "bottom"
     },
@@ -180,14 +180,14 @@
       "text": "おこ",
       "motion": "shake",
       "wear": [
-        "cat_ears"
+        "bow"
       ],
       "emo": [
         "anger"
       ],
       "deco": [],
       "tint": "warm",
-      "zoom": "face",
+      "zoom": "",
       "flip": true,
       "text_pos": "bottom"
     },
@@ -215,7 +215,7 @@
       ],
       "deco": [],
       "tint": "",
-      "zoom": "face",
+      "zoom": "",
       "flip": false,
       "text_pos": "bottom"
     },
@@ -243,7 +243,7 @@
       ],
       "deco": [],
       "tint": "cool",
-      "zoom": "face",
+      "zoom": "",
       "flip": false,
       "text_pos": "bottom"
     },
@@ -301,7 +301,7 @@
       "emo": [],
       "deco": [],
       "tint": "",
-      "zoom": "face",
+      "zoom": "",
       "flip": false,
       "text_pos": "bottom"
     },
@@ -331,7 +331,7 @@
       ],
       "deco": [],
       "tint": "",
-      "zoom": "face",
+      "zoom": "",
       "flip": true,
       "text_pos": "bottom"
     },
@@ -356,7 +356,7 @@
       "text": "まってる",
       "motion": "breathe",
       "wear": [
-        "ribbon_collar"
+        "bow"
       ],
       "emo": [
         "question"
