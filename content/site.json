@@ -4,8 +4,8 @@
   "nameEn": "TONARIE",
   "wordmark": "en-first",
   "_wordmark": "ロゴの並び。'en-first' は TONARIE を大きく・トナリエを小さく。'ja-first' で逆になります。",
-  "tagline": "ネットの向こうを、となりに。",
-  "description": "ネットの向こうを、となりに。TikTok・Instagram・ThreadsのSNS集客と、AIを使った動画・コンテンツ制作。むずかしいことを、わかるカタチにしてお渡しします。Web制作・SNS運用代行・AI導入のご依頼を承ります。富山県射水市発、トナリエ。",
+  "tagline": "ネットの向こうを、あなたのとなりへ",
+  "description": "ネットの向こうを、あなたのとなりへ。TikTok・Instagram・ThreadsのSNS集客と、AIを使った動画・コンテンツ制作。むずかしいことを、わかるカタチにしてお渡しします。Web制作・SNS運用代行・AI導入のご依頼を承ります。富山県射水市発、トナリエ。",
   "url": "https://rinrin127.github.io/portfolio/",
   "ogImage": "assets/images/profile-tonarie.jpg",
   "lang": "ja",
@@ -104,5 +104,5 @@
     "location": "富山県／全国フルオンライン対応",
     "note": "掲載しているサービス内容・料金は予告なく変更する場合があります。"
   },
-  "taglineAccent": "となりに。"
+  "taglineAccent": "あなたのとなりへ"
 }
