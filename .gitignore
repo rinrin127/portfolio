@@ -5,3 +5,6 @@ node_modules/
 scratch/
 
 dist/
+
+# 名刺用フォントのキャッシュ（大きいので入れない）
+print/business-card/fonts/

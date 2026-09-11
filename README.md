@@ -296,6 +296,20 @@ npm run figma:all
 
 ---
 
+## 名刺データ
+
+`print/business-card/` にピンクの名刺データがあります。**印刷所に出すのは `business-card-pink.pdf`** です（表・裏の2ページ、塗り足し3mm込み）。
+
+名刺の文字はサイトと同じ `content/` から作っているので、名前・肩書き・実績3行・メールなどを直したら、
+
+```bash
+npm run card
+```
+
+で名刺も作り直されます。くわしくは `print/business-card/README.md` を見てください。
+
+---
+
 ## 公開する
 
 ```bash
@@ -322,6 +336,9 @@ scripts/
   build.mjs         content → 全ページのHTML
   lib-markdown.mjs  記事のMarkdown変換
   figma-*.mjs       Figma連携
+  business-card.mjs 名刺データ（print/business-card/）を content から生成
+print/
+  business-card/    名刺データ（ピンク）。PDF が入稿用。詳しくは中の README
 archive/
   v1.html           旧サイト（2026-06版）
 
