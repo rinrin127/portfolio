@@ -14,8 +14,8 @@
 | 名刺の場所 | 元データ |
 |---|---|
 | ロゴ TONARIE／トナリエ | `site.json` の `nameEn` / `name` |
-| ネットの向こうを、となりに。 | `site.json` の `tagline`（`taglineAccent` の部分だけ濃いピンク） |
-| 名前・肩書き | `profile.json` の `name` / `role`（ローマ字は `nameEn`。無ければ Risa Nakajima） |
+| ネットの向こうを、あなたのとなりへ | `site.json` の `card.tagline`（無ければサイトと同じ `tagline`）。`card.taglineAccent` の部分だけ濃いピンク |
+| 名前・肩書き | `profile.json` の `name` / `role`（ローマ字は `nameEn`） |
 | メール・URL・所在地 | `site.json` の `contact.email` / `url` / `footer.location` |
 | 裏の実績3行 | `site.json` の `achievements.items` |
 | 裏の 01/02/03 | `services.json` の各柱の `title` |

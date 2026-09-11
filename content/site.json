@@ -104,5 +104,10 @@
     "location": "富山県／全国フルオンライン対応",
     "note": "掲載しているサービス内容・料金は予告なく変更する場合があります。"
   },
-  "taglineAccent": "となりに。"
+  "taglineAccent": "となりに。",
+  "card": {
+    "_comment": "名刺だけで使う文言。ここが空ならサイトと同じ tagline / taglineAccent が名刺にも載ります。",
+    "tagline": "ネットの向こうを、あなたのとなりへ",
+    "taglineAccent": "あなたのとなりへ"
+  }
 }

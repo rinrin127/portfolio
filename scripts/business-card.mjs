@@ -57,10 +57,10 @@ const mainAccount = (accounts.items || []).find((a) => a.public && /本アカウ
 /** 名前のローマ字。profile.json に nameEn があればそれを使う */
 const nameEn = profile.nameEn || 'Risa Nakajima';
 
-/** タグライン。taglineAccent の部分だけ色を変える（サイトと同じ） */
+/** タグライン。site.json の card.tagline があればそちらを優先。taglineAccent の部分だけ色を変える */
 function taglineHtml() {
-  const t = e(site.tagline || '');
-  const a = e(site.taglineAccent || '');
+  const t = e(site.card?.tagline || site.tagline || '');
+  const a = e(site.card?.taglineAccent ?? site.taglineAccent ?? '');
   if (!a || !t.includes(a)) return t;
   return t.replace(a, `<em>${a}</em>`);
 }
