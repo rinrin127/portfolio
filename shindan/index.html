@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI活用 かんたん診断（3分）｜トナリエ</title>
+<meta name="description" content="教室・スクールを運営している先生向け。9つの質問に答えると、今のAI活用の段階（知る・使う・任せる・広げる）と、次の一歩が分かります。所要3分。">
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600&family=Noto+Sans+JP:wght@400;500;700&family=Crimson+Pro:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../assets/tokens.css">
+<style>
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--cream); color: var(--ink); font-family: var(--font-sans); font-feature-settings: "palt"; -webkit-font-smoothing: antialiased; line-height: 1.7; }
+  a { color: var(--accent); }
+  .wrap { max-width: 640px; margin: 0 auto; padding: 0 20px 64px; }
+  header { display: flex; justify-content: space-between; align-items: baseline; padding: 22px 0 10px; }
+  header a { text-decoration: none; display: inline-flex; align-items: baseline; gap: 8px; }
+  header .en { font-family: var(--font-en); font-size: 20px; letter-spacing: .12em; color: var(--ink); }
+  header .ja { font-family: var(--font-mincho); font-size: 10px; letter-spacing: .16em; color: var(--ink-soft); }
+  header .tag { font-size: 11px; letter-spacing: .06em; color: var(--ink-faint); }
+
+  .hero { padding: 18px 0 8px; }
+  .pill { display: inline-flex; align-items: center; gap: 8px; padding: 5px 12px; border: 1px solid var(--accent-soft); border-radius: 999px; font-size: 12px; letter-spacing: .08em; color: var(--accent); background: var(--white); }
+  .pill::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+  h1 { font-family: var(--font-mincho); font-weight: 600; font-size: clamp(26px, 6.5vw, 34px); letter-spacing: .06em; line-height: 1.35; margin: 14px 0 8px; }
+  .lead { font-size: 14px; color: var(--ink-soft); margin: 0; }
+
+  .card { background: var(--white); border: 1px solid var(--line); border-radius: 8px; padding: 22px 20px; margin-top: 18px; box-shadow: 0 2px 6px rgba(51,38,31,.05), 0 14px 36px rgba(51,38,31,.06); }
+
+  /* progress */
+  .prog { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .prog .bar { flex: 1; height: 4px; background: var(--cream-deep); border-radius: 999px; overflow: hidden; }
+  .prog .bar i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .25s; }
+  .prog .num { font-family: var(--font-en); font-size: 14px; letter-spacing: .06em; color: var(--accent); white-space: nowrap; }
+
+  .q { display: none; }
+  .q.on { display: block; }
+  .q h2 { font-family: var(--font-mincho); font-weight: 600; font-size: 19px; letter-spacing: .04em; line-height: 1.5; margin: 0 0 4px; }
+  .q .sub { font-size: 12px; color: var(--ink-faint); margin: 0 0 14px; }
+  .opts { display: flex; flex-direction: column; gap: 8px; }
+  .opt { display: flex; align-items: center; gap: 12px; padding: 13px 14px; border: 1px solid var(--line); border-radius: 6px; background: var(--white); cursor: pointer; font-size: 15px; line-height: 1.5; transition: border-color .15s, background .15s; }
+  .opt:hover { border-color: var(--accent-soft); }
+  .opt input { position: absolute; opacity: 0; pointer-events: none; }
+  .opt .box { width: 18px; height: 18px; border: 1.5px solid var(--accent-soft); border-radius: 50%; flex: none; position: relative; }
+  .opt.multi .box { border-radius: 3px; }
+  .opt.sel { border-color: var(--accent); background: var(--accent-pale); }
+  .opt.sel .box::after { content: ""; position: absolute; inset: 3px; background: var(--accent); border-radius: inherit; }
+
+  .nav { display: flex; justify-content: space-between; gap: 12px; margin-top: 18px; }
+  .btn { appearance: none; border: 1px solid var(--accent); background: var(--accent); color: var(--cream); font: inherit; font-size: 15px; font-weight: 700; letter-spacing: .06em; padding: 12px 22px; border-radius: 999px; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; }
+  .btn:disabled { opacity: .35; cursor: default; }
+  .btn.ghost { background: transparent; color: var(--accent); }
+  .btn.wide { width: 100%; padding: 15px 22px; font-size: 16px; }
+
+  /* result */
+  #result { display: none; }
+  .lv { display: flex; align-items: baseline; gap: 12px; margin: 4px 0 6px; }
+  .lv .n { font-family: var(--font-en); font-size: 44px; line-height: 1; color: var(--accent); }
+  .lv .name { font-family: var(--font-mincho); font-weight: 600; font-size: 30px; letter-spacing: .1em; }
+  .lv .of { font-size: 12px; color: var(--ink-faint); letter-spacing: .06em; }
+  .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 14px 0 18px; }
+  .steps div { text-align: center; font-size: 11px; letter-spacing: .04em; padding: 8px 4px; border-radius: 4px; border: 1px solid var(--line); color: var(--ink-faint); background: var(--white); }
+  .steps div.now { background: var(--accent); border-color: var(--accent); color: var(--cream); font-weight: 700; }
+  .steps div.done { background: var(--accent-pale); border-color: var(--accent-soft); color: var(--accent); }
+  .res-h { font-family: var(--font-en); font-size: 11px; letter-spacing: .16em; color: var(--accent); margin: 18px 0 6px; }
+  .res-p { margin: 0; font-size: 15px; }
+  .hits { display: flex; flex-direction: column; gap: 8px; margin: 0; padding: 0; list-style: none; }
+  .hits li { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; padding: 10px 12px; background: var(--cream); border-radius: 6px; }
+  .hits li b { color: var(--accent); flex: none; }
+  .cta { margin-top: 22px; padding: 18px 16px; border: 1px solid var(--accent-soft); border-radius: 8px; background: var(--white); position: relative; overflow: hidden; }
+  .cta::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; background: var(--accent); }
+  .cta h3 { font-family: var(--font-mincho); font-weight: 600; font-size: 18px; letter-spacing: .04em; margin: 0 0 4px; padding-left: 8px; }
+  .cta p { margin: 0 0 14px; font-size: 13.5px; color: var(--ink-soft); padding-left: 8px; }
+  .cta .badge { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .06em; padding: 3px 10px; border-radius: 999px; background: var(--accent); color: var(--cream); margin-left: 6px; vertical-align: middle; }
+  .small { font-size: 12px; color: var(--ink-faint); margin-top: 12px; }
+  .copy { margin-top: 12px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .copy button { appearance: none; border: 1px solid var(--line); background: var(--white); color: var(--ink-soft); font: inherit; font-size: 13px; padding: 8px 14px; border-radius: 999px; cursor: pointer; }
+  #done { display: none; }
+  .hp { position: absolute; left: -9999px; }
+  .f { display: flex; flex-direction: column; gap: 5px; margin-bottom: 12px; padding-left: 8px; }
+  .f > label { font-size: 13px; font-weight: 700; letter-spacing: .04em; }
+  .f > label em { font-style: normal; font-size: 10px; color: var(--cream); background: var(--accent); border-radius: 999px; padding: 1px 7px; margin-left: 6px; vertical-align: middle; }
+  .f > label span { font-size: 10px; color: var(--ink-faint); margin-left: 6px; }
+  .f input[type=text], .f input[type=email], .f textarea { font: inherit; font-size: 16px; padding: 11px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--white); color: var(--ink); width: 100%; }
+  .f input:focus, .f textarea:focus { outline: none; border-color: var(--accent); }
+  .radios { display: flex; gap: 8px; flex-wrap: wrap; }
+  .chip { position: relative; }
+  .chip input { position: absolute; opacity: 0; pointer-events: none; }
+  .chip span { display: inline-block; padding: 8px 14px; border: 1px solid var(--line); border-radius: 999px; font-size: 13px; background: var(--white); cursor: pointer; }
+  .chip input:checked + span { border-color: var(--accent); background: var(--accent-pale); color: var(--accent); font-weight: 700; }
+  #applyForm .btn.wide { margin-left: 8px; width: calc(100% - 8px); }
+  footer { margin-top: 40px; padding-top: 14px; border-top: 1px solid var(--line); font-size: 11px; color: var(--ink-faint); display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  @media (max-width: 420px) { .steps div { font-size: 10px; } .lv .name { font-size: 26px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a href="../"><span class="en">TONARIE</span><span class="ja">トナリエ</span></a>
+    <span class="tag">AI活用 かんたん診断</span>
+  </header>
+
+  <section class="hero" id="intro">
+    <span class="pill">教室・スクールを運営している先生へ</span>
+    <h1>いま、AIをどこまで<br>使えていますか？</h1>
+    <p class="lead">9つの質問に答えると、今の段階（知る・使う・任せる・広げる）と、次の一歩が分かります。所要3分。名前の入力はいりません。</p>
+  </section>
+
+  <div class="card" id="quiz">
+    <div class="prog"><div class="bar"><i id="bar"></i></div><span class="num" id="num">1 / 9</span></div>
+
+    <div class="q on" data-k="ai">
+      <h2>AIは、どのくらい使っていますか？</h2>
+      <p class="sub">ChatGPT・Claude・Gemini など、なんでも</p>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="ai" value="0"><span class="box"></span>使ったことがない</label>
+        <label class="opt"><input type="radio" name="ai" value="1"><span class="box"></span>少し触ったけど、やめた</label>
+        <label class="opt"><input type="radio" name="ai" value="2"><span class="box"></span>ときどき使う</label>
+        <label class="opt"><input type="radio" name="ai" value="3"><span class="box"></span>ほぼ毎日使っている</label>
+      </div>
+    </div>
+
+    <div class="q" data-k="write">
+      <h2>AIに、仕事の文章を作ってもらったことは？</h2>
+      <p class="sub">返信・お知らせ・投稿文など</p>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="write" value="0"><span class="box"></span>ない</label>
+        <label class="opt"><input type="radio" name="write" value="1"><span class="box"></span>1〜2回ある</label>
+        <label class="opt"><input type="radio" name="write" value="2"><span class="box"></span>ときどき作ってもらう</label>
+        <label class="opt"><input type="radio" name="write" value="3"><span class="box"></span>自分用の「指示文」を持っていて、いつも使う</label>
+      </div>
+    </div>
+
+    <div class="q" data-k="reply">
+      <h2>返信やお知らせの文は、どう作っていますか？</h2>
+      <p class="sub">体験申込への返事、保護者への連絡など</p>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="reply" value="0"><span class="box"></span>毎回ゼロから書く</label>
+        <label class="opt"><input type="radio" name="reply" value="1"><span class="box"></span>前に送った文をコピーして直す</label>
+        <label class="opt"><input type="radio" name="reply" value="2"><span class="box"></span>決まったテンプレがある</label>
+        <label class="opt"><input type="radio" name="reply" value="3"><span class="box"></span>一部は自動で送られる仕組みがある</label>
+      </div>
+    </div>
+
+    <div class="q" data-k="manage">
+      <h2>出席・月謝・予約の管理は？</h2>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="manage" value="0"><span class="box"></span>手帳や紙で管理している</label>
+        <label class="opt"><input type="radio" name="manage" value="1"><span class="box"></span>LINEやメモに散らばっている</label>
+        <label class="opt"><input type="radio" name="manage" value="2"><span class="box"></span>表計算（Excel・スプレッドシート）にまとめている</label>
+        <label class="opt"><input type="radio" name="manage" value="3"><span class="box"></span>申込や出席が自動で表に入る</label>
+      </div>
+    </div>
+
+    <div class="q" data-k="print">
+      <h2>チラシ・お便り・プリントづくりは？</h2>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="print" value="0"><span class="box"></span>手書き、または人に頼んでいる</label>
+        <label class="opt"><input type="radio" name="print" value="1"><span class="box"></span>自分で作るが、かなり時間がかかる</label>
+        <label class="opt"><input type="radio" name="print" value="2"><span class="box"></span>テンプレがあって、短時間で作れる</label>
+        <label class="opt"><input type="radio" name="print" value="3"><span class="box"></span>AIに文章や下書きを作らせている</label>
+      </div>
+    </div>
+
+    <div class="q" data-k="sns">
+      <h2>SNSやホームページでの発信は？</h2>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="sns" value="0"><span class="box"></span>していない</label>
+        <label class="opt"><input type="radio" name="sns" value="1"><span class="box"></span>思いついたときだけ</label>
+        <label class="opt"><input type="radio" name="sns" value="2"><span class="box"></span>週1回以上、続けている</label>
+        <label class="opt"><input type="radio" name="sns" value="3"><span class="box"></span>予約投稿など、仕組みで回している</label>
+      </div>
+    </div>
+
+    <div class="q" data-k="auto">
+      <h2>「自分がいなくても勝手に動く」作業は、ありますか？</h2>
+      <p class="sub">例：申込が来たら自動でお礼が届く、月末に集計が自動で出る</p>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="auto" value="0"><span class="box"></span>ない</label>
+        <label class="opt"><input type="radio" name="auto" value="1"><span class="box"></span>ないが、あったらいいと思う</label>
+        <label class="opt"><input type="radio" name="auto" value="2"><span class="box"></span>1つある</label>
+        <label class="opt"><input type="radio" name="auto" value="3"><span class="box"></span>いくつかある</label>
+      </div>
+    </div>
+
+    <div class="q" data-k="expand">
+      <h2>教室の内容を、オンライン講座や教材にすることは？</h2>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="expand" value="0"><span class="box"></span>考えていない</label>
+        <label class="opt"><input type="radio" name="expand" value="1"><span class="box"></span>興味はある</label>
+        <label class="opt"><input type="radio" name="expand" value="2"><span class="box"></span>準備している</label>
+        <label class="opt"><input type="radio" name="expand" value="3"><span class="box"></span>すでに販売している</label>
+      </div>
+    </div>
+
+    <div class="q" data-k="pain" data-multi="1">
+      <h2>いちばん減らしたい作業は？</h2>
+      <p class="sub">いくつでも選べます</p>
+      <div class="opts">
+        <label class="opt multi"><input type="checkbox" name="pain" value="reply"><span class="box"></span>申込や問い合わせへの返信</label>
+        <label class="opt multi"><input type="checkbox" name="pain" value="notice"><span class="box"></span>保護者・受講者へのお知らせ文</label>
+        <label class="opt multi"><input type="checkbox" name="pain" value="manage"><span class="box"></span>出席・月謝・予約の管理</label>
+        <label class="opt multi"><input type="checkbox" name="pain" value="print"><span class="box"></span>チラシ・お便り・プリントづくり</label>
+        <label class="opt multi"><input type="checkbox" name="pain" value="sns"><span class="box"></span>SNSやホームページの発信</label>
+        <label class="opt multi"><input type="checkbox" name="pain" value="material"><span class="box"></span>教材づくり・オンライン化</label>
+      </div>
+    </div>
+
+    <div class="nav">
+      <button class="btn ghost" id="prev" type="button">← 戻る</button>
+      <button class="btn" id="next" type="button" disabled>次へ →</button>
+    </div>
+  </div>
+
+  <div class="card" id="result">
+    <div class="res-h">YOUR STEP</div>
+    <div class="lv"><span class="n" id="rn">1</span><span class="name" id="rname">知る</span><span class="of">／ 4段階</span></div>
+    <div class="steps"><div id="s1">1 知る</div><div id="s2">2 使う</div><div id="s3">3 任せる</div><div id="s4">4 広げる</div></div>
+    <p class="res-p" id="rdesc"></p>
+
+    <div class="res-h">NEXT STEP</div>
+    <p class="res-p" id="rnext"></p>
+
+    <div class="res-h" id="rhits-h" style="font-family: var(--font-mincho); font-size: 14px; letter-spacing: .08em; color: var(--ink);">AIが効きそうなところ</div>
+    <ul class="hits" id="rhits"></ul>
+
+    <div class="cta" id="applybox">
+      <h3>この結果で、30分診断を申し込む <span class="badge">モニター先着10名 0円</span></h3>
+      <p>診断の結果は自動で一緒に送られます。下の3つを書いて「申し込む」を押すだけで完了です。</p>
+      <form id="applyForm" method="post" action="https://tonarie.pages.dev/api/contact" accept-charset="UTF-8">
+        <input type="hidden" name="ご相談の種類" value="AI活用診断（30分）の申し込み">
+        <input type="hidden" name="ご相談内容" id="hiddenBody" value="">
+        <input type="hidden" name="_next" id="hiddenNext" value="">
+        <p class="hp"><label>この欄は空のままにしてください<input type="text" name="_gotcha" tabindex="-1" autocomplete="off"></label></p>
+        <div class="f">
+          <label for="fName">お名前 <em>必須</em></label>
+          <input id="fName" type="text" name="お名前" required autocomplete="name" placeholder="例：中島 理佐">
+        </div>
+        <div class="f">
+          <label for="fSchool">教室・スクール名 <span>任意</span></label>
+          <input id="fSchool" type="text" name="会社名" autocomplete="organization" placeholder="例：◯◯そろばん教室">
+        </div>
+        <div class="f">
+          <label for="fMail">メールアドレス <em>必須</em></label>
+          <input id="fMail" type="email" name="email" required autocomplete="email" placeholder="example@example.com">
+        </div>
+        <div class="f">
+          <label>診断の形 <span>任意</span></label>
+          <div class="radios">
+            <label class="chip"><input type="radio" name="how" value="教室に来てほしい（射水・高岡・富山市）"><span>教室に来てほしい</span></label>
+            <label class="chip"><input type="radio" name="how" value="オンライン（Zoomなど）"><span>オンライン</span></label>
+            <label class="chip"><input type="radio" name="how" value="どちらでもよい" checked><span>どちらでも</span></label>
+          </div>
+        </div>
+        <div class="f">
+          <label for="fWhen">ご都合のよい曜日・時間帯 <span>任意</span></label>
+          <input id="fWhen" type="text" name="when" placeholder="例：平日の午前、土曜の午後">
+        </div>
+        <div class="f">
+          <label for="fNote">ひとこと <span>任意</span></label>
+          <textarea id="fNote" name="note" rows="3" placeholder="いま一番困っていること、聞いてみたいことなど"></textarea>
+        </div>
+        <button class="btn wide" type="submit" id="submitBtn">この内容で申し込む</button>
+        <p class="small">送信すると、中島から2営業日以内にメールでご連絡します。モニターの方には診断後にアンケートと、感想の掲載（お名前は伏せます）をお願いしています。</p>
+      </form>
+    </div>
+
+    <div class="nav" style="justify-content:center;"><button class="btn ghost" id="retry" type="button">もう一度やる</button></div>
+  </div>
+
+  <div class="card" id="done">
+    <div class="res-h">THANK YOU</div>
+    <h2 style="font-family: var(--font-mincho); font-weight: 600; font-size: 24px; letter-spacing: .06em; margin: 4px 0 10px;">申し込みを受け付けました</h2>
+    <p class="res-p">診断の結果と一緒に届いています。中島から <b>2営業日以内</b> にメールでご連絡しますので、少しお待ちください。</p>
+    <p class="small">メールが届かない場合は、迷惑メールフォルダをご確認ください。それでも無い場合は、トナリエのトップページのお問い合わせからご連絡ください。</p>
+    <div class="nav" style="justify-content:center;"><a class="btn ghost" href="../">トナリエのトップへ</a></div>
+  </div>
+
+  <footer>
+    <span>トナリエ　中島 理佐（AI活用アドバイザー）</span>
+    <span>診断の回答は、申し込みを送るときだけ一緒に届きます。それ以外では保存しません。</span>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var qs = Array.prototype.slice.call(document.querySelectorAll('.q'));
+  var i = 0, total = qs.length;
+  var bar = document.getElementById('bar'), num = document.getElementById('num');
+  var prev = document.getElementById('prev'), next = document.getElementById('next');
+
+  function answered(q){
+    return q.querySelector('input:checked') !== null;
+  }
+  function show(n){
+    qs.forEach(function(q,k){ q.classList.toggle('on', k===n); });
+    i = n;
+    bar.style.width = ((n)/total*100) + '%';
+    num.textContent = (n+1) + ' / ' + total;
+    prev.style.visibility = n===0 ? 'hidden' : 'visible';
+    next.textContent = n===total-1 ? '結果を見る' : '次へ →';
+    next.disabled = !answered(qs[n]) && !qs[n].dataset.multi;
+    window.scrollTo({top: document.getElementById('quiz').offsetTop - 12, behavior:'smooth'});
+  }
+  document.querySelectorAll('.opt input').forEach(function(inp){
+    inp.addEventListener('change', function(){
+      var q = inp.closest('.q');
+      q.querySelectorAll('.opt').forEach(function(o){ o.classList.toggle('sel', o.querySelector('input').checked); });
+      next.disabled = false;
+      if (inp.type==='radio' && i < total-1) setTimeout(function(){ show(i+1); }, 220);
+    });
+  });
+  prev.addEventListener('click', function(){ if(i>0) show(i-1); });
+  next.addEventListener('click', function(){ if(i<total-1) show(i+1); else result(); });
+
+  var LV = [
+    null,
+    {name:'知る', desc:'AIはまだ「よく知らない道具」の段階です。ここは一番伸びしろが大きいところ。スマホにAIを入れて、返信やお知らせ文を一緒に作るところから始めると、最初の1週間で手応えが出ます。',
+     next:'講座1回（90分）。AIの入れ方と、返信・お知らせ文の作り方を、その場で一緒にやります。'},
+    {name:'使う', desc:'AIを使い始めていますが、まだ「思いついたときに使う」段階です。毎週の事務と発信を、決まった手順で回せるようにすると、時間が目に見えて減ります。',
+     next:'講座3回＋テンプレのお渡し。自分専用の指示文（テンプレ）を作り、チラシ・お便り・1か月分の投稿を短時間で作れるようにします。'},
+    {name:'任せる', desc:'手順ができていて、AIも日常的に使えています。次は「自分がいなくても動く」作業を1つ作る段階です。申込→自動でお礼、月末の集計が自動で届く、など。',
+     next:'仕組みづくり（お見積り）。30分診断でどの作業を自動にするか決め、こちらで作ってお渡しします。運用は先生ご自身で。'},
+    {name:'広げる', desc:'事務はかなり仕組みで回っています。ここからは、教室の外に新しい売上の柱を作る段階です。オンライン講座・教材・動画での集客など。',
+     next:'伴走（月額・ご相談）。実際にオンライン講座と教材で売上を作ってきた経験から、順番と作り方をお伝えします。'}
+  ];
+  var HITS = {
+    reply:   ['返信', 'よくある問い合わせの返事を、AIに下書きさせて1分で返せます。'],
+    notice:  ['お知らせ', '「誰に・何を・いつまで」を伝えるだけで、丁寧な文がすぐできます。'],
+    manage:  ['管理', '申込フォーム→表計算→リマインドまで、自動でつなげられます。'],
+    print:   ['チラシ', '文章と構成をAIに出させて、Canvaに流し込むと30分で仕上がります。'],
+    sns:     ['発信', '1か月分の投稿文をまとめて作り、予約投稿で回せます。'],
+    material:['教材', '教室でやっている内容を、AIで書き起こし・整理して教材の形にできます。']
+  };
+  function val(name){ var e=document.querySelector('input[name="'+name+'"]:checked'); return e? +e.value : 0; }
+  function level(){
+    var ai=val('ai'), routine=Math.max(val('reply'),val('manage'),val('print'),val('sns')), auto=val('auto');
+    if (ai<=1) return 1;
+    if (routine<=1) return 2;
+    if (auto<=1) return 3;
+    return 4;
+  }
+  var lastLevel='', lastPains='';
+  function result(){
+    var lv = level(), L = LV[lv];
+    document.getElementById('rn').textContent = lv;
+    document.getElementById('rname').textContent = L.name;
+    for (var k=1;k<=4;k++){ var s=document.getElementById('s'+k); s.className = k<lv?'done':(k===lv?'now':''); }
+    document.getElementById('rdesc').textContent = L.desc;
+    document.getElementById('rnext').textContent = L.next;
+    var pains = Array.prototype.slice.call(document.querySelectorAll('input[name="pain"]:checked')).map(function(e){return e.value;});
+    var ul = document.getElementById('rhits'); ul.innerHTML='';
+    var hh = document.getElementById('rhits-h');
+    if (pains.length){ hh.style.display=''; pains.forEach(function(p){ var li=document.createElement('li'); li.innerHTML='<b>'+HITS[p][0]+'</b><span>'+HITS[p][1]+'</span>'; ul.appendChild(li); }); }
+    else { hh.style.display='none'; }
+    lastLevel = lv+' '+L.name; lastPains = pains.map(function(p){return HITS[p][0];}).join('・')||'（未選択）';
+    document.getElementById('quiz').style.display='none';
+    document.getElementById('intro').style.display='none';
+    document.getElementById('result').style.display='block';
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+  /* 送信：診断の結果を本文にまとめて、サイトの問い合わせ受け口へ */
+  var form = document.getElementById('applyForm');
+  document.getElementById('hiddenNext').value = location.origin + location.pathname + '?sent=1';
+  form.addEventListener('submit', function(){
+    var g = function(n){ var e=form.querySelector('[name="'+n+'"]:checked') || form.querySelector('[name="'+n+'"]'); return e ? String(e.value||'').trim() : ''; };
+    var lines = [
+      '■ ウェブ診断の結果',
+      '段階：' + lastLevel,
+      '減らしたい作業：' + lastPains,
+      '',
+      '■ 回答',
+      'AIの経験：' + txt('ai'), '文章づくり：' + txt('write'), '返信・お知らせ：' + txt('reply'), '管理：' + txt('manage'),
+      'チラシ：' + txt('print'), '発信：' + txt('sns'), '自動化：' + txt('auto'), '教材化：' + txt('expand'),
+      '',
+      '■ 診断の希望',
+      '形：' + (g('how') || '（未選択）'),
+      '都合：' + (g('when') || '（未記入）'),
+      'ひとこと：' + (g('note') || '（なし）')
+    ];
+    document.getElementById('hiddenBody').value = lines.join('\n');
+    document.getElementById('submitBtn').disabled = true;
+    document.getElementById('submitBtn').textContent = '送信中…';
+  });
+  function txt(name){ var e=document.querySelector('input[name="'+name+'"]:checked'); return e ? e.parentNode.textContent.trim() : '（未回答）'; }
+
+  /* 送信後に戻ってきたら、完了画面 */
+  if (new URLSearchParams(location.search).get('sent') === '1') {
+    document.getElementById('intro').style.display='none';
+    document.getElementById('quiz').style.display='none';
+    document.getElementById('done').style.display='block';
+    history.replaceState(null, '', location.pathname);
+  }
+  document.getElementById('retry').addEventListener('click', function(){
+    document.querySelectorAll('.opt input').forEach(function(e){ e.checked=false; });
+    document.querySelectorAll('.opt').forEach(function(o){ o.classList.remove('sel'); });
+    document.getElementById('result').style.display='none';
+    document.getElementById('intro').style.display='';
+    document.getElementById('quiz').style.display='';
+    show(0);
+  });
+  show(0);
+})();
+</script>
+</body>
+</html>
