@@ -11,6 +11,11 @@
     "figma:inspect": "node scripts/figma-inspect.mjs",
     "figma:all": "npm run figma:tokens && npm run figma:works && npm run build",
     "serve": "node --run build && npx --yes serve -l 4321 .",
-    "dist": "node scripts/build.mjs && node scripts/dist.mjs"
+    "dist": "node scripts/build.mjs && node scripts/dist.mjs",
+    "selfback": "node scripts/selfback/run.mjs",
+    "selfback:debug": "node scripts/selfback/run.mjs --debug"
+  },
+  "devDependencies": {
+    "playwright": "^1.48.0"
   }
 }

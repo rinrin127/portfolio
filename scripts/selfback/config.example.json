@@ -1,0 +1,32 @@
+{
+  "_comment": "cp config.example.json config.json してから編集してください（config.json はコミットされません）",
+
+  "loginCheckUrl": "https://www.a8.net/",
+  "loggedInMarkerText": "ログアウト",
+
+  "_selfbackUrl_comment": "A8.netに実際にログインし、上部メニューの「セルフバック」を開いたときのURLをそのまま貼ってください",
+  "selfbackUrl": "ここにセルフバック一覧ページのURLを設定してください",
+
+  "minReward": 500,
+
+  "_excludeKeywords_comment": "クレジットカード・ローン・投資系はデフォルトで除外しています。含めたい場合だけ自己責任で外してください",
+  "excludeKeywords": [
+    "クレジットカード",
+    "カードローン",
+    "キャッシング",
+    "カードローン",
+    "消費者金融",
+    "FX",
+    "信用取引",
+    "仮想通貨",
+    "暗号資産",
+    "投資",
+    "審査"
+  ],
+
+  "completedMarkers": ["獲得済", "達成済", "承認済み", "対象外"],
+
+  "rewardPattern": "([0-9][0-9,]*)\\s*円",
+
+  "maxOpenTabs": 5
+}

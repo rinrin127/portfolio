@@ -5,3 +5,8 @@ node_modules/
 scratch/
 
 dist/
+
+# セルフバック自動化（ログインセッション・案件レポートには個人情報が含まれ得るためコミットしない）
+scripts/selfback/config.json
+scripts/selfback/state/
+scripts/selfback/reports/
