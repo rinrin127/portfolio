@@ -16,7 +16,7 @@ const DIST = join(ROOT, 'dist');
 
 /** 公開するもの */
 const PAGES = ['index.html', 'sitemap.xml', 'robots.txt'];
-const DIRS = ['assets', 'service', 'works', 'business', 'profile', 'news', 'contact', 'archive', 'shindan'];
+const DIRS = ['assets', 'service', 'works', 'business', 'profile', 'news', 'contact', 'archive', 'shindan', 'tarot'];
 
 rmSync(DIST, { recursive: true, force: true });
 mkdirSync(DIST, { recursive: true });

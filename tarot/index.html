@@ -1,0 +1,678 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>にゃんこ恋愛タロット｜何度でも無料で占える</title>
+<meta name="description" content="猫たちが描かれた22枚の大アルカナで、あの人の気持ち・ふたりの未来・今の恋愛運を占う無料タロット。登録不要、何度でも引けます。">
+<meta property="og:title" content="にゃんこ恋愛タロット">
+<meta property="og:description" content="猫のタロットで、あの人の気持ち・ふたりの未来を占う。無料・何度でも。">
+<meta property="og:type" content="website">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&family=Cormorant+Garamond:wght@500;600&display=swap">
+<style>
+  :root {
+    --night: #2A2140;
+    --night-2: #3A2D57;
+    --rose: #E89AAE;
+    --rose-deep: #C86B85;
+    --gold: #E9C77B;
+    --gold-soft: #F4E2B4;
+    --cream: #FFF8F1;
+    --ink: #4A3A48;
+    --ink-soft: #7D6A78;
+    --line: #EBDCE2;
+    --font: "Zen Maru Gothic", -apple-system, "Hiragino Maru Gothic ProN", "Hiragino Sans", sans-serif;
+    --font-en: "Cormorant Garamond", Georgia, serif;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; min-height: 100vh; color: var(--ink); font-family: var(--font); line-height: 1.8;
+    background: radial-gradient(1200px 600px at 50% -10%, #4B3A6E 0%, var(--night) 55%, #1C1630 100%) no-repeat, var(--night);
+    -webkit-font-smoothing: antialiased; font-feature-settings: "palt";
+  }
+  body::before { /* 星 */
+    content: ""; position: fixed; inset: 0; pointer-events: none; opacity: .55;
+    background-image:
+      radial-gradient(1.2px 1.2px at 12% 18%, #fff, transparent),
+      radial-gradient(1px 1px at 78% 12%, #fff, transparent),
+      radial-gradient(1.4px 1.4px at 64% 34%, #fff, transparent),
+      radial-gradient(1px 1px at 30% 62%, #fff, transparent),
+      radial-gradient(1.2px 1.2px at 88% 70%, #fff, transparent),
+      radial-gradient(1px 1px at 8% 86%, #fff, transparent),
+      radial-gradient(1px 1px at 46% 8%, #fff, transparent),
+      radial-gradient(1.3px 1.3px at 54% 90%, #fff, transparent);
+  }
+  .wrap { position: relative; max-width: 680px; margin: 0 auto; padding: 0 16px 72px; }
+
+  header { text-align: center; padding: 36px 0 8px; color: var(--cream); }
+  .eyebrow { font-family: var(--font-en); letter-spacing: .3em; font-size: 13px; color: var(--gold); }
+  h1 { font-size: clamp(26px, 7vw, 36px); font-weight: 700; letter-spacing: .08em; margin: 6px 0 6px; line-height: 1.35; }
+  h1 small { display: block; font-size: .5em; letter-spacing: .2em; color: var(--rose); font-weight: 500; }
+  .lead { font-size: 14px; color: #D9CDE6; margin: 0; }
+
+  .panel { background: var(--cream); border-radius: 20px; padding: 24px 20px; margin-top: 22px; box-shadow: 0 20px 50px rgba(0,0,0,.35); }
+  .step { display: none; }
+  .step.on { display: block; animation: fade .4s ease; }
+  @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+  .step-title { text-align: center; font-weight: 700; font-size: 18px; letter-spacing: .06em; margin: 0 0 4px; }
+  .step-sub { text-align: center; font-size: 13px; color: var(--ink-soft); margin: 0 0 18px; }
+
+  /* テーマ選択 */
+  .themes { display: grid; gap: 10px; }
+  .theme {
+    appearance: none; font: inherit; color: inherit; text-align: left; cursor: pointer;
+    display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 14px;
+    border: 1.5px solid var(--line); background: #fff; transition: border-color .15s, transform .15s;
+  }
+  .theme:hover { border-color: var(--rose); transform: translateY(-1px); }
+  .theme .ico { flex: none; width: 44px; height: 44px; border-radius: 50%; background: #FBE7ED; display: grid; place-items: center; }
+  .theme b { display: block; font-size: 16px; }
+  .theme span { font-size: 12.5px; color: var(--ink-soft); }
+
+  .btn {
+    appearance: none; border: 0; font: inherit; font-weight: 700; font-size: 16px; letter-spacing: .08em; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none;
+    padding: 14px 28px; border-radius: 999px; color: #fff;
+    background: linear-gradient(135deg, var(--rose) 0%, var(--rose-deep) 100%);
+    box-shadow: 0 6px 16px rgba(200,107,133,.35);
+  }
+  .btn.ghost { background: #fff; color: var(--rose-deep); border: 1.5px solid var(--rose); box-shadow: none; }
+  .btn.wide { width: 100%; }
+  .center { text-align: center; }
+
+  /* シャッフル */
+  .shuffle-stage { position: relative; height: 210px; margin: 6px auto 18px; width: 140px; }
+  .shuffle-stage .back { position: absolute; inset: 0; width: 120px; height: 200px; left: 10px; }
+  .shuffle-stage.go .back:nth-child(1) { animation: sh1 .9s ease-in-out 2; }
+  .shuffle-stage.go .back:nth-child(2) { animation: sh2 .9s ease-in-out 2; }
+  .shuffle-stage.go .back:nth-child(3) { animation: sh3 .9s ease-in-out 2; }
+  @keyframes sh1 { 50% { transform: translateX(-70px) rotate(-14deg); } }
+  @keyframes sh2 { 50% { transform: translateX(70px) rotate(12deg); } }
+  @keyframes sh3 { 50% { transform: translateY(-16px) rotate(3deg); } }
+
+  /* カードを選ぶ */
+  .spread { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
+  @media (min-width: 560px) { .spread { grid-template-columns: repeat(8, 1fr); } }
+  .pick {
+    appearance: none; border: 0; padding: 0; background: none; cursor: pointer; aspect-ratio: 120 / 200;
+    border-radius: 7px; transition: transform .18s; animation: deal .35s ease backwards;
+  }
+  .pick:hover { transform: translateY(-6px); }
+  .pick:focus-visible { outline: 3px solid var(--rose); outline-offset: 2px; }
+  .pick svg { width: 100%; height: 100%; display: block; filter: drop-shadow(0 3px 5px rgba(42,33,64,.25)); }
+  @keyframes deal { from { opacity: 0; transform: translateY(14px) scale(.9); } }
+
+  /* 結果 */
+  .reveal { perspective: 1000px; width: min(220px, 60vw); margin: 4px auto 16px; aspect-ratio: 120 / 200; }
+  .flipper { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform .9s cubic-bezier(.3,.7,.3,1); }
+  .flipper.open { transform: rotateY(180deg); }
+  .face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+  .face svg { width: 100%; height: 100%; display: block; filter: drop-shadow(0 10px 18px rgba(42,33,64,.35)); }
+  .face.front { transform: rotateY(180deg); }
+  .face.front.rev svg { transform: rotate(180deg); }
+
+  .card-name { text-align: center; }
+  .card-name .en { font-family: var(--font-en); letter-spacing: .2em; color: var(--rose-deep); font-size: 14px; }
+  .card-name h2 { margin: 0; font-size: 24px; letter-spacing: .08em; }
+  .pos { display: inline-block; margin-top: 6px; font-size: 12px; padding: 2px 12px; border-radius: 999px; background: #FBE7ED; color: var(--rose-deep); font-weight: 700; }
+  .pos.rv { background: #E9E4F3; color: #6B5A92; }
+  .kw { text-align: center; font-size: 13px; color: var(--ink-soft); margin: 8px 0 0; }
+
+  .msg { margin-top: 20px; padding: 18px; border-radius: 14px; background: #fff; border: 1px solid var(--line); }
+  .msg h3 { margin: 0 0 6px; font-size: 14px; color: var(--rose-deep); letter-spacing: .06em; display: flex; align-items: center; gap: 6px; }
+  .msg p { margin: 0; font-size: 15px; }
+  .msg.advice { background: #FFF3E0; border-color: #F3DDB8; }
+  .msg.advice h3 { color: #A9782A; }
+
+  .lucky { margin-top: 12px; padding: 16px 18px; border-radius: 14px; background: linear-gradient(135deg, #FDEFF3, #F3EDFB); display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .lucky .lbl { font-size: 12px; color: var(--ink-soft); }
+  .lucky .item { font-weight: 700; font-size: 16px; }
+  .lucky .txt { flex: 1; min-width: 160px; }
+  .lucky a { font-size: 13px; padding: 9px 16px; }
+  .pr { font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 4px; background: #fff; color: var(--ink-soft); border: 1px solid var(--line); margin-left: 6px; vertical-align: 2px; }
+
+  .actions { display: grid; gap: 10px; margin-top: 22px; }
+  .share { display: flex; gap: 10px; }
+  .share .btn { flex: 1; font-size: 14px; padding: 12px 10px; }
+
+  .note { text-align: center; font-size: 11.5px; color: #B9AEC8; margin-top: 22px; line-height: 1.7; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">LOVE TAROT</div>
+    <h1><small>猫たちがささやく</small>にゃんこ恋愛タロット</h1>
+    <p class="lead">無料・登録なし・何度でも占えます</p>
+  </header>
+
+  <main class="panel">
+    <!-- 1. テーマ -->
+    <section class="step on" id="s-theme">
+      <p class="step-title">何を占いますか？</p>
+      <p class="step-sub">いちばん知りたいことをひとつ選んでね</p>
+      <div class="themes" id="themes"></div>
+    </section>
+
+    <!-- 2. シャッフル -->
+    <section class="step" id="s-shuffle">
+      <p class="step-title" id="shuffle-title">あの人を思い浮かべて…</p>
+      <p class="step-sub">心の中で質問を唱えながら、ボタンを押してね</p>
+      <div class="shuffle-stage" id="stage"></div>
+      <div class="center"><button class="btn" id="do-shuffle">カードをシャッフル</button></div>
+    </section>
+
+    <!-- 3. 選ぶ -->
+    <section class="step" id="s-pick">
+      <p class="step-title">気になる1枚を選んでね</p>
+      <p class="step-sub">直感で、ピンときたカードを</p>
+      <div class="spread" id="spread"></div>
+    </section>
+
+    <!-- 4. 結果 -->
+    <section class="step" id="s-result">
+      <div class="reveal"><div class="flipper" id="flipper">
+        <div class="face back-face" id="r-back"></div>
+        <div class="face front" id="r-front"></div>
+      </div></div>
+      <div id="r-body" style="opacity:0; transition: opacity .5s .6s;">
+        <div class="card-name">
+          <div class="en" id="r-en"></div>
+          <h2 id="r-name"></h2>
+          <span class="pos" id="r-pos"></span>
+        </div>
+        <p class="kw" id="r-kw"></p>
+
+        <div class="msg">
+          <h3 id="r-theme-ttl"></h3>
+          <p id="r-msg"></p>
+        </div>
+        <div class="msg advice">
+          <h3>にゃんこからのアドバイス</h3>
+          <p id="r-adv"></p>
+        </div>
+        <div class="lucky" id="r-lucky"></div>
+
+        <div class="actions">
+          <button class="btn wide" id="again-same">同じテーマでもう一度</button>
+          <button class="btn ghost wide" id="again-top">ほかのテーマを占う</button>
+          <div class="share">
+            <a class="btn ghost" id="share-x" target="_blank" rel="noopener">Xでシェア</a>
+            <a class="btn ghost" id="share-th" target="_blank" rel="noopener">Threadsでシェア</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <p class="note">占いの結果は、あなたの背中をそっと押すためのものです。<br>最後に決めるのは、いつもあなた自身。</p>
+</div>
+
+<script>
+/* =========================================================
+   ★ アフィリエイトの入れ方 ★
+   ラッキーアイテムの url に、楽天やAmazonのアフィリンクを貼るだけ。
+   url が空（''）のものはボタンが出ず、アイテム名だけ表示されます。
+   リンクを貼ったものには自動で「PR」表記がつきます（ステマ規制対策）。
+   ========================================================= */
+const LUCKY = [
+  { item: 'ピンクベージュのリップ', url: '' },
+  { item: 'いい香りのハンドクリーム', url: '' },
+  { item: 'パールのピアス', url: '' },
+  { item: 'ローズの香りのボディミスト', url: '' },
+  { item: 'ふわふわのルームウェア', url: '' },
+  { item: 'ハート型のアクセサリー', url: '' },
+  { item: '月のモチーフのネックレス', url: '' },
+  { item: 'ハーブティー', url: '' },
+  { item: '猫モチーフの小物', url: '' },
+  { item: 'ネイルオイル', url: '' },
+  { item: 'ヘアミスト', url: '' },
+  { item: 'かわいいレターセット', url: '' },
+  { item: 'アロマキャンドル', url: '' },
+  { item: '入浴剤', url: '' },
+  { item: 'チーク（コーラル系）', url: '' },
+  { item: '天然石のブレスレット', url: '' },
+];
+
+/* 公開URL（シェア用）。独自ドメインに移したらここを書き換え */
+const SHARE_URL = 'https://rinrin127.github.io/portfolio/tarot/';
+
+const THEMES = [
+  { key: 'feel',   title: 'あの人の気持ち',   sub: '今、あの人はわたしをどう思ってる？', ttl: 'あの人の気持ち', shuffle: 'あの人を思い浮かべて…', ico: 'heart' },
+  { key: 'future', title: 'ふたりの未来',     sub: 'この恋はこれからどうなる？',         ttl: 'ふたりの未来',   shuffle: 'ふたりの姿を思い浮かべて…', ico: 'star' },
+  { key: 'me',     title: '今のわたしの恋愛運', sub: '出会い・片思い・復縁、全体の流れ',   ttl: 'あなたの恋愛運', shuffle: '今の自分を思い浮かべて…', ico: 'moon' },
+];
+
+/* 22枚の大アルカナ（にゃんこ版）
+   up = 正位置 / rv = 逆位置
+   feel = あの人の気持ち / future = ふたりの未来 / me = 恋愛運 / adv = アドバイス */
+const CARDS = [
+  { no: '0', name: '愚者', en: 'THE FOOL', sym: 'flower', c: ['#FCE3B0', '#F6B8A0'],
+    up: { kw: '自由・無邪気・新しい始まり',
+      feel: 'あなたといると肩の力が抜けて、素の自分でいられると感じています。まだ恋と自覚していないかもしれないけれど、一緒にいる時間を純粋に楽しんでいるよう。',
+      future: '形にとらわれない、新鮮な関係が始まりそう。計画通りではなくても、ふたりらしいペースで自然に近づいていけます。',
+      me: '思いがけないところから恋の風が吹いてきます。いつもと違う場所に行ったり、新しい人と話したりすると、運命が動き出すかも。',
+      adv: '考えすぎずに、まず一歩。気まぐれな猫みたいに、気になる方へ足を向けてみて。' },
+    rv: { kw: '迷い・軽率・様子見',
+      feel: '好意はあるけれど、真剣に向き合うことに少し尻込みしているみたい。気持ちがふわふわしていて、本人もまだ答えを出せていません。',
+      future: '勢いだけで進むと、すれ違いが起きやすい時期。少し立ち止まって、お互いの本音を確かめる時間を取ると安定します。',
+      me: '焦って動くより、足元を見直すとき。「なんとなく」で選ばず、自分が本当に大切にされる恋を思い描いてみて。',
+      adv: '飛び出す前に、ひと呼吸。猫も高い所から降りる前は、ちゃんと下をのぞいています。' } },
+
+  { no: 'I', name: '魔術師', en: 'THE MAGICIAN', sym: 'infinity', c: ['#F9C6C9', '#E58FA6'],
+    up: { kw: '始まり・行動力・チャンス',
+      feel: 'あなたのことを「もっと知りたい」と前向きに思っています。きっかけさえあれば、自分から距離を縮めようとする気持ちも。',
+      future: '関係が具体的に動き出すタイミング。小さな約束やメッセージから、ふたりの物語がはっきり始まっていきます。',
+      me: '恋の主導権はあなたの手の中に。自分から声をかけると、驚くほどスムーズに進みます。',
+      adv: 'あなたにはもう、恋を動かす魔法が全部そろっています。あとは使うだけ。' },
+    rv: { kw: '空回り・準備不足・駆け引き',
+      feel: '興味はあるのに、どう接していいか分からず空回り気味。かっこつけようとして、本音が伝わっていないかも。',
+      future: '言葉と行動がちぐはぐになりやすい時期。駆け引きより、素直なひとことのほうがずっと効きます。',
+      me: 'チャンスはあるのに、自信のなさでブレーキをかけていませんか。自分の魅力を信じるところから。',
+      adv: 'テクニックはいったん手放して。等身大のあなたが、いちばん魅力的です。' } },
+
+  { no: 'II', name: '女教皇', en: 'THE HIGH PRIESTESS', sym: 'crescent', c: ['#CFE0F5', '#9DB5E0'],
+    up: { kw: '直感・清らかさ・心のつながり',
+      feel: 'あなたのことを、誠実で大切にしたい存在だと感じています。軽い気持ちでは近づけない、と思うほど真剣なのかも。',
+      future: '派手さはなくても、心でつながる穏やかな関係に。静かに、でも確かに信頼が育っていきます。',
+      me: 'あなたの直感が冴えています。「なんだか気になる」は、当たっていることが多い時期。',
+      adv: '心の声に耳をすませて。答えはもう、あなたの中にあります。' },
+    rv: { kw: '神経質・疑い・すれ違い',
+      feel: '気にはなっているけれど、あなたの本心が分からず警戒しているみたい。心のシャッターを少し下ろしている状態です。',
+      future: '考えすぎて、相手の言葉を悪く受け取りやすい時期。疑う前に、聞いてみることが大切です。',
+      me: '理想が高くなりすぎていませんか。完璧な人を探すより、一緒にいて安心できる人に目を向けて。',
+      adv: 'ひとりで考え込まないで。猫がのどを鳴らすように、気持ちを少しずつ外に出してみて。' } },
+
+  { no: 'III', name: '女帝', en: 'THE EMPRESS', sym: 'heart', c: ['#FFD3DE', '#F59DB4'],
+    up: { kw: '愛される・豊かさ・満たされる',
+      feel: 'あなたのそばにいると、癒やされて満たされると感じています。かわいい、守りたい、という愛情が育っているよう。',
+      future: '愛情たっぷりの、あたたかい関係に。お互いを大切にし合える、実りのある未来が見えています。',
+      me: '女性としての魅力がぐんと高まる時期。自分を大切にするほど、愛される運がめぐってきます。',
+      adv: '自分をたっぷり甘やかして。満たされたあなたに、愛は自然と集まります。' },
+    rv: { kw: '尽くしすぎ・わがまま・不安',
+      feel: 'あなたの優しさに甘えてしまっているかも。大切に思ってはいるけれど、それを言葉にするのを怠りがち。',
+      future: 'どちらかが与えすぎて、バランスが崩れやすい時期。ちゃんと「してほしいこと」を伝えると良い方へ。',
+      me: '尽くすことで愛を確かめようとしていませんか。あなたは、何もしなくても愛される価値がある人です。',
+      adv: '相手のために頑張る前に、まず自分にやさしくしてあげて。' } },
+
+  { no: 'IV', name: '皇帝', en: 'THE EMPEROR', sym: 'crown', c: ['#F8D8A8', '#E0A15E'],
+    up: { kw: '安定・責任・頼もしさ',
+      feel: 'あなたとの関係を真剣に考えていて、「自分が支えたい」という気持ちが強いよう。将来のことも少し意識しています。',
+      future: '関係がしっかり固まっていく流れ。周りにも認められる、安定したパートナーシップが築けそう。',
+      me: '頼りがいのある人とのご縁が強まります。誠実さを大事にする恋が、しあわせへの近道に。',
+      adv: '大事なことは、ちゃんと言葉と形にして。それが恋を守る土台になります。' },
+    rv: { kw: '強引・意地・プライド',
+      feel: '好意はあるけれど、プライドが邪魔して素直になれない様子。自分から折れるのが苦手なのかも。',
+      future: '主導権争いや意地の張り合いに注意。どちらかが一歩ゆずると、関係はまた温かく動き出します。',
+      me: '「こうあるべき」にとらわれていませんか。ルールを少しゆるめると、恋の風通しが良くなります。',
+      adv: '勝ち負けより、仲良しでいること。猫だって、たまにはおなかを見せます。' } },
+
+  { no: 'V', name: '法王', en: 'THE HIEROPHANT', sym: 'key', c: ['#E6D9F2', '#B9A0D8'],
+    up: { kw: '信頼・誠実・祝福',
+      feel: 'あなたを信頼できる人だと感じていて、誠実に向き合いたいと思っています。軽い関係ではなく、ちゃんとした形を望んでいるよう。',
+      future: '周りからも祝福される関係に。結婚や真剣交際など、きちんとした約束につながる流れです。',
+      me: '信頼できる人からの紹介や、昔からの縁に恋のチャンスあり。誠実な人ほど、あなたの良さに気づいてくれます。',
+      adv: '思いやりと誠実さが、いちばんの恋の鍵。小さな約束を大切に。' },
+    rv: { kw: '形だけ・束縛・価値観のズレ',
+      feel: 'あなたのことは大切だけれど、常識や周りの目を気にして踏み出せずにいるよう。',
+      future: '「普通はこう」という考えに縛られると窮屈に。ふたりだけのルールを話し合うと楽になります。',
+      me: '条件や世間体で相手を選ぼうとしていませんか。心がときめくかどうかも、大切な基準です。',
+      adv: '誰かの正解より、あなたの心地よさを信じて。' } },
+
+  { no: 'VI', name: '恋人', en: 'THE LOVERS', sym: 'hearts', c: ['#FFC7D1', '#F28AA0'],
+    up: { kw: '恋の始まり・両想い・ときめき',
+      feel: 'あなたに惹かれています。一緒にいるとドキドキして、楽しい。かなり脈ありのサインです。',
+      future: '想いが通じ合う、うれしい流れ。ふたりの距離が一気に縮まり、恋人らしい時間が増えていきます。',
+      me: '恋愛運は絶好調。ときめく出会いや、気になる人との進展が期待できます。',
+      adv: '心がときめく方を選んで。今のあなたの「好き」は、ちゃんと届きます。' },
+    rv: { kw: '迷い・誘惑・すれ違い',
+      feel: '惹かれてはいるけれど、気持ちが揺れている様子。ほかのことに気を取られて、あなたとの時間を後回しにしがちかも。',
+      future: '小さな行き違いが重なりやすい時期。楽しいだけでなく、お互いの気持ちを確かめ合う会話が大切に。',
+      me: '目移りしたり、決めきれなかったりしそう。本当に大切にしたいものは何か、一度整理してみて。',
+      adv: 'あれもこれもより、「これ」と決めた方に心を注いで。' } },
+
+  { no: 'VII', name: '戦車', en: 'THE CHARIOT', sym: 'arrow', c: ['#C9E3E8', '#7FB5C4'],
+    up: { kw: '前進・勝利・積極性',
+      feel: 'あなたに向かって、気持ちがまっすぐ進んでいます。「動かなきゃ」と思っていて、近いうちにアクションがあるかも。',
+      future: '関係がスピーディーに進展します。迷わず進めば、望む形をつかめる流れです。',
+      me: '攻めの恋愛運。自分から誘う、告白するなど、積極的に動くほど結果がついてきます。',
+      adv: 'チャンスは今。思い切ってアクセルを踏んで大丈夫。' },
+    rv: { kw: '空回り・焦り・ブレーキ',
+      feel: '気持ちはあるけれど、何かが気がかりで前に進めずにいるよう。タイミングを見計らっているのかも。',
+      future: '焦って押すと、かえって相手が引いてしまいそう。ペースを相手に合わせると、うまく噛み合います。',
+      me: '気持ちばかりが先走りがち。いったんスピードを落として、周りをよく見てみて。',
+      adv: '急がば回れ。猫のように、じっと良いタイミングを待つのも作戦です。' } },
+
+  { no: 'VIII', name: '力', en: 'STRENGTH', sym: 'paw', c: ['#FCD9B8', '#EDA67A'],
+    up: { kw: '思いやり・忍耐・やさしい強さ',
+      feel: 'あなたのやさしさや包容力に、心を開きつつあります。そばにいると安心できる、特別な人だと感じているよう。',
+      future: 'ゆっくりでも、確かに絆が深まっていきます。困難があっても、ふたりで乗り越えられる関係です。',
+      me: '焦らず向き合う姿勢が、恋を実らせます。あなたのやさしさが、いちばんの武器に。',
+      adv: 'やわらかく、でもあきらめずに。猫の肉球みたいな強さで。' },
+    rv: { kw: '自信のなさ・我慢しすぎ',
+      feel: 'あなたへの気持ちを持て余していて、どう扱えばいいか戸惑っているよう。自分に自信がないのかも。',
+      future: 'どちらかが我慢しすぎると、関係が疲れてしまいます。本音を言い合える空気をつくることが大切。',
+      me: '自分を後回しにしすぎていませんか。好かれるために無理をする恋は、長続きしません。',
+      adv: '我慢は愛の証じゃない。言いたいことは、やさしく伝えてOK。' } },
+
+  { no: 'IX', name: '隠者', en: 'THE HERMIT', sym: 'lantern', c: ['#D6D3E8', '#8F89B5'],
+    up: { kw: '内省・慎重・本当の気持ち',
+      feel: 'あなたのことを真剣に考えているからこそ、慎重になっています。言葉は少なくても、気持ちは深いところにあるよう。',
+      future: '急な進展はないけれど、お互いを深く理解していく時期。ゆっくり育てる恋が、強い絆になります。',
+      me: 'ひとりの時間に、自分が本当に望む恋がはっきり見えてくるとき。焦らなくて大丈夫。',
+      adv: '心のランタンを灯して、自分の気持ちをよく見つめて。' },
+    rv: { kw: '孤立・閉じこもり・こだわり',
+      feel: '自分の殻にこもってしまっている様子。あなたが嫌なのではなく、心に余裕がないのかもしれません。',
+      future: '連絡が減ったり、距離ができやすい時期。追いかけすぎず、でも扉は開けておいて。',
+      me: '過去の恋や理想にこだわって、新しい縁を遠ざけていませんか。外に出ると気分も運も変わります。',
+      adv: '窓を開けて、新しい風を入れてみて。' } },
+
+  { no: 'X', name: '運命の輪', en: 'WHEEL OF FORTUNE', sym: 'wheel', c: ['#FFE6A6', '#F4BE5E'],
+    up: { kw: '運命・チャンス・好転',
+      feel: 'あなたとの出会いに、何か特別なものを感じています。「この人とはご縁がある」と思っているかも。',
+      future: '運命の歯車が回り始めました。思いがけない展開で、ふたりの関係が一気に良い方へ。',
+      me: '恋愛運が大きく好転するタイミング。偶然の再会や、ふとした出会いを大切に。',
+      adv: '流れに乗って大丈夫。今のあなたには、追い風が吹いています。' },
+    rv: { kw: 'タイミングのズレ・停滞',
+      feel: '気持ちはあるのに、タイミングが合わずにもどかしく感じているよう。今は少し忙しいのかも。',
+      future: '一時的にすれ違いや停滞がありそう。でも輪はまた回ります。今は無理に動かさないで。',
+      me: '今は充電期間。自分磨きをしておくと、次の波が来たときに一気に乗れます。',
+      adv: '止まっているように見えても、季節はちゃんと巡っています。' } },
+
+  { no: 'XI', name: '正義', en: 'JUSTICE', sym: 'scales', c: ['#D5EAD9', '#8FC29E'],
+    up: { kw: 'バランス・誠実・正しい判断',
+      feel: 'あなたのことを、公平で信頼できる人だと思っています。誠実な関係を築きたいと、冷静に考えているよう。',
+      future: 'お互いに対等で、バランスの取れた関係に。話し合いで物事がスムーズに決まっていきます。',
+      me: '冷静な目で相手を見られるとき。感情に流されず、自分にふさわしい人を選べます。',
+      adv: 'してもらうこと、してあげること。そのバランスを大切に。' },
+    rv: { kw: '不公平・迷い・アンバランス',
+      feel: 'あなたへの気持ちと、ほかの事情の間で揺れているよう。どうするのが正しいか迷っています。',
+      future: 'どちらかに負担が偏りやすい時期。「なんだか不公平」と感じたら、早めに話し合って。',
+      me: '頭で考えすぎて、心が置いてけぼりになっていませんか。理屈じゃない「好き」も大切に。',
+      adv: '我慢している方が、正しいとは限りません。' } },
+
+  { no: 'XII', name: '吊るされた男', en: 'THE HANGED MAN', sym: 'drop', c: ['#CFE2F2', '#86AED6'],
+    up: { kw: '待つ・見方を変える・献身',
+      feel: 'あなたのことを想いながらも、今は動けない事情があるよう。でも、気持ちは簡単には変わりません。',
+      future: '今は待ちの時期。焦らず見守ることで、あとから大きく報われる流れです。',
+      me: 'いつもと違う視点で恋を見ると、思わぬ発見が。「タイプじゃない」と思っていた人に注目して。',
+      adv: '見方を逆さにしてみて。猫がごろんと寝転ぶと、世界が違って見えるように。' },
+    rv: { kw: '報われなさ・自己犠牲',
+      feel: '身動きが取れず、もどかしさを抱えているよう。あなたに申し訳なさを感じているのかも。',
+      future: '一方的に尽くし続けると、心がすり減ってしまいます。待つ期限を自分の中で決めておくと楽に。',
+      me: '報われない恋にしがみついていませんか。あなたが笑顔でいられる恋を選んでいいんです。',
+      adv: '我慢の先にしあわせがあるとは限らない。自分を大切に。' } },
+
+  { no: 'XIII', name: '死神', en: 'DEATH', sym: 'sprout', c: ['#E0E0E8', '#A3A3BA'],
+    up: { kw: '終わりと始まり・生まれ変わり',
+      feel: 'あなたとの関係を、今までとは違う形に変えたいと思っているよう。友達から恋人へ、など新しい段階を意識しています。',
+      future: '古い関係が終わり、新しい関係に生まれ変わるとき。リセットした先に、より良いふたりが待っています。',
+      me: '過去の恋に区切りがつき、新しい恋が始まるサイン。手放したぶん、新しい縁が入ってきます。',
+      adv: '終わりは、始まりのための準備。古い葉が落ちて、新しい芽が出るように。' },
+    rv: { kw: '再スタート・未練・立ち直り',
+      feel: '一度は離れようとしたけれど、あなたのことが気になっているよう。関係を見直したい気持ちも。',
+      future: '止まっていた関係が、もう一度動き出す可能性あり。復縁や再会にも希望があります。',
+      me: '少しずつ前向きな気持ちが戻ってくるとき。新しい一歩を踏み出す準備ができています。',
+      adv: 'もう一度、始めていい。何度でもやり直せるのが恋です。' } },
+
+  { no: 'XIV', name: '節制', en: 'TEMPERANCE', sym: 'cup', c: ['#D3EDEA', '#86C6BE'],
+    up: { kw: '調和・穏やか・ちょうどいい距離',
+      feel: 'あなたといると、自然体でいられて心地いいと感じています。無理なく続く関係を望んでいるよう。',
+      future: '穏やかで、ちょうどいい距離感の関係に。少しずつ心が混ざり合い、自然と深まっていきます。',
+      me: '落ち着いた恋が実るとき。派手なドキドキより、居心地のよさを大切にすると吉。',
+      adv: '頑張りすぎず、離れすぎず。心地よい温度をキープして。' },
+    rv: { kw: 'バランスの乱れ・ちぐはぐ',
+      feel: 'あなたとのペースが合わないと感じているかも。会いたい頻度や連絡の温度差に戸惑っているよう。',
+      future: '温度差が出やすい時期。どちらかに合わせるのではなく、真ん中を探すと上手くいきます。',
+      me: '生活リズムが乱れて、恋にも余裕がなくなっていませんか。まずは自分のペースを取り戻して。',
+      adv: 'よく眠って、よく食べて。整ったあなたに、良い恋はやってきます。' } },
+
+  { no: 'XV', name: '悪魔', en: 'THE DEVIL', sym: 'chain', c: ['#E7C9D6', '#B0748F'],
+    up: { kw: '強い執着・誘惑・離れられない',
+      feel: 'あなたに強く惹かれていて、頭から離れない様子。理屈では説明できない引力を感じているよう。',
+      future: '強く惹かれ合うけれど、依存しやすい関係にも。楽しさの裏で、自分を見失わないことが大切。',
+      me: '危険な魅力を持つ人に惹かれやすいとき。ドキドキと、しあわせは別物かもしれません。',
+      adv: '「離れられない」のか「離れたくない」のか、一度見つめてみて。' },
+    rv: { kw: '解放・目が覚める・断ち切る',
+      feel: '今までのこだわりを手放して、あなたと素直に向き合おうとしているよう。',
+      future: '悪い流れから抜け出し、健やかな関係に変わっていけます。ふたりを縛っていたものがほどけていく時期。',
+      me: 'しんどい恋から解放されるサイン。心が軽くなったあなたに、新しい縁が近づいています。',
+      adv: '鎖は、思っているより簡単にほどけます。もう自由になっていい。' } },
+
+  { no: 'XVI', name: '塔', en: 'THE TOWER', sym: 'bolt', c: ['#F5D0B8', '#D98A6A'],
+    up: { kw: '急展開・衝撃・ひらめき',
+      feel: 'あなたのことで、心が大きく揺さぶられているよう。突然の気持ちの変化に、本人も驚いているかも。',
+      future: '予想外の出来事で、関係が大きく変わりそう。衝撃のあとには、本当の気持ちがはっきり見えてきます。',
+      me: '雷に打たれたような、突然の恋の予感。思い込みが壊れて、本当に大切なものが分かるとき。',
+      adv: '崩れたところから、新しく建て直せばいい。もっと素敵な形で。' },
+    rv: { kw: '不安・小さなトラブル・立て直し',
+      feel: '何かを言い出せず、心の中でモヤモヤを抱えているよう。関係を壊したくない気持ちが強いのかも。',
+      future: '小さなトラブルはあっても、早めに向き合えば大きく崩れずに済みます。',
+      me: '変化を怖がって、現状にしがみついていませんか。少しの勇気で、景色はがらりと変わります。',
+      adv: '心配していることの多くは、実際には起こりません。深呼吸して。' } },
+
+  { no: 'XVII', name: '星', en: 'THE STAR', sym: 'star', c: ['#D6E4FA', '#94B2EC'],
+    up: { kw: '希望・憧れ・願いが叶う',
+      feel: 'あなたのことを、キラキラした憧れの存在のように感じています。一緒にいると前向きになれる、と思っているよう。',
+      future: '希望に満ちた、明るい未来。願っていたことが、少しずつ現実になっていきます。',
+      me: '願いが叶いやすい時期。理想の恋を思い描くほど、それが引き寄せられてきます。',
+      adv: '願いを言葉にして。星は、ちゃんと聞いてくれています。' },
+    rv: { kw: '高望み・自信喪失・失望',
+      feel: 'あなたのことは素敵だと思っているけれど、「自分には釣り合わない」と遠慮しているのかも。',
+      future: '期待しすぎるとがっかりしやすい時期。完璧を求めず、今のふたりを楽しむことが大切。',
+      me: '自信をなくしかけていませんか。あなたの輝きは、ちゃんと誰かに見えています。',
+      adv: '曇りの日も、星は空にある。あなたの光も消えていません。' } },
+
+  { no: 'XVIII', name: '月', en: 'THE MOON', sym: 'moon', c: ['#D9D2EE', '#9C8CCB'],
+    up: { kw: '不安・ゆらぎ・見えない気持ち',
+      feel: 'あなたへの気持ちが、自分でもまだはっきりしていないよう。好意はあるけれど、揺れ動いている状態です。',
+      future: '先が見えない不安を感じやすい時期。でも夜が明ければ、道ははっきり見えてきます。',
+      me: '想像がふくらんで、不安になりやすいとき。「事実」と「心配」を分けて考えると楽になります。',
+      adv: '暗い夜道も、猫の目なら見えている。あなたの直感を信じて。' },
+    rv: { kw: '霧が晴れる・誤解が解ける',
+      feel: 'モヤモヤしていた気持ちが整理されて、あなたへの想いがはっきりしてきたよう。',
+      future: '誤解や不安が少しずつ解けていきます。隠れていた本音が見えて、関係がクリアに。',
+      me: '不安な時期を抜けて、心が軽くなっていきます。本当に大切な人が誰か、分かってくるとき。',
+      adv: '夜明けはもうすぐ。もう少しだけ、待ってみて。' } },
+
+  { no: 'XIX', name: '太陽', en: 'THE SUN', sym: 'sun', c: ['#FFE3A0', '#F7B24C'],
+    up: { kw: '幸福・成功・最高のしあわせ',
+      feel: 'あなたのことが大好きで、一緒にいると心から楽しいと感じています。隠しきれないほどの好意があふれているよう。',
+      future: '明るくてしあわせいっぱいの未来。周りからも祝福される、太陽みたいな関係に。',
+      me: '恋愛運は最高潮。素直に笑顔でいるだけで、良い縁がどんどん集まってきます。',
+      adv: 'そのままのあなたで大丈夫。笑顔が、いちばんの魔法。' },
+    rv: { kw: 'ちょっとした曇り・照れ',
+      feel: '好意はしっかりあるけれど、照れくさくて表に出せていないよう。根っこはポジティブです。',
+      future: '一時的に曇っても、太陽はすぐ顔を出します。基本的には明るい流れが続いています。',
+      me: '少し疲れて、笑顔が減っていませんか。好きなことをして、自分の機嫌を取ってあげて。',
+      adv: 'ひなたぼっこして、心を温めて。光はすぐ戻ってきます。' } },
+
+  { no: 'XX', name: '審判', en: 'JUDGEMENT', sym: 'bell', c: ['#F3DDF0', '#D29ACB'],
+    up: { kw: '復活・再会・決断のとき',
+      feel: 'あなたとの関係を、もう一度ちゃんと考え直そうとしています。過去のことも含めて、前向きに向き合いたいと思っているよう。',
+      future: '止まっていた恋が、再び動き出します。復縁や、思いがけない再会にも期待できる流れ。',
+      me: '過去の経験が、今の恋に活きてくるとき。大切な決断をするのにぴったりのタイミングです。',
+      adv: '呼ばれている気がしたら、その声に応えて。今がそのときです。' },
+    rv: { kw: '後悔・決められない・タイミング待ち',
+      feel: '過去のことにとらわれて、新しい一歩を踏み出せずにいるよう。後悔している気持ちもあるのかも。',
+      future: '決断を先延ばしにすると、チャンスを逃しやすい時期。小さなことからでも、答えを出してみて。',
+      me: '昔の恋と比べてしまっていませんか。過去は過去。今のあなたにふさわしい恋があります。',
+      adv: '過去のあなたも、今のあなたも、ちゃんと頑張ってきた。許してあげて。' } },
+
+  { no: 'XXI', name: '世界', en: 'THE WORLD', sym: 'wreath', c: ['#D7EEDC', '#9BCFA8'],
+    up: { kw: '完成・達成・最高のハッピーエンド',
+      feel: 'あなたのことを、かけがえのない存在だと感じています。「この人しかいない」と思うほど、心が満たされているよう。',
+      future: 'ふたりの恋がひとつの完成形に。ずっと望んでいた形が叶う、最高のハッピーエンドです。',
+      me: '恋愛運が最高の形で実るとき。願ってきたことが、ひとつの答えになって返ってきます。',
+      adv: 'おめでとう。今のしあわせを、思いきり味わって。' },
+    rv: { kw: 'あと一歩・未完成・物足りなさ',
+      feel: 'あなたに好意はあるけれど、決定的なひと押しが足りないと感じているよう。きっかけ待ちかも。',
+      future: 'ゴールはもう目の前。最後の一歩を踏み出せるかどうかで、未来が決まります。',
+      me: 'もう少しで願いが叶うところまで来ています。最後まであきらめないで。',
+      adv: 'あと一歩。ここまで来たあなたなら、大丈夫。' } },
+];
+
+/* ---------- 猫カードのイラスト（SVG） ---------- */
+const SYMBOLS = {
+  flower: '<g fill="#FFF8F1"><circle cx="100" cy="72" r="9"/><circle cx="114" cy="80" r="9"/><circle cx="109" cy="96" r="9"/><circle cx="91" cy="96" r="9"/><circle cx="86" cy="80" r="9"/></g><circle cx="100" cy="85" r="7" fill="#E9C77B"/>',
+  infinity: '<path d="M100 85c-10-14-32-14-32 0s22 14 32 0c10-14 32-14 32 0s-22 14-32 0z" fill="none" stroke="#FFF8F1" stroke-width="6"/>',
+  crescent: '<path d="M112 58a28 28 0 1 0 0 52a22 22 0 1 1 0-52z" fill="#FFF8F1"/>',
+  heart: '<path d="M100 108c-24-16-34-28-34-40a16 16 0 0 1 34-6a16 16 0 0 1 34 6c0 12-10 24-34 40z" fill="#FFF8F1"/>',
+  hearts: '<path d="M82 104c-16-11-22-19-22-27a11 11 0 0 1 22-4a11 11 0 0 1 22 4c0 8-6 16-22 27z" fill="#FFF8F1"/><path d="M118 104c-16-11-22-19-22-27a11 11 0 0 1 22-4a11 11 0 0 1 22 4c0 8-6 16-22 27z" fill="#FFF8F1" opacity=".75"/>',
+  crown: '<path d="M70 104l-4-38l18 16l16-24l16 24l18-16l-4 38z" fill="#FFF8F1"/><circle cx="100" cy="92" r="5" fill="#E9C77B"/>',
+  key: '<g fill="none" stroke="#FFF8F1" stroke-width="6"><circle cx="100" cy="68" r="13"/><path d="M100 81v34M100 104h12M100 114h8"/></g>',
+  arrow: '<path d="M70 104l30-44l30 44l-12 0l-18-26l-18 26z" fill="#FFF8F1"/>',
+  paw: '<g fill="#FFF8F1"><ellipse cx="100" cy="96" rx="18" ry="15"/><ellipse cx="78" cy="76" rx="7" ry="9"/><ellipse cx="92" cy="66" rx="7" ry="9"/><ellipse cx="108" cy="66" rx="7" ry="9"/><ellipse cx="122" cy="76" rx="7" ry="9"/></g>',
+  lantern: '<g fill="#FFF8F1"><rect x="96" y="56" width="8" height="8" rx="2"/><path d="M84 66h32l-4 40h-24z"/></g><ellipse cx="100" cy="86" rx="7" ry="10" fill="#E9C77B"/>',
+  wheel: '<g fill="none" stroke="#FFF8F1" stroke-width="5"><circle cx="100" cy="84" r="26"/><circle cx="100" cy="84" r="6"/><path d="M100 58v52M74 84h52M82 66l36 36M118 66l-36 36"/></g>',
+  scales: '<g fill="none" stroke="#FFF8F1" stroke-width="5" stroke-linecap="round"><path d="M100 58v52M70 70h60M88 110h24"/><path d="M62 90l8-20l8 20z M122 90l8-20l8 20z" fill="#FFF8F1"/></g>',
+  drop: '<path d="M100 56c12 20 22 32 22 44a22 22 0 0 1-44 0c0-12 10-24 22-44z" fill="#FFF8F1"/>',
+  sprout: '<g fill="#FFF8F1"><path d="M100 112V84" stroke="#FFF8F1" stroke-width="5"/><path d="M100 86c-4-18-20-26-32-22c2 14 16 24 32 22z"/><path d="M100 80c4-16 18-24 30-20c-2 12-14 22-30 20z"/></g>',
+  cup: '<g fill="#FFF8F1"><path d="M76 62h48c0 22-10 34-24 34s-24-12-24-34z"/><rect x="96" y="94" width="8" height="12"/><rect x="84" y="104" width="32" height="6" rx="3"/></g>',
+  chain: '<g fill="none" stroke="#FFF8F1" stroke-width="6"><ellipse cx="82" cy="84" rx="16" ry="11"/><ellipse cx="118" cy="84" rx="16" ry="11"/><ellipse cx="100" cy="84" rx="10" ry="16"/></g>',
+  bolt: '<path d="M108 54l-26 36h16l-8 26l28-38h-16z" fill="#FFF8F1"/>',
+  star: '<path d="M100 54l9 20l22 3l-16 15l4 22l-19-11l-19 11l4-22l-16-15l22-3z" fill="#FFF8F1"/>',
+  moon: '<circle cx="100" cy="84" r="28" fill="#FFF8F1"/><circle cx="91" cy="78" r="5" fill="#000" opacity=".08"/><circle cx="110" cy="92" r="7" fill="#000" opacity=".08"/>',
+  sun: '<g fill="#FFF8F1"><circle cx="100" cy="84" r="18"/><g stroke="#FFF8F1" stroke-width="5" stroke-linecap="round"><path d="M100 52v10M100 106v10M68 84h10M122 84h10M77 61l7 7M116 100l7 7M123 61l-7 7M84 100l-7 7"/></g></g>',
+  bell: '<g fill="#FFF8F1"><path d="M78 104c4-8 4-20 6-30a16 16 0 0 1 32 0c2 10 2 22 6 30z"/><circle cx="100" cy="110" r="6"/><circle cx="100" cy="56" r="4"/></g>',
+  wreath: '<g fill="#FFF8F1"><circle cx="100" cy="84" r="28" fill="none" stroke="#FFF8F1" stroke-width="4"/>' +
+    Array.from({ length: 12 }, (_, i) => { const a = i * Math.PI / 6; return `<ellipse cx="${(100 + 28 * Math.cos(a)).toFixed(1)}" cy="${(84 + 28 * Math.sin(a)).toFixed(1)}" rx="5" ry="3" transform="rotate(${i * 30 + 90} ${(100 + 28 * Math.cos(a)).toFixed(1)} ${(84 + 28 * Math.sin(a)).toFixed(1)})"/>`; }).join('') + '</g>',
+};
+
+/* 座っている猫（後ろ向き・空を見上げる） */
+function catSVG(fill) {
+  return `<g fill="${fill}">
+    <path d="M128 296c30 0 42-20 34-34" fill="none" stroke="${fill}" stroke-width="10" stroke-linecap="round"/>
+    <path d="M100 168c-30 0-48 40-48 86c0 30 20 46 48 46s48-16 48-46c0-46-18-86-48-86z"/>
+    <circle cx="100" cy="160" r="30"/>
+    <path d="M73 150l-4-34l26 20z"/><path d="M127 150l4-34l-26 20z"/>
+  </g>
+  <path d="M75 146l-2-22l14 12z M125 146l2-22l-14 12z" fill="#F7B6C5" opacity=".7"/>`;
+}
+
+function frontSVG(card) {
+  const id = 'g' + card.no.replace(/\W/g, '') + card.sym;
+  return `<svg viewBox="0 0 200 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${card.name}のカード">
+    <defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${card.c[0]}"/><stop offset="1" stop-color="${card.c[1]}"/></linearGradient></defs>
+    <rect x="2" y="2" width="196" height="336" rx="14" fill="#FFF8F1"/>
+    <rect x="10" y="10" width="180" height="320" rx="10" fill="url(#${id})"/>
+    <rect x="16" y="16" width="168" height="308" rx="8" fill="none" stroke="#FFF8F1" stroke-width="1.5" opacity=".8"/>
+    <text x="100" y="40" text-anchor="middle" font-family="Cormorant Garamond, Georgia, serif" font-size="18" font-weight="600" fill="#FFF8F1" letter-spacing="2">${card.no}</text>
+    ${SYMBOLS[card.sym]}
+    ${catSVG('#3A2D57')}
+    <rect x="10" y="298" width="180" height="32" fill="#FFF8F1" opacity=".92"/>
+    <text x="100" y="319" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="15" font-weight="700" fill="#4A3A48" letter-spacing="3">${card.name}</text>
+  </svg>`;
+}
+
+const BACK_SVG = `<svg viewBox="0 0 120 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <rect x="1" y="1" width="118" height="198" rx="9" fill="#FFF8F1"/>
+  <rect x="6" y="6" width="108" height="188" rx="6" fill="#3A2D57"/>
+  <rect x="11" y="11" width="98" height="178" rx="4" fill="none" stroke="#E9C77B" stroke-width="1.2"/>
+  <g fill="#E9C77B">
+    <path d="M60 78c-12 0-20 9-20 20c0 12 9 18 20 18s20-6 20-18c0-11-8-20-20-20z"/>
+    <path d="M43 90l-2-20l13 10z M77 90l2-20l-13 10z"/>
+    <path d="M60 128l3 7l7 1l-5 5l1 7l-6-3l-6 3l1-7l-5-5l7-1z"/>
+    <circle cx="28" cy="30" r="1.6"/><circle cx="92" cy="40" r="1.2"/><circle cx="24" cy="160" r="1.2"/><circle cx="94" cy="170" r="1.6"/><circle cx="60" cy="28" r="1"/><circle cx="60" cy="176" r="1"/>
+  </g>
+  <g fill="#3A2D57"><ellipse cx="52" cy="98" rx="2.4" ry="3.4"/><ellipse cx="68" cy="98" rx="2.4" ry="3.4"/></g>
+</svg>`;
+
+const THEME_ICON = {
+  heart: '<svg width="24" height="24" viewBox="0 0 24 24"><path d="M12 21c-6-4-9-7.5-9-11a5 5 0 0 1 9-3a5 5 0 0 1 9 3c0 3.5-3 7-9 11z" fill="#E89AAE"/></svg>',
+  star: '<svg width="24" height="24" viewBox="0 0 24 24"><path d="M12 2l3 6.5l7 .8l-5.2 4.8l1.5 7L12 17.5L5.7 21l1.5-7L2 9.3l7-.8z" fill="#E9C77B"/></svg>',
+  moon: '<svg width="24" height="24" viewBox="0 0 24 24"><path d="M15 3a9 9 0 1 0 6 15a7 7 0 1 1-6-15z" fill="#9C8CCB"/></svg>',
+};
+
+/* ---------- 画面の動き ---------- */
+const $ = (id) => document.getElementById(id);
+let theme = THEMES[0];
+
+function show(step) {
+  document.querySelectorAll('.step').forEach((s) => s.classList.toggle('on', s.id === step));
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+$('themes').innerHTML = THEMES.map((t, i) =>
+  `<button class="theme" data-i="${i}"><span class="ico">${THEME_ICON[t.ico]}</span><span><b>${t.title}</b><span>${t.sub}</span></span></button>`).join('');
+$('themes').addEventListener('click', (e) => {
+  const b = e.target.closest('.theme'); if (!b) return;
+  theme = THEMES[+b.dataset.i];
+  toShuffle();
+});
+
+function toShuffle() {
+  $('shuffle-title').textContent = theme.shuffle;
+  $('stage').className = 'shuffle-stage';
+  $('stage').innerHTML = [0, 1, 2].map(() => `<div class="back">${BACK_SVG}</div>`).join('');
+  $('do-shuffle').disabled = false;
+  show('s-shuffle');
+}
+
+$('do-shuffle').addEventListener('click', () => {
+  $('do-shuffle').disabled = true;
+  $('stage').classList.add('go');
+  setTimeout(dealCards, 1800);
+});
+
+function rand(n) { // 偏りの少ない乱数
+  if (window.crypto && crypto.getRandomValues) {
+    const a = new Uint32Array(1); crypto.getRandomValues(a); return a[0] % n;
+  }
+  return Math.floor(Math.random() * n);
+}
+
+let deck = [];
+function dealCards() {
+  deck = CARDS.map((c, i) => i);
+  for (let i = deck.length - 1; i > 0; i--) { const j = rand(i + 1); [deck[i], deck[j]] = [deck[j], deck[i]]; }
+  $('spread').innerHTML = deck.map((_, k) =>
+    `<button class="pick" data-k="${k}" style="animation-delay:${k * 25}ms" aria-label="${k + 1}枚目のカード">${BACK_SVG}</button>`).join('');
+  show('s-pick');
+}
+
+$('spread').addEventListener('click', (e) => {
+  const b = e.target.closest('.pick'); if (!b) return;
+  const card = CARDS[deck[+b.dataset.k]];
+  const reversed = rand(3) === 0; // 逆位置は 1/3 の確率
+  reveal(card, reversed);
+});
+
+function reveal(card, reversed) {
+  const r = reversed ? card.rv : card.up;
+  $('r-back').innerHTML = BACK_SVG;
+  $('r-front').innerHTML = frontSVG(card);
+  $('r-front').classList.toggle('rev', reversed);
+  $('flipper').classList.remove('open');
+  $('r-body').style.opacity = 0;
+
+  $('r-en').textContent = card.en;
+  $('r-name').textContent = card.name;
+  $('r-pos').textContent = reversed ? '逆位置' : '正位置';
+  $('r-pos').classList.toggle('rv', reversed);
+  $('r-kw').textContent = r.kw;
+  $('r-theme-ttl').textContent = theme.ttl;
+  $('r-msg').textContent = r[theme.key];
+  $('r-adv').textContent = r.adv;
+
+  const lucky = LUCKY[rand(LUCKY.length)];
+  $('r-lucky').innerHTML =
+    `<div class="txt"><div class="lbl">今日のラッキーアイテム${lucky.url ? '<span class="pr">PR</span>' : ''}</div><div class="item"></div></div>` +
+    (lucky.url ? `<a class="btn" href="${encodeURI(lucky.url)}" target="_blank" rel="sponsored noopener">見てみる</a>` : '');
+  $('r-lucky').querySelector('.item').textContent = lucky.item;
+
+  const text = `にゃんこ恋愛タロットで「${theme.title}」を占ったら【${card.name}（${reversed ? '逆位置' : '正位置'}）】が出たよ🐈‍⬛\n${r.kw}`;
+  $('share-x').href = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(text) + '&url=' + encodeURIComponent(SHARE_URL);
+  $('share-th').href = 'https://www.threads.net/intent/post?text=' + encodeURIComponent(text + '\n' + SHARE_URL);
+
+  show('s-result');
+  setTimeout(() => { $('flipper').classList.add('open'); $('r-body').style.opacity = 1; }, 350);
+}
+
+$('again-same').addEventListener('click', toShuffle);
+$('again-top').addEventListener('click', () => show('s-theme'));
+</script>
+</body>
+</html>
